@@ -20,7 +20,7 @@ app.use((req, res, next) => {
 
 app.use("/api/user/", userRoutes);
 
-mongoose.connect(process.env.MONGO_URL).then(
+mongoose.connect(MONGO_URL).then(
     () => {
         console.log("Connected to the database");
 
