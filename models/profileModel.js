@@ -24,7 +24,7 @@ const profileSchema = new Schema({
 
 profileSchema.statics.updateNickname = async function (userId, nickname) {
   
-    const profile = await this.findOne({ user: userId });
+    const profile = await this.findOne({ user: new mongoose.Types.ObjectId(userId)  });
 
     if (!profile) {
       throw Error("Profile not found");
@@ -39,7 +39,7 @@ profileSchema.statics.updateNickname = async function (userId, nickname) {
 
 profileSchema.statics.updateAge = async function (userId, age) {
   
-    const profile = await this.findOne({ user: userId });
+    const profile = await this.findOne({ user: new mongoose.Types.ObjectId(userId)  });
 
     if (!profile) {
       throw Error("Profile not found");
@@ -58,7 +58,7 @@ profileSchema.statics.updateAge = async function (userId, age) {
 
 profileSchema.statics.updateGender = async function (userId, gender) {
   
-    const profile = await this.findOne({ user: userId });
+    const profile = await this.findOne({ user: new mongoose.Types.ObjectId(userId)  });
 
     if (!profile) {
       throw Error("Profile not found");
@@ -76,7 +76,7 @@ profileSchema.statics.updateGender = async function (userId, gender) {
 
 profileSchema.statics.updateBio = async function (userId, bio) {
   
-    const profile = await this.findOne({ user: userId });
+    const profile = await this.findOne({ user: new mongoose.Types.ObjectId(userId)  });
 
     if (!profile) {
       throw Error("Profile not found");
@@ -91,7 +91,7 @@ profileSchema.statics.updateBio = async function (userId, bio) {
 
 profileSchema.statics.updateImage = async function (userId, icon) {
   
-    const profile = await this.findOne({ user: userId });
+    const profile = await this.findOne({ user: new mongoose.Types.ObjectId(userId)  });
 
     if (!profile) {
       throw Error("Profile not found");

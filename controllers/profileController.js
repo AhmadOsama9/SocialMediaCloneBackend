@@ -50,7 +50,7 @@ const updateImage = async (req, res) => {
     const file = req.file;
   
     try {
-      const profile = await Profile.findOne({ user: userId });
+      const profile = await Profile.findOne({ user: new mongoose.Types.ObjectId(userId)  });
   
       if (!profile) {
         throw Error("Profile not found");
@@ -68,7 +68,7 @@ const getProfileInfo = async (req, res) => {
     const { userId } = req.query;
 
     try {
-        const profile = await Profile.findOne({ user: mongoose.Types.ObjectId(userId) });
+        const profile = await Profile.findOne({ user: new mongoose.Types.ObjectId(userId) });
 
         if(!profile) {
             throw Error("Profile not found");
