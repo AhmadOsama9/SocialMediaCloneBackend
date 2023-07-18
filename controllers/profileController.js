@@ -50,12 +50,6 @@ const updateImage = async (req, res) => {
     const file = req.file;
   
     try {
-      const profile = await Profile.findOne({ user: new mongoose.Types.ObjectId(userId)  });
-  
-      if (!profile) {
-        throw Error("Profile not found");
-      }
-  
       await Profile.updateImage(userId, file);
   
       res.status(200).json({ message: "Image updated successfully" });
