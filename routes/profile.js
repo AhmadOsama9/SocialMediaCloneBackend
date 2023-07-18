@@ -1,5 +1,5 @@
 const express = require("express");
-
+const router = express.Router();
 const {
   updateNickname,
   updateAge,
@@ -7,8 +7,6 @@ const {
   updateBio,
   updateImage,
 } = require("../controllers/profileController");
-
-const router = express.Router();
 
 router.post("/nickname", updateNickname);
 router.post("/age", updateAge);

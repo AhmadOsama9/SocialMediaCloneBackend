@@ -64,3 +64,11 @@ const updateImage = async (req, res) => {
       res.status(400).json({ error: error.message });
     }
   };
+
+module.exports = {
+    updateNickname, 
+    updateAge,
+    updateGender,
+    updateBio,
+    updateImage,
+}
