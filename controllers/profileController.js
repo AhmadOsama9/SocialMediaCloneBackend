@@ -26,10 +26,10 @@ const updateGender = async (req, res) => {
     const {userId, gender} = req.body;
 
     try {
-        const profile = await Profile.updateGender(userId, age);
+        const profile = await Profile.updateGender(userId, gender);
         res.status(200).json({ gender });
     } catch (error) {
-        res.statues(400).json({error: error.message});
+        res.status(400).json({error: error.message});
     }
 }
 
@@ -38,7 +38,7 @@ const updateBio = async (req, res) => {
 
     try {
         const profile = await Profile.updateBio(userId, bio);
-        res.status(200).json({ gender });
+        res.status(200).json({ bio });
     } catch (error) {
         res.status(400).json({error: error.message});
     }
