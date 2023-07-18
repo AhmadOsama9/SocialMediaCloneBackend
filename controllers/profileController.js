@@ -61,6 +61,10 @@ const updateImage = async (req, res) => {
 const getProfileInfo = async (req, res) => {
     const { userId } = req.query;
 
+    if(!mongoose.Types.ObjectId.isValid(userId)) {
+        return res.status(400).json({ error: "Invalid userId"});
+    }
+
     try {
         const profile = await Profile.findOne({ user: new mongoose.Types.ObjectId(userId) });
 
