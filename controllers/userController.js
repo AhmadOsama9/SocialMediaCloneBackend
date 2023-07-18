@@ -32,7 +32,6 @@ const signupUser = async (req, res) => {
             user: user._id,
             nickname: "Enter your nickname",
             age: 0,
-            gender: "choose man or woman",
             bio: "Enter your bio"
         });
 
