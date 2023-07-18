@@ -1,4 +1,6 @@
 const Profile = require("../models/profileModel");
+const mongoose = require("mongoose");
+const { ObjectId } = mongoose.Types;
 
 const updateNickname = async (req, res) => {
     const {userId, nickname} = req.body;
@@ -67,7 +69,7 @@ const getProfileInfo = async (req, res) => {
     const { userId } = req.query;
 
     try {
-        const profile = await Profile.findOne({ user: userId });
+        const profile = await Profile.findOne({ user: ObjectId(userId) });
 
         if(!profile) {
             throw Error("Profile not found");
