@@ -64,7 +64,7 @@ const updateImage = async (req, res) => {
   };
 
 const getProfileInfo = async (req, res) => {
-    const { userId } = req.body;
+    const { userId } = req.query;
 
     try {
         const profile = await Profile.findOne({ user: userId });
