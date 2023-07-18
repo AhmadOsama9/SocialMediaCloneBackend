@@ -37,10 +37,30 @@ const updateBio = async (req, res) => {
     const {userId, bio} = req.body;
 
     try {
-        const profile = await Profile.updateBio(userId, bio)
+        const profile = await Profile.updateBio(userId, bio);
+        res.status(200).json({ gender });
+    } catch (error) {
+        res.status(400).json({error: error.message});
     }
 }
 
 const updateImage = async (req, res) => {
-
-}
+    const { userId } = req.body;
+    const file = req.file;
+  
+    try {
+      const profile = await Profile.findOne({ user: userId });
+  
+      if (!profile) {
+        throw Error("Profile not found");
+      }
+  
+      profile.image.data = file.buffer;
+      profile.image.contentType = file.mimetype;
+      await profile.save();
+  
+      res.status(200).json({ message: "Image updated successfully" });
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  };
