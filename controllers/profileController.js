@@ -55,9 +55,7 @@ const updateImage = async (req, res) => {
         throw Error("Profile not found");
       }
   
-      profile.image.data = file.buffer;
-      profile.image.contentType = file.mimetype;
-      await profile.save();
+      await Profile.updateImage(userId, file);
   
       res.status(200).json({ message: "Image updated successfully" });
     } catch (error) {

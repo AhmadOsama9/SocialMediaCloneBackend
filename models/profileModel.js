@@ -45,6 +45,10 @@ profileSchema.statics.updateAge = async function (userId, age) {
       throw Error("Profile not found");
     }
 
+    if (age < 12 || age > 90) {
+        throw Error("Invalid age");
+      }
+
     profile.age = age;
     await profile.save();
 
@@ -85,7 +89,7 @@ profileSchema.statics.updateBio = async function (userId, bio) {
   
 };
 
-profileSchema.statics.updateImage = async function (userId, image) {
+profileSchema.statics.updateImage = async function (userId, icon) {
   
     const profile = await this.findOne({ user: userId });
 
@@ -93,8 +97,11 @@ profileSchema.statics.updateImage = async function (userId, image) {
       throw Error("Profile not found");
     }
 
-    profile.image.data = fs.readFileSync(image.path);
-    profile.image.contentType = image.mimetype;
+    profile.image = {
+        data: Buffer.from(icon, "utf-8"),
+        contentType: "image/svg+xml"
+      };
+
     await profile.save();
 
     return profile;
