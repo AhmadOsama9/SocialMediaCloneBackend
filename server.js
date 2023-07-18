@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 
 const userRoutes = require("./routes/user");
+const profileRoutes = require("./routes/profile");
 
 
 const app = express();
@@ -19,6 +20,7 @@ app.use((req, res, next) => {
 });
 
 app.use("/api/user/", userRoutes);
+app.use("/api/user/updateprofile", profileRoutes);
 
 mongoose.connect(process.env.MONGO_URL).then(
     () => {

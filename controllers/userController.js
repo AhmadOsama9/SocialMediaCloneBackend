@@ -1,5 +1,7 @@
 const User = require("../models/userModel");
+const Profile = require("../models/profileModel");
 const jwt = require("jsonwebtoken");
+
 
 const createToken = (_id) => {
     return jwt.sign({_id}, process.env.SECRET_JWT, {expiresIn: "3d"});
@@ -25,8 +27,17 @@ const signupUser = async (req, res) => {
 
     try {
         const user = await User.signup(email, password, role);
+        
+        await Profile.create({
+            user: user._id,
+            nickname: "Enter your nickname",
+            age: 0,
+            gender: "choose man or woman",
+            bio: "Enter your bio"
+        });
+
         const token = createToken(user._id);
-        res.status(200).json({email, token, role: user.role});
+        res.status(200).json({email, token, role: user.role, userId: user.user._id});
 
     } catch(error) {
         res.status(400).json({error: error.message});
