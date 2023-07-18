@@ -63,10 +63,27 @@ const updateImage = async (req, res) => {
     }
   };
 
+const getProfileInfo = async (req, res) => {
+    const { userId } = req.body;
+
+    try {
+        const profile = await Profile.findOne({ user: userId });
+
+        if(!profile) {
+            throw Error("Profile not found");
+        }
+
+        res.status(200).json(profile);
+    } catch (error) {
+        res.status(400).json({error: error.message});
+    }
+}
+
 module.exports = {
     updateNickname, 
     updateAge,
     updateGender,
     updateBio,
     updateImage,
+    getProfileInfo,
 }
