@@ -9,11 +9,11 @@ const {
   getProfileInfo,
 } = require("../controllers/profileController");
 
-router.post("/nickname", updateNickname);
-router.post("/age", updateAge);
-router.post("/gender", updateGender);
-router.post("/bio", updateBio);
-router.post("/image", updateImage);
+router.post("/updateprofile/nickname", updateNickname);
+router.post("/updateprofile/age", updateAge);
+router.post("/updateprofile/gender", updateGender);
+router.post("/updateprofile/bio", updateBio);
+router.post("/updateprofile/image", updateImage);
 
 
 router.get("/getprofileinfo", getProfileInfo);

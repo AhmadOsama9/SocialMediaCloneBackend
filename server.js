@@ -20,7 +20,7 @@ app.use((req, res, next) => {
 });
 
 app.use("/api/user/", userRoutes);
-app.use("/api/user/updateprofile", profileRoutes);
+app.use("/api/user", profileRoutes);
 
 mongoose.connect(process.env.MONGO_URL).then(
     () => {
