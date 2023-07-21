@@ -63,17 +63,23 @@ postSchema.statics.addPost = async function (content, owner, community, imageDat
     }
 
     const createdPost = await this.create(newPost);
-    if(!createdPost) {
+    if (!createdPost) {
         throw Error("Cannot create the post");
     }
     // Add the post to the user's posts array in UsersActivity
-    const userActivity = await UsersActivity.findByIdAndUpdate(owner, { $push: { posts: createdPost._id } });
-    if(!userActivity) {
+    const userActivity = await UsersActivity.findOne({ user: owner});
+    if (!userActivity) {
         throw Error("Cannot find a UserActivity with that Id");
+    }
+
+    userActivity.posts.push(createdPost._id);
+    userActivity = await userActivity.save();
+    if (!userActivity) {
+      throw Error("Couldn't save the post to the userActivity");
     }
     // Add the post to the community's posts array
     community = await Communities.findByIdAndUpdate(community, { $push: { posts: createdPost._id } });
-    if(!community) {
+    if (!community) {
         throw Error("Cannot find a community with that Id")
     }
 
