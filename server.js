@@ -23,8 +23,8 @@ app.use((req, res, next) => {
 
 app.use("/api/user/", userRoutes);
 app.use("/api/user", profileRoutes);
-app.use("api/post/", postRoutes);
-app.use("api/community/", communityRoutes);
+app.use("/api/post/", postRoutes);
+app.use("/api/community/", communityRoutes);
 
 mongoose.connect(process.env.MONGO_URL).then(
     () => {
