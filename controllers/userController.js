@@ -28,12 +28,22 @@ const signupUser = async (req, res) => {
     try {
         const user = await User.signup(email, password, role);
         
-        await Profile.create({
+        const profile = await Profile.create({
             user: user._id,
             nickname: "Enter your nickname",
             age: 0,
             bio: "Enter your bio"
         });
+        if(!profile) {
+            throw Error("Failed to create a profile");
+        }
+
+        const userActivity = await userActivity.create({
+            user: user._id,
+        })
+        if(!userActivity) {
+            throw Error("Failed to create a userActivity");
+        } 
 
         const token = createToken(user._id);
         res.status(200).json({email, token, role: user.role, userId: user._id});
