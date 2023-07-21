@@ -172,6 +172,27 @@ postSchema.statics.addReaction = async function (userId, postId, reactionType) {
 
 };
 
+postSchema.statics.updateReaction = async function (userId, postId, reactionType) {
+  if (!["like", "love", "care", "Sad", "Angry"].includes(reactionType)) {
+    throw new Error("Invalid reaction type");
+  }
+
+  const post = await this.model("Posts").findById(postId).populate("reactions");
+  if (!post) {
+    throw new Error("Post not found");
+  }
+
+  const reaction = post.reactions.find((r) => r.user.equals(userId));
+  if (!reaction) {
+    throw new Error("Reaction not found");
+  }
+
+  reaction.reaction = reactionType;
+  await reaction.save();
+
+  return reaction;
+};
+
 postSchema.statics.removeReaction = async function (userId, postId) {
   const post = await this.model("Posts").findById(postId);
   if (!post) {
@@ -206,33 +227,6 @@ postSchema.statics.removeReaction = async function (userId, postId) {
   }
 };
 
-postSchema.statics.updateReaction = async function (userId, postId, reactionType) {
-  if (!["like", "love", "care", "Sad", "Angry"].includes(reactionType)) {
-    throw new Error("Invalid reaction type");
-  }
-  if (!["like", "love", "care", "Sad", "Angry"].includes(reactionType)) {
-    throw new Error("Invalid reaction type");
-  }
-  const post = await this.model("Posts").findById(postId);
-  if (!post) {
-    throw new Error("Post not found");
-  }
-
-  const reaction = await Reactions.findOne({
-    "user": userId,
-    "reaction._id": { $in: post.reactions.map((r) => r.reaction._id) },
-  });
-
-  if (!reaction) {
-    throw new Error("Reaction not found");
-  }
-
-  reaction.reaction = reactionType;
-  await reaction.save();
-
-  return reaction;
-
-}
 
 postSchema.statics.addComment = async function (userId, commentContent) {
   try {
