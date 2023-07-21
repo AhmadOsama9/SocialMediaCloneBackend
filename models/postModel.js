@@ -108,6 +108,8 @@ postSchema.statics.updatePost = async function (postId, content, community, imag
   if(!finishedupdatedPost) {
     throw Error("Failed to update the post");
   }
+
+  return finishedupdatedPost;
 };
 
 postSchema.statics.deletePost = async function (postId) {
