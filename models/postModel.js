@@ -136,7 +136,7 @@ postSchema.statics.deletePost = async function (postId) {
   }
 
   deletedPost = await this.findByIdAndDelete(postId);
-  if(!deleted) {
+  if(!deletedPost) {
     throw Error("Failed to delete the post");
   }
 };
