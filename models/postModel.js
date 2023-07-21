@@ -142,42 +142,78 @@ postSchema.statics.deletePost = async function (postId) {
 };
 
 postSchema.methods.addReaction = async function (userId, reactionType) {
-  try {
-    const reaction = await Reactions.create({ user: userId, reaction: reactionType });
-    this.reactions.push({ reaction });
-    await this.save();
+  const reaction = await Reactions.create({ user: userId, reaction: reactionType });
+  if (!reaction) {
+    throw Error("Failed to add the reaction");
+  }
+  const savedReaction = await this.model("Posts").findByIdAndUpdate(postId, {$push: {reactions: reaction}});
 
-    // Add the reaction to the user's reactions array in UsersActivity
-    await UsersActivity.findByIdAndUpdate(this.owner, { $push: { reactions: reaction._id } });
+  if (!savedReaction) {
+    throw Error("Failed to save the reaction in the reactions");
+  }
+  // Add the reaction to the user's reactions array in UsersActivity
+  const addedReaction = await UsersActivity.findByIdAndUpdate(this.owner, { $push: { reactions: reaction._id } });
+  if (!addedReaction) {
+    throw Error("Failed to add the reaction to the user activities");
+  }
 
-    return this;
-  } catch (error) {
-    throw new Error("Failed to add reaction: " + error.message);
+};
+
+postSchema.methods.removeReaction = async function (userId, postId) {
+  const post = await this.model("Posts").findById(postId);
+  if (!post) {
+    throw new Error("Post not found");
+  }
+
+  const reactionIndex = post.reactions.findIndex((r) =>
+    r.reaction.user.equals(userId)
+  );
+  if (reactionIndex === -1) {
+    throw new Error("Reaction not found");
+  }
+
+  // Remove the reaction from the post's reactions array
+  const removedReaction = post.reactions.splice(reactionIndex, 1)[0];
+  const removedpostReaction = await post.save();
+  if (!removedpostReaction) {
+    throw Error("Failed to remove the reaction from the post");
+  }
+  // Remove the reaction from the user's reactions array in UsersActivity
+  const userActivity = await UsersActivity.findOneAndUpdate(
+    { user: post.owner },
+    { $pull: { reactions: removedReaction.reaction._id } }
+  );
+  if (!userActivity) {
+    throw Error("Couldn't remove it from the user activity");
+  }
+  // Delete the reaction document
+  const react = await Reactions.findByIdAndDelete(removedReaction.reaction._id);
+  if(!react) {
+    throw Error("Couldn't remove the react from the reactions");
   }
 };
 
-postSchema.methods.removeReaction = async function (userId) {
-  try {
-    const reactionIndex = this.reactions.findIndex(r => r.reaction.user.equals(userId));
-    if (reactionIndex === -1) {
-      throw new Error("Reaction not found");
-    }
-
-    // Remove the reaction from the post's reactions array
-    const removedReaction = this.reactions.splice(reactionIndex, 1)[0];
-    await this.save();
-
-    // Remove the reaction from the user's reactions array in UsersActivity
-    await UsersActivity.findByIdAndUpdate(this.owner, { $pull: { reactions: removedReaction.reaction._id } });
-
-    // Delete the reaction document
-    await Reactions.findByIdAndDelete(removedReaction.reaction._id);
-
-    return this;
-  } catch (error) {
-    throw new Error("Failed to remove reaction: " + error.message);
+postSchema.methods.updateReaction = async function (userId, postId, newReactionType) {
+  const post = await this.model("Posts").findById(postId);
+  if (!post) {
+    throw new Error("Post not found");
   }
-};
+
+  const reaction = await Reaction.findOne({
+    "user": userId,
+    "reaction._id": { $in: post.reactions.map((r) => r.reaction._id) },
+  });
+
+  if (!reaction) {
+    throw new Error("Reaction not found");
+  }
+
+  reaction.reaction = newReaction;
+  await reaction.save();
+
+  return reaction;
+
+}
 
 postSchema.methods.addComment = async function (userId, commentContent) {
   try {

@@ -34,8 +34,45 @@ const deletePost = async (req, res) => {
     }
 }
 
+const addReaction = async (req, res) => {
+    const {userId, reactionType} = req.body;
+
+    try {
+        await Posts.addReaction(userId, reactionType);
+        res.status(200).json({message: "The reaction has been added Successfuly"});
+    } catch (error) {
+        res.status(400).json({error: error.message});
+    }
+}
+
+const updateReaction = async (req, res) => {
+    const {userId, postId, reactionType} = req.body;
+
+    try{
+        await Posts.updateReaction(userId, postId, reactionType);
+        res.status(200).json({message: "The reaction has been updated Successfully"})
+    } catch (error) {
+        res.status(400).json({error: error.message});
+    }
+}
+
+const removeReaction = async (req, res) => {
+    const {userId, postId} = req.body;
+
+    try {
+        await Posts.removeReaction(userId, postId);
+        res.status(200).json({message: "The reaction has been remove Succesfully"});
+    } catch (error) {
+        res.status(400).json({error: error.message});
+    }
+}
+
 module.exports = {
     addPost,
     updatePost,
     deletePost,
+    addReaction,
+    updateReaction,
+    removeReaction,
+
 }
