@@ -141,7 +141,7 @@ postSchema.statics.deletePost = async function (postId) {
   }
 };
 
-postSchema.methods.addReaction = async function (userId, reactionType) {
+postSchema.statics.addReaction = async function (userId, postId, reactionType) {
   const reaction = await Reactions.create({ user: userId, reaction: reactionType });
   if (!reaction) {
     throw Error("Failed to add the reaction");
@@ -159,7 +159,7 @@ postSchema.methods.addReaction = async function (userId, reactionType) {
 
 };
 
-postSchema.methods.removeReaction = async function (userId, postId) {
+postSchema.statics.removeReaction = async function (userId, postId) {
   const post = await this.model("Posts").findById(postId);
   if (!post) {
     throw new Error("Post not found");
@@ -193,7 +193,7 @@ postSchema.methods.removeReaction = async function (userId, postId) {
   }
 };
 
-postSchema.methods.updateReaction = async function (userId, postId, newReactionType) {
+postSchema.statics.updateReaction = async function (userId, postId, newReactionType) {
   const post = await this.model("Posts").findById(postId);
   if (!post) {
     throw new Error("Post not found");
@@ -215,7 +215,7 @@ postSchema.methods.updateReaction = async function (userId, postId, newReactionT
 
 }
 
-postSchema.methods.addComment = async function (userId, commentContent) {
+postSchema.statics.addComment = async function (userId, commentContent) {
   try {
     const comment = await Comments.create({ user: userId, comment: commentContent });
     this.comments.push({ comment });
@@ -230,7 +230,7 @@ postSchema.methods.addComment = async function (userId, commentContent) {
   }
 };
 
-postSchema.methods.removeComment = async function (userId, commentId) {
+postSchema.statics.removeComment = async function (userId, commentId) {
   try {
     const commentIndex = this.comments.findIndex(c => c.comment._id.equals(commentId));
     if (commentIndex === -1) {
@@ -253,7 +253,7 @@ postSchema.methods.removeComment = async function (userId, commentId) {
   }
 };
 
-postSchema.methods.addShare = async function (userId) {
+postSchema.statics.addShare = async function (userId) {
   try {
     // Add the post to the user's shared posts array in UsersActivity
     await UsersActivity.findByIdAndUpdate(userId, { $push: { sharePosts: this._id } });
