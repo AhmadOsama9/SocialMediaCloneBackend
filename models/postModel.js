@@ -117,7 +117,7 @@ postSchema.statics.deletePost = async function (postId) {
   const postToDelete = await this.findById(postId);
 
   if (!postToDelete) {
-    throw new Error("Post not found");
+    throw Error("Post not found");
   }
 
   // Remove the post from the user's posts array in UsersActivity
