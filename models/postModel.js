@@ -145,7 +145,7 @@ postSchema.statics.addReaction = async function (userId, postId, reactionType) {
   if (!["like", "love", "care", "Sad", "Angry"].includes(reactionType)) {
     throw Error("Invalid reaction type");
   }
-  const newReaction = await this.create({
+  const newReaction = await Reactions.create({
     user: userId,
     reaction: reactionType,
   });
