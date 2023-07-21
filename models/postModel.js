@@ -192,15 +192,14 @@ postSchema.statics.updateReaction = async function (userId, postId, reactionType
 
   return reaction;
 };
-
 postSchema.statics.removeReaction = async function (userId, postId) {
-  const post = await this.model("Posts").findById(postId);
+  const post = await this.model("Posts").findById(postId).populate("reactions");
   if (!post) {
     throw new Error("Post not found");
   }
 
   const reactionIndex = post.reactions.findIndex((r) =>
-    r.reaction.user.equals(userId)
+    r.user.equals(userId)
   );
   if (reactionIndex === -1) {
     throw new Error("Reaction not found");
@@ -208,22 +207,22 @@ postSchema.statics.removeReaction = async function (userId, postId) {
 
   // Remove the reaction from the post's reactions array
   const removedReaction = post.reactions.splice(reactionIndex, 1)[0];
-  const removedpostReaction = await post.save();
-  if (!removedpostReaction) {
-    throw Error("Failed to remove the reaction from the post");
+  const removedPostReaction = await post.save();
+  if (!removedPostReaction) {
+    throw new Error("Failed to remove the reaction from the post");
   }
   // Remove the reaction from the user's reactions array in UsersActivity
   const userActivity = await UsersActivity.findOneAndUpdate(
     { user: post.owner },
-    { $pull: { reactions: removedReaction.reaction._id } }
+    { $pull: { reactions: removedReaction._id } } // Note: Use removedReaction._id instead of removedReaction.reaction._id
   );
   if (!userActivity) {
-    throw Error("Couldn't remove it from the user activity");
+    throw new Error("Couldn't remove it from the user activity");
   }
   // Delete the reaction document
-  const react = await Reactions.findByIdAndDelete(removedReaction.reaction._id);
-  if(!react) {
-    throw Error("Couldn't remove the react from the reactions");
+  const react = await Reactions.findByIdAndDelete(removedReaction._id); // Note: Use removedReaction._id instead of removedReaction.reaction._id
+  if (!react) {
+    throw new Error("Couldn't remove the react from the reactions");
   }
 };
 
