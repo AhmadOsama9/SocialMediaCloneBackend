@@ -149,7 +149,12 @@ postSchema.statics.addReaction = async function (userId, postId, reactionType) {
   if (!reaction) {
     throw Error("Failed to add the reaction");
   }
-  const savedReaction = await this.model("Posts").findByIdAndUpdate(postId, {$push: {reactions: reaction}});
+  const post = await this.model("Posts").findById(postId);
+  if(!post) {
+    throw Error("Failed to find the post with that postId");
+  }
+  post.reactions.push(newReaction);
+  const savedReaction = await post.save();
 
   if (!savedReaction) {
     throw Error("Failed to save the reaction in the reactions");
