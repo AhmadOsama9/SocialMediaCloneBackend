@@ -218,7 +218,7 @@ postSchema.statics.updateReaction = async function (userId, postId, reactionType
     throw new Error("Post not found");
   }
 
-  const reaction = await Reaction.findOne({
+  const reaction = await Reactions.findOne({
     "user": userId,
     "reaction._id": { $in: post.reactions.map((r) => r.reaction._id) },
   });
