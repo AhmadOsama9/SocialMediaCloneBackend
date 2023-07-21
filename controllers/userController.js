@@ -1,5 +1,6 @@
 const User = require("../models/userModel");
 const Profile = require("../models/profileModel");
+const UserActivity = require("../models/userActivityModel");
 const jwt = require("jsonwebtoken");
 
 
@@ -38,7 +39,7 @@ const signupUser = async (req, res) => {
             throw Error("Failed to create a profile");
         }
 
-        const userActivity = await userActivity.create({
+        const userActivity = await UserActivity.create({
             user: user._id,
         })
         if(!userActivity) {
