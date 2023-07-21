@@ -73,8 +73,8 @@ postSchema.statics.addPost = async function (content, owner, community, imageDat
     }
 
     userActivity.posts.push(createdPost._id);
-    userActivity = await userActivity.save();
-    if (!userActivity) {
+    const foundUserActivity = await userActivity.save();
+    if (!foundUserActivity) {
       throw Error("Couldn't save the post to the userActivity");
     }
     // Add the post to the community's posts array
