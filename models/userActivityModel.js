@@ -71,4 +71,4 @@ userActivitySchema.statics.savePost = async function (userId, postId) {
     }
 };
 
-module.exports = mongoose.model("UserActivity", userActivitySchema);
+module.exports = mongoose.model("UsersActivity", userActivitySchema);

@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const UsersActivity = require("./usersActivityModel");
+const UsersActivity = require("./userActivityModel");
 const Communities = require("./communitiesModel");
 const Reactions = require("./reactionModel");
 const Comments = require("./commentModel");
