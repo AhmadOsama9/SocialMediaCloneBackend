@@ -35,10 +35,10 @@ const deletePost = async (req, res) => {
 }
 
 const addReaction = async (req, res) => {
-    const {userId, reactionType} = req.body;
+    const {userId, postId, reactionType} = req.body;
 
     try {
-        await Posts.addReaction(userId, reactionType);
+        await Posts.addReaction(userId, postId, reactionType);
         res.status(200).json({message: "The reaction has been added Successfuly"});
     } catch (error) {
         res.status(400).json({error: error.message});

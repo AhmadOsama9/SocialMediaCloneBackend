@@ -142,6 +142,9 @@ postSchema.statics.deletePost = async function (postId) {
 };
 
 postSchema.statics.addReaction = async function (userId, postId, reactionType) {
+  if (!["like", "love", "care", "Sad", "Angry"].includes(reactionType)) {
+    throw new Error("Invalid reaction type");
+  }
   const reaction = await Reactions.create({ user: userId, reaction: reactionType });
   if (!reaction) {
     throw Error("Failed to add the reaction");
@@ -193,7 +196,13 @@ postSchema.statics.removeReaction = async function (userId, postId) {
   }
 };
 
-postSchema.statics.updateReaction = async function (userId, postId, newReactionType) {
+postSchema.statics.updateReaction = async function (userId, postId, reactionType) {
+  if (!["like", "love", "care", "Sad", "Angry"].includes(reactionType)) {
+    throw new Error("Invalid reaction type");
+  }
+  if (!["like", "love", "care", "Sad", "Angry"].includes(reactionType)) {
+    throw new Error("Invalid reaction type");
+  }
   const post = await this.model("Posts").findById(postId);
   if (!post) {
     throw new Error("Post not found");
@@ -208,7 +217,7 @@ postSchema.statics.updateReaction = async function (userId, postId, newReactionT
     throw new Error("Reaction not found");
   }
 
-  reaction.reaction = newReaction;
+  reaction.reaction = reactionType;
   await reaction.save();
 
   return reaction;
