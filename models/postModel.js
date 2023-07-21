@@ -87,47 +87,51 @@ postSchema.statics.addPost = async function (content, owner, community, imageDat
 };
 
 postSchema.statics.updatePost = async function (postId, content, community, imageData, contentType) {
-  try {
-    const updatedPost = {};
+  const updatedPost = {};
 
-    if (content) {
-      updatedPost.content = content;
-    }
+  if (content) {
+    updatedPost.content = content;
+  }
 
-    if (community) {
-      updatedPost.community = community;
-    }
+  if (community) {
+    updatedPost.community = community;
+  }
 
-    if (imageData && contentType) {
-      updatedPost.image = {
-        data: imageData,
-        contentType,
-      };
-    }
+  if (imageData && contentType) {
+    updatedPost.image = {
+      data: imageData,
+      contentType,
+    };
+  }
 
-    return this.findByIdAndUpdate(postId, updatedPost, { new: true });
-  } catch (error) {
-    throw new Error("Failed to update the post");
+  const finishedupdatedPost = await this.findByIdAndUpdate(postId, updatedPost, { new: true });
+  if(!finishedupdatedPost) {
+    throw Error("Failed to update the post");
   }
 };
 
 postSchema.statics.deletePost = async function (postId) {
-  try {
-    const postToDelete = await this.findById(postId);
 
-    if (!postToDelete) {
-      throw new Error("Post not found");
-    }
+  const postToDelete = await this.findById(postId);
 
-    // Remove the post from the user's posts array in UsersActivity
-    await UsersActivity.findByIdAndUpdate(postToDelete.owner, { $pull: { posts: postId } });
+  if (!postToDelete) {
+    throw new Error("Post not found");
+  }
 
-    // Remove the post from the community's posts array
-    await Communities.findByIdAndUpdate(postToDelete.community, { $pull: { posts: postId } });
+  // Remove the post from the user's posts array in UsersActivity
+  const userActivity = await UsersActivity.findByIdAndUpdate(postToDelete.owner, { $pull: { posts: postId } });
+  if(!userActivity) {
+    throw Error("Failed to find the userActivity");
+  }
+  // Remove the post from the community's posts array
+  const community = await Communities.findByIdAndUpdate(postToDelete.community, { $pull: { posts: postId } });
+  if(!community) {
+    throw Error("Failed to find the community");
+  }
 
-    return this.findByIdAndDelete(postId);
-  } catch (error) {
-    throw new Error("Failed to delete the post");
+  deletedPost = await this.findByIdAndDelete(postId);
+  if(!deleted) {
+    throw Error("Failed to delete the post");
   }
 };
 
