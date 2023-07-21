@@ -21,16 +21,12 @@ const postSchema = new Schema({
     required: true,
   },
   reactions: [{
-    reaction: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Reactions",
-    },
   }],
   comments: [{
-    comment: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Comments",
-    },
   }],
   ShareCount: {
     type: Number,
