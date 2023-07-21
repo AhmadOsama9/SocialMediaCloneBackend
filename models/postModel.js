@@ -192,6 +192,7 @@ postSchema.statics.updateReaction = async function (userId, postId, reactionType
 
   return reaction;
 };
+
 postSchema.statics.removeReaction = async function (userId, postId) {
   const post = await this.model("Posts").findById(postId).populate("reactions");
   if (!post) {
@@ -212,15 +213,17 @@ postSchema.statics.removeReaction = async function (userId, postId) {
     throw new Error("Failed to remove the reaction from the post");
   }
   // Remove the reaction from the user's reactions array in UsersActivity
-  const userActivity = await UsersActivity.findOneAndUpdate(
-    { user: post.owner },
-    { $pull: { reactions: removedReaction._id } } // Note: Use removedReaction._id instead of removedReaction.reaction._id
-  );
-  if (!userActivity) {
-    throw new Error("Couldn't remove it from the user activity");
+  const activity = await UsersActivity.findOne({ user: userId });
+  if (!activity) {
+    throw new Error("Failed to find the user Activity");
+  }
+  activity.reactions.pull(removedReaction); // Use removedReaction instead of newReaction
+  const updatedActivity = await activity.save();
+  if (!updatedActivity) {
+    throw new Error("Failed to remove the reaction from the user activities");
   }
   // Delete the reaction document
-  const react = await Reactions.findByIdAndDelete(removedReaction._id); // Note: Use removedReaction._id instead of removedReaction.reaction._id
+  const react = await Reactions.findByIdAndDelete(removedReaction._id);
   if (!react) {
     throw new Error("Couldn't remove the react from the reactions");
   }
