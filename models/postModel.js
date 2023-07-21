@@ -1,6 +1,4 @@
 const mongoose = require("mongoose");
-const ObjectId = mongoose.Types.ObjectId;
-
 const UsersActivity = require("./userActivityModel");
 const Communities = require("./communitiesModel");
 const Reactions = require("./reactionModel");
@@ -116,7 +114,7 @@ postSchema.statics.updatePost = async function (postId, content, community, imag
 
 postSchema.statics.deletePost = async function (postId) {
 
-  const postToDelete = await this.findById(ObjectId(postId));
+  const postToDelete = await this.findById(postId);
 
   if (!postToDelete) {
     throw new Error("Post not found");
