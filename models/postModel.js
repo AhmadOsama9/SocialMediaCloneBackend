@@ -160,10 +160,12 @@ postSchema.statics.addReaction = async function (userId, postId, reactionType) {
     throw Error("Failed to save the reaction in the reactions");
   }
   // Add the reaction to the user's reactions array in UsersActivity
-  const addedReaction = await UsersActivity.findOneAndUpdate(
-    {user: postToDelete.owner},
-    { $push: { reactions: newReaction } }
-  );
+  const activity = await UsersActivity.findOne({user: userId});
+  if(!activity) {
+    throw Error("Failed to find the user Activity");
+  }
+  activity.reactions.push(newReaction);
+  const addedReaction = await activity.save();
   if (!addedReaction) {
     throw Error("Failed to add the reaction to the user activities");
   }
