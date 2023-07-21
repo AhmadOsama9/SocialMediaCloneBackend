@@ -10,7 +10,7 @@ const reactionSchema = new Schema({
   },
   reaction: {
     type: String,
-    enum: ["like", "love", "care", "sad", "Angry"],
+    enum: ["like", "love", "care", "Sad", "Angry"],
     required: true,
   },
   createdAt: {

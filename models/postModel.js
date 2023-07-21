@@ -143,9 +143,13 @@ postSchema.statics.deletePost = async function (postId) {
 
 postSchema.statics.addReaction = async function (userId, postId, reactionType) {
   if (!["like", "love", "care", "Sad", "Angry"].includes(reactionType)) {
-    throw new Error("Invalid reaction type");
+    throw Error("Invalid reaction type");
   }
-  const reaction = await Reactions.create({ user: userId, reaction: reactionType });
+  const newReaction = await this.create({
+    user: userId,
+    reaction: reactionType,
+  });
+  const reaction = await Reactions.create(newReaction);
   if (!reaction) {
     throw Error("Failed to add the reaction");
   }
