@@ -21,3 +21,8 @@ const acceptFriendRequest = async (req, res) => {
         res.status(400).json({error: error.message});
     }
 }
+
+module.exports = {
+    sendFriendRequest,
+    acceptFriendRequest,
+}

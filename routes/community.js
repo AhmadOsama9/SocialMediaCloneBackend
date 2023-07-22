@@ -33,6 +33,6 @@ router.post("/makeadmin", makeMemberAdmin);
 
 router.post("/search", searchCommunityByName);
 
-router.post("/getall", getAllCommunities);
+router.get("/getall", getAllCommunities);
 
 module.exports = router;

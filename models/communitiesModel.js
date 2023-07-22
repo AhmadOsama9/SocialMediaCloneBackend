@@ -202,8 +202,4 @@ communitySchema.statics.getAllCommunities = async function () {
     return communities;
 }
 
-communitySchema.statics.searchCommunity = async function (query) {
-
-}
-
 module.exports = mongoose.model("Communities", communitySchema);
