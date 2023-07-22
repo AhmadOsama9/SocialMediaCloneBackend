@@ -1,4 +1,4 @@
-const UsersActivity = require("../models/chatModel");
+const UsersActivity = require("../models/userActivityModel");
 
 const sendFriendRequest = async (req, res) => {
     const { senderId, receiverId } = req.body;
