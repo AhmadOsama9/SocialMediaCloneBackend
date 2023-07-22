@@ -27,7 +27,7 @@ app.use("/api/user/", profileRoutes);
 app.use("/api/post/", postRoutes);
 app.use("/api/community/", communityRoutes);
 app.use("api/chat/", chatRoutes);
-app.use("api/user/", userActivityRoutes);
+app.use("/api/user/", userActivityRoutes);
 
 mongoose.connect(process.env.MONGO_URL).then(
     () => {
