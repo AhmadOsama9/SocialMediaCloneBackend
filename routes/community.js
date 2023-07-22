@@ -21,7 +21,7 @@ router.post("/remove", removeCommunity);
 
 router.post("/add", addMember);
 
-router.post("/remove", removeMember);
+router.post("/removemember", removeMember);
 
 router.post("/addtorequests", addToRequests);
 
