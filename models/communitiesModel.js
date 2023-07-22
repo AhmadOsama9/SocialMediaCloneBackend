@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const UsersActivity = require("./userActivityModel");
+const Users = require("./userModel");
 
 const Schema = mongoose.Schema;
 
@@ -55,6 +56,44 @@ communitySchema.statics.createCommunity = async function (name, description, adm
     return newCommunity;
 };
 
+
+communitySchema.statics.removeCommunity = async function (userId, communityId) {
+    const community = await this.findById(communityId);
+    if (!community) {
+        throw Error("Community not found");
+    }
+
+    const user = Users.findById(userId);
+    if (!user) {
+        throw Error("User not found");
+    }
+
+    if (!community.admins.includes(userId) && user.role !== "admin") {
+        throw Error("You are not authorized to delete this community");
+    }
+
+    const userActivityUpdate = await UsersActivity.updateMany(
+        {user: { $in: [...community.admins, ...community.members]}
+    },
+    {
+        $pull: {
+            createdCommunities: communityId,
+            joinedCommunities: communityId,
+        },
+    }
+    );
+
+    if (!userActivityUpdate) {
+        throw Error("Failed to update users activity");
+    }
+
+    const deletedCommunity = await this.findByIdAndDelete(communityId);
+    if (!deletedCommunity) {
+        throw Error("Failed to delete the community");
+    }
+ 
+}
+
 communitySchema.statics.addMember = async function (userId, communityId) {
 
         // Add the member to the community's members
@@ -100,6 +139,18 @@ communitySchema.statics.removeMember = async function (userId, communityId) {
         throw Error("Failed to save the updated activity");
     }
 };
+
+communitySchema.statics.addToRequests = async function(userId, communityId) {
+    const community = await this.findById(communityId);
+    if (!community) {
+        throw Error("Community not found");
+    }
+    community.membershipRequests.push(userId);
+    const updatedCommunity = await community.save();
+    if (!updatedCommunity) {
+        throw Error("Failed to save the updated community");
+    }
+}
 
 communitySchema.statics.acceptMemberRequest = async function (userId, communityId) {
     const community = await this.findById(communityId);

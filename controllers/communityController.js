@@ -13,6 +13,17 @@ const createCommunity = async (req, res) => {
 
 }
 
+const removeCommunity = async (req, res) => {
+    const { userId, communityId } = req.body;
+
+    try {
+        const community = await Community.removeCommunity(userId, communityId);
+        res.status(200).json({message: "The community has been removed Successfully"});
+    } catch (error) {
+        res.status(400).json({error: error.message});
+    }
+}
+
 const addMember = async (req, res) => {
     const { userId, communityId } = req.body;
 
@@ -35,6 +46,17 @@ const removeMember = async (req, res) => {
     }
 }
 
+const addToRequests = async (req, res) => {
+    const { userId, communityId } = req.body;
+
+    try {
+        await Community.addToRequests(userId, communityId);
+        res.status(200).json({message: "The request has been added Successfully"});
+    } catch (error) {
+        res.status(400).json({error: error.message});
+    }
+}
+
 const acceptMemberRequest = async (req, res) => {
     const { userId, communityId } = req.body;
 
@@ -50,17 +72,22 @@ const makeMemberAdmin = async (req, res) => {
     const { userId, communityId } = req.body;
 
     try {
-        await Community.makeMemberAdmin(userId, commmunityId);
+        await Community.makeMemberAdmin(userId, communityId);
         res.status(200).json({message: "the user have become an admin successfully"});
     }  catch (error) {
         res.status(400).json({error: error.message});
     }
 }
 
+
+
 module.exports = {
     createCommunity,
+    removeCommunity,
     addMember,
     removeMember,
+    addToRequests,
     acceptMemberRequest,
     makeMemberAdmin,
+
 }
