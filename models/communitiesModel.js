@@ -186,4 +186,24 @@ communitySchema.statics.makeMemberAdmin = async function (userId, communityId) {
     }
 }
 
+communitySchema.statics.searchCommunityByName = async function (communityName) {
+    const community = await this.findOne({ name: communityName });
+    if (!community) {
+        throw Error("No Community with that name");
+    }
+    return community;
+}
+
+communitySchema.statics.getAllCommunities = async function () {
+    const communities = await this.find();
+    if (!communities) {
+        throw Error("Currently No Communities");
+    }
+    return communities;
+}
+
+communitySchema.statics.searchCommunity = async function (query) {
+
+}
+
 module.exports = mongoose.model("Communities", communitySchema);

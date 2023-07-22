@@ -36,39 +36,74 @@ const userActivitySchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Reactions",
     }],
+    friends: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Users",
+    }],
+    friendRequests: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Users",
+    }],
+    pendingRequests: [{
+        type: mongoose.SchemaTypes.ObjectId,
+        ref: "Users",
+    }],
 });
 
-userActivitySchema.statics.leaveCommunity = async function (userId, communityId) {
-    try {
-        // Remove the community from the user's joinedCommunities
-        await this.updateOne({ user: userId }, { $pull: { joinedCommunities: communityId } });
-        
-        // Remove the user from the community's members
-        await Communities.findByIdAndUpdate(communityId, { $pull: { members: userId } });
-    } catch (error) {
-        throw new Error("Failed to leave the community");
-    }
-};
+userActivitySchema.statics.sendFriendRequest = async function (senderId, receiverId) {
+    const senderActivity = await this.findOne({ user: senderId });
+    const receiverActivity = await this.findOne({ user: receiverId});
 
-userActivitySchema.statics.removeFromSharedPosts = async function (userId, postId) {
-    try {
-        // Remove the post from the user's sharedPosts
-        await this.updateOne({ user: userId }, { $pull: { sharedPosts: postId } });
-        
-        // Decrease the shareCount of the post
-        await Posts.findByIdAndUpdate(postId, { $inc: { shareCount: -1 } });
-    } catch (error) {
-        throw new Error("Failed to remove post from shared posts");
+    if (!senderActivity || !receiverActivity) {
+        throw Error("Sender or Receiver activity is not found");
     }
-};
 
-userActivitySchema.statics.savePost = async function (userId, postId) {
-    try {
-        // Add the post to the user's savedPosts
-        await this.updateOne({ user: userId }, { $addToSet: { savedPosts: postId } });
-    } catch (error) {
-        throw new Error("Failed to save the post");
+    if (senderActivity.friends.includes(receiverId)) {
+        throw Error("You are alraedy friend");
     }
-};
+
+    if (senderActivity.pendingRequests.includes(receiverId)) {
+        throw Error("Waiting for the receiver to accept")
+    }
+
+    senderActivity.pendingRequests.push(receiverId);
+    const updatedSenderActivity = senderActivity.save();
+    if (!updatedSenderActivity) {
+        throw Error("Failed to save the updated Sender activity");
+    }
+
+    receiverActivity.friendRequests.push(senderId);
+    const updatedReceiverActivity = await receiverActivity.save();
+    if (!updatedReceiverActivity) {
+        throw Error("Failed to save the updated Receiver activity");
+    }
+}
+
+userActivitySchema.statics.acceptFriendRequest = async function (userId, friendId) {
+    const userActivity = await this.findOne({ user: userId });
+    const friendActivity = await this.findOne({ user: friendId });
+
+    if (!userActivity || !friendActivity) {
+        throw Error("User or friend activity not found");
+    }
+    
+    if(!userActivity.frinedRequests.includes(friendId)) {
+        throw Error("No friend request from this user");
+    }
+    
+    userActivity.friendRequests.pull(friendId);
+    userActivity.friends.push(friendId);
+    const updatedUserActivity = await userActivity.save();
+    if (!updatedUserActivity) {
+        throw Error("Failed to save the updated user activity");
+    }
+
+    friendActivity.pendingRequests.pull(userId);
+    friendActivity.friends.push(userId);
+    const updatedFriendActivity = await updatedFriendActivity.save();
+    if (!updatedFriendActivity) {
+        throw Error("Failed to save the updated friend activity");
+    }
+}
 
 module.exports = mongoose.model("UsersActivity", userActivitySchema);

@@ -79,7 +79,25 @@ const makeMemberAdmin = async (req, res) => {
     }
 }
 
+const searchCommunityByName = async (req, res) => {
+    const { communityName } = req.body;
 
+    try {
+        const community = await Community.searchCommunityByName(communityName);
+        res.status(200).json(community);
+    } catch (error) {
+        res.status(400).json({eror: error.message});
+    }
+}
+
+const getAllCommunities = async (req, res) => {
+    try {
+        const communities = await Community.getAllCommunities();
+        res.status(200).json(communities);
+    } catch (error) {
+        res.status(400).json({error: error.message});
+    }
+}
 
 module.exports = {
     createCommunity,
@@ -89,5 +107,7 @@ module.exports = {
     addToRequests,
     acceptMemberRequest,
     makeMemberAdmin,
+    searchCommunityByName,
+    getAllCommunities,
 
 }

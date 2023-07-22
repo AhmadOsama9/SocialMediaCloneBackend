@@ -8,6 +8,8 @@ const {
     addToRequests,
     acceptMemberRequest,
     makeMemberAdmin,
+    searchCommunityByName,
+    getAllCommunities,
  } 
  = require("../controllers/communityController");
 
@@ -28,5 +30,9 @@ router.post("/addtorequests", addToRequests);
 router.post("/accept", acceptMemberRequest);
 
 router.post("/makeadmin", makeMemberAdmin);  
+
+router.post("/search", searchCommunityByName);
+
+router.post("/getall", getAllCommunities);
 
 module.exports = router;
