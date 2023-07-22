@@ -234,12 +234,11 @@ postSchema.statics.removeReaction = async function (userId, postId) {
 
 postSchema.statics.addComment = async function (userId, postId, commentContent) {
   
-  const comment = {
+  const comment = await Comments.create({
     user: userId,
     content: commentContent,
-  };
-  const comment2 = await Comments.create(comment);
-  if (!comment2) {
+  });
+  if (!comment) {
     throw Error("Failed to craete the comment");
   }
   
