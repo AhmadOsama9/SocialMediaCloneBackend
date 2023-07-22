@@ -145,11 +145,10 @@ postSchema.statics.addReaction = async function (userId, postId, reactionType) {
     user: userId,
     reaction: reactionType,
   });
-  const reaction = await Reactions.create(newReaction);
-  if (!reaction) {
+  if (!newReaction) {
     throw Error("Failed to add the reaction");
   }
-  const post = await this.model("Posts").findById(postId);
+  const post = await this.findById(postId);
   if(!post) {
     throw Error("Failed to find the post with that postId");
   }
@@ -174,113 +173,198 @@ postSchema.statics.addReaction = async function (userId, postId, reactionType) {
 
 postSchema.statics.updateReaction = async function (userId, postId, reactionType) {
   if (!["like", "love", "care", "Sad", "Angry"].includes(reactionType)) {
-    throw new Error("Invalid reaction type");
+    throw Error("Invalid reaction type");
   }
 
-  const post = await this.model("Posts").findById(postId).populate("reactions");
+  const post = await this.findById(postId).populate("reactions");
   if (!post) {
-    throw new Error("Post not found");
+    throw Error("Post not found");
   }
 
   const reaction = post.reactions.find((r) => r.user.equals(userId));
   if (!reaction) {
-    throw new Error("Reaction not found");
+    throw Error("Cannot find the user reaction on this post");
   }
 
   reaction.reaction = reactionType;
-  await reaction.save();
+  const savedReaction = await reaction.save();
+  if (!savedReaction) {
+    throw Error("Failed to save the updated Reaction");
+  }
 
   return reaction;
 };
 
 postSchema.statics.removeReaction = async function (userId, postId) {
-  const post = await this.model("Posts").findById(postId).populate("reactions");
+  const post = await this.findById(postId).populate("reactions");
   if (!post) {
-    throw new Error("Post not found");
+    throw Error("Post not found");
   }
 
   const reactionIndex = post.reactions.findIndex((r) =>
     r.user.equals(userId)
   );
   if (reactionIndex === -1) {
-    throw new Error("Reaction not found");
+    throw Error("Reaction not found");
   }
 
   // Remove the reaction from the post's reactions array
   const removedReaction = post.reactions.splice(reactionIndex, 1)[0];
   const removedPostReaction = await post.save();
   if (!removedPostReaction) {
-    throw new Error("Failed to remove the reaction from the post");
+    throw Error("Failed to remove the reaction from the post");
   }
   // Remove the reaction from the user's reactions array in UsersActivity
   const activity = await UsersActivity.findOne({ user: userId });
   if (!activity) {
-    throw new Error("Failed to find the user Activity");
+    throw Error("Failed to find the user Activity");
   }
-  activity.reactions.pull(removedReaction); // Use removedReaction instead of newReaction
+  activity.reactions.pull(removedReaction._id); 
   const updatedActivity = await activity.save();
   if (!updatedActivity) {
-    throw new Error("Failed to remove the reaction from the user activities");
+    throw Error("Failed to remove the reaction from the user activities");
   }
   // Delete the reaction document
   const react = await Reactions.findByIdAndDelete(removedReaction._id);
   if (!react) {
-    throw new Error("Couldn't remove the react from the reactions");
+    throw Error("Couldn't remove the react from the reactions table");
   }
 };
 
 
-postSchema.statics.addComment = async function (userId, commentContent) {
-  try {
-    const comment = await Comments.create({ user: userId, comment: commentContent });
-    this.comments.push({ comment });
-    await this.save();
-
-    // Add the comment to the user's comments array in UsersActivity
-    await UsersActivity.findByIdAndUpdate(this.owner, { $push: { comments: comment._id } });
-
-    return this;
-  } catch (error) {
-    throw new Error("Failed to add comment: " + error.message);
+postSchema.statics.addComment = async function (userId, postId, commentContent) {
+  
+  const comment = await Comments.create({
+    user: userId,
+    content: commentContent,
+  });
+  if (!comment) {
+    throw Error("Failed to craete the comment");
   }
+  
+  const post = await this.findById(postId);
+  if (!post) {
+    throw Error("Failed to find the post with that postId");
+  }
+  post.comments.push(comment);
+  const savedComment = await post.save();
+  if (!savedComment) {
+    throw Error("Failed to save the comment to the post");
+  }
+  
+  const activity = await UsersActivity.findOne({user: userId});
+  if (!activity) {
+    throw Error("Failed to find the user activity");
+  }
+  activity.comments.push(comment);
+  const addedComment = await activity.save();
+  if (!addedComment) {
+    throw Error("Failed to add the comment to the user actvitiy");
+  }
+
 };
 
-postSchema.statics.removeComment = async function (userId, commentId) {
-  try {
-    const commentIndex = this.comments.findIndex(c => c.comment._id.equals(commentId));
-    if (commentIndex === -1) {
-      throw new Error("Comment not found");
-    }
-
-    // Remove the comment from the post's comments array
-    const removedComment = this.comments.splice(commentIndex, 1)[0];
-    await this.save();
-
-    // Remove the comment from the user's comments array in UsersActivity
-    await UsersActivity.findByIdAndUpdate(this.owner, { $pull: { comments: removedComment.comment._id } });
-
-    // Delete the comment document
-    await Comments.findByIdAndDelete(removedComment.comment._id);
-
-    return this;
-  } catch (error) {
-    throw new Error("Failed to remove comment: " + error.message);
+postSchema.statics.updateComment = async function (userId, postId, newContent) {
+  const post = await this.findById(postId).populate("comments");
+  if (!post) {
+    throw Error("Post not found");
   }
+
+  const comment = post.comments.find((r) => r.user.equals(userId));
+  if (!comment) {
+    throw Error("Can not find the user comment in that post")
+  }
+
+  comment.content = newContent;
+  const savedComment = await comment.save();
+  if (!savedComment) {
+    throw Error("Failed to save the updated comment");
+  }
+  return comment;
+}
+
+postSchema.statics.removeComment = async function (userId, postId) {
+  const post = await this.findById(postId).populate("comments");
+  if (!post) {
+    throw Error("Post not found");
+  }
+
+  const commentIndex = post.comments.findIndex((r) => r.user.equals(userId));
+  if (commentIndex === -1) {
+    throw Error("Comment not found");
+  }
+  
+  const removedComment = post.comments.splice(commentIndex, 1)[0];
+  const removedPostComment = await post.save();
+  if (!removedPostComment) {
+    throw Error("Failed to remove the comment from the post");
+  }
+
+  const activity = await UsersActivity.findOne({ user: userId });
+  if (!activity) {
+    throw Error("Failed to find the user activity");
+  }
+  activity.comments.pull(removedComment);
+  const updatedActivity = await activity.save();
+  if (!updatedActivity) {
+    throw Error("Failed to remove the comment from the user activities");
+  }
+
+  const comment2 = await Comments.findByIdAndDelete(removedComment._id);
+  if (!comment2) {
+    throw Error("Couldn't remove the comment from the comments table");
+  }
+  
 };
 
-postSchema.statics.addShare = async function (userId) {
-  try {
-    // Add the post to the user's shared posts array in UsersActivity
-    await UsersActivity.findByIdAndUpdate(userId, { $push: { sharePosts: this._id } });
-
-    // Increment the ShareCount in the post
-    this.ShareCount++;
-    await this.save();
-
-    return this;
-  } catch (error) {
-    throw new Error("Failed to add share: " + error.message);
+//increase the post share count
+//add the shared post to the user
+postSchema.statics.addShare = async function (userId, postId) {
+  const post = await this.findById(postId);
+  if (!post) {
+    throw Error("Post not found");
   }
+
+  post.ShareCount++;
+  const updatedPost = await post.save();
+  if (!updatedPost) {
+    throw Error("Failed to updated the number of shares in the post");
+  }
+
+  const activity = await UsersActivity.findOne({user: userId});
+  if (!activity) {
+    throw Error("Failed to find the user activity");
+  }
+  activity.sharedPosts.push(post);
+  const updatedActivity = await activity.save();
+  if (!updatedActivity) {
+    throw Error("Failed to add the post to the user sharedPosts");
+  }
+  
+
 };
+
+postSchema.statics.removeShare = async function(userId, postId) {
+  const post = await this.findById(postId);
+  if (!post) {
+    throw Error("Post not found");
+  }
+
+  const activity = await UsersActivity.findOne({ user: userId});
+  if (!activity) {
+    throw Error("Failed to find the user Activity");
+  }
+  activity.sharedPosts.pull(post);
+  const updatedActivity = await activity.save();
+  if (!updatedActivity) {
+    throw Error("Failed to remove the post from user sharedPosts");
+  }
+
+  post.ShareCount--;
+  const updatedPost = await post.save();
+  if (!updatedPost) {
+    throw Error("Failed to update the number of share in the post");
+  }
+}
 
 module.exports = mongoose.model("Posts", postSchema);
