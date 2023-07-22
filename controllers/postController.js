@@ -68,7 +68,7 @@ const removeReaction = async (req, res) => {
 }
 
 const addComment = async (req, res) => {
-    const { userId, postId, contentontent } = req.body;
+    const { userId, postId, content} = req.body;
 
     try {
         await Posts.addComment( userId, postId, content);
