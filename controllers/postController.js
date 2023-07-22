@@ -68,10 +68,10 @@ const removeReaction = async (req, res) => {
 }
 
 const addComment = async (req, res) => {
-    const { userId, postId, content } = req.body;
+    const { userId, postId, commentContent } = req.body;
 
     try {
-        await Posts.addComment( userId, postId, content);
+        await Posts.addComment( userId, postId, commentContent);
         res.status(200).json({message: "The comment has been added succesfully"});
     } catch (error) {
         res.status(400).json({error: error.message});

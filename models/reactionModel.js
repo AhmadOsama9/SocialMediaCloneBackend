@@ -19,44 +19,5 @@ const reactionSchema = new Schema({
   },
 });
 
-reactionSchema.statics.createReaction = async function (userId, reactionType) {
-  try {
-    const newReaction = await this.create({
-      user: userId,
-      reaction: reactionType,
-    });
-    return newReaction;
-  } catch (error) {
-    throw new Error("Failed to create reaction: " + error.message);
-  }
-};
-
-reactionSchema.statics.updateReaction = async function (reactionId, userId, newReactionType) {
-  try {
-    const reaction = await this.findById(reactionId);
-    if (!reaction) {
-      throw new Error("Reaction not found");
-    }
-
-    reaction.reaction = newReactionType;
-    await reaction.save();
-    return reaction;
-  } catch (error) {
-    throw new Error("Failed to update reaction: " + error.message);
-  }
-};
-
-reactionSchema.statics.deleteReaction = async function (reactionId) {
-  try {
-    const reaction = await this.findById(reactionId);
-    if (!reaction) {
-      throw new Error("Reaction not found");
-    }
-    await reaction.remove();
-    return reaction;
-  } catch (error) {
-    throw new Error("Failed to delete reaction: " + error.message);
-  }
-};
 
 module.exports = mongoose.model("Reactions", reactionSchema);
