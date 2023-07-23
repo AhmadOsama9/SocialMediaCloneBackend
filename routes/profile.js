@@ -7,6 +7,7 @@ const {
   updateBio,
   updateImage,
   getProfileInfo,
+  searchByNickname
 } = require("../controllers/profileController");
 
 router.post("/updateprofile/nickname", updateNickname);
@@ -20,6 +21,9 @@ router.post("/updateprofile/bio", updateBio);
 router.post("/updateprofile/image", updateImage);
 
 
+
 router.get("/getprofileinfo", getProfileInfo);
+
+router.get("/getprofilebynickname", searchByNickname);
 
 module.exports = router;

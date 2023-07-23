@@ -108,4 +108,13 @@ profileSchema.statics.updateImage = async function (userId, icon) {
   
 };
 
+
+profileSchema.statics.searchByNickname = async function (nickname) {
+  const userProfile = await this.findOne({ nickname: nickname });
+  if (!userProfile) {
+      throw Error("No user with that nickname");
+  }
+  return userProfile;
+}
+
 module.exports = mongoose.model("Profiles", profileSchema);

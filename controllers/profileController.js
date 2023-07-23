@@ -80,6 +80,17 @@ const getProfileInfo = async (req, res) => {
     }
 }
 
+const searchByNickname = async (req, res) => {
+    const { nickname } = req.body;
+
+    try {
+        const userProfile = await Profile.searchByNickname(nickname);
+        res.status(200).json(userProfile);
+    } catch (error) {
+        res.status(400).json({error: error.message});
+    }
+}
+
 module.exports = {
     updateNickname, 
     updateAge,
@@ -87,4 +98,5 @@ module.exports = {
     updateBio,
     updateImage,
     getProfileInfo,
+    searchByNickname,
 }
