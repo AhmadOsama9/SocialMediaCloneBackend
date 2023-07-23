@@ -100,7 +100,7 @@ userActivitySchema.statics.acceptFriendRequest = async function (userId, friendI
 
     friendActivity.pendingRequests.pull(userId);
     friendActivity.friends.push(userId);
-    const updatedFriendActivity = await updatedFriendActivity.save();
+    const updatedFriendActivity = await friendActivity.save();
     if (!updatedFriendActivity) {
         throw Error("Failed to save the updated friend activity");
     }
