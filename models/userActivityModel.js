@@ -133,7 +133,7 @@ userActivitySchema.statics.removeFriend = async function (userId, friendId) {
 }
 
 userActivitySchema.statics.getAllFriends = async function (userId) {
-    const userActivity = await this.findById(userId);
+    const userActivity = await this.findOne({ user: userId});
     if (!userActivity) {
         throw Error("user activity not found");
     }
