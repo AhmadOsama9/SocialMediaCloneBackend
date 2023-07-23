@@ -81,7 +81,7 @@ const getProfileInfo = async (req, res) => {
 }
 
 const searchByNickname = async (req, res) => {
-    const { nickname } = req.body;
+    const { nickname } = req.query;
 
     try {
         const userProfile = await Profile.searchByNickname(nickname);

@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Profile = require("./profileModel");
 
 const Schema = mongoose.Schema;
 
@@ -37,8 +38,13 @@ const userActivitySchema = new Schema({
         ref: "Reactions",
     }],
     friends: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Users",
+        userId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Users",
+        },
+        nickname: {
+            type: String,
+        },
     }],
     friendRequests: [{
         type: mongoose.Schema.Types.ObjectId,
@@ -82,7 +88,7 @@ userActivitySchema.statics.sendFriendRequest = async function (senderId, receive
 userActivitySchema.statics.acceptFriendRequest = async function (userId, friendId) {
     const userActivity = await this.findOne({ user: userId });
     const friendActivity = await this.findOne({ user: friendId });
-
+    
     if (!userActivity || !friendActivity) {
         throw Error("User or friend activity not found");
     }
@@ -91,15 +97,22 @@ userActivitySchema.statics.acceptFriendRequest = async function (userId, friendI
         throw Error("No friend request from this user");
     }
     
+    const userProfile = await Profile.findOne({ user: userId });
+    const friendProfile = await Profile.findOne({ user: friendId });
+
+    if (!userProfile || !friendProfile) {
+        throw Error("user profile or friend profile not found");
+    }
+
     userActivity.friendRequests.pull(friendId);
-    userActivity.friends.push(friendId);
+    userActivity.friends.push({ userId: friendId, nickname: friendProfile.nickname});
     const updatedUserActivity = await userActivity.save();
     if (!updatedUserActivity) {
         throw Error("Failed to save the updated user activity");
     }
 
     friendActivity.pendingRequests.pull(userId);
-    friendActivity.friends.push(userId);
+    friendActivity.friends.push({ userId: userId, nickname: userProfile.nickname });
     const updatedFriendActivity = await friendActivity.save();
     if (!updatedFriendActivity) {
         throw Error("Failed to save the updated friend activity");
@@ -114,17 +127,17 @@ userActivitySchema.statics.removeFriend = async function (userId, friendId) {
         throw Error("User or Friend actvity not found");
     }
     
-    if (!userActivity.friends.includes(friendId)) {
+    if (!userActivity.friends.includes({ userId })) {
         throw Error("That user is not in your friend list");
     }
 
-    userActivity.friends.pull(friendId);
+    userActivity.friends.pull({ userId: friendId });
     const updatedUserActivity = await userActivity.save();
     if (!updatedUserActivity) {
         throw Error("Failed to save the updated user activity");
     }
 
-    friendActivity.friends.pull(userId);
+    friendActivity.friends.pull({ userId });
     const updatedFriendActivity = await friendActivity.save();
     if (!updatedFriendActivity) {
         throw Error("Failed to save the updated friend activity");

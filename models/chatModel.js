@@ -79,4 +79,13 @@ chatSchema.statics.getChatMessages = async function (chatId) {
     return chat.messages;
 }
 
+chatSchema.statics.getChats = async function (userId) {
+    const user = await this.findOne({ user: userId});
+    if (!user) {
+        throw Error("User not found");
+    }
+
+    return chats;
+}
+
 module.exports = mongoose.model("Chats", chatSchema);
