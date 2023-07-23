@@ -141,4 +141,13 @@ userActivitySchema.statics.getAllFriends = async function (userId) {
     return userActivity.friends;
 }
 
+userActivitySchema.statics.getJoinedCommunities = async function (userId) {
+    const userActivity = await this.findOne({ user: userId});
+    if (!userActivity) {
+        throw Error("user activity not found");
+    }
+
+    return userActivity.joinedCommunities;
+}
+
 module.exports = mongoose.model("UsersActivity", userActivitySchema);

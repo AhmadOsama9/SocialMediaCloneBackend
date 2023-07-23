@@ -5,6 +5,7 @@ const {
     acceptFriendRequest,
     removeFriend,
     getAllFriends,
+    getJoinedCommunities,
 } = require("../controllers/userActivityController");
 
 const router = express.Router();
@@ -16,6 +17,8 @@ router.post("/acceptrequest", acceptFriendRequest);
 router.post("/remove", removeFriend);
 
 router.get("/getallfriends", getAllFriends);
+
+router.get("/getjoinedCommunities", getJoinedCommunities);
 
 
 
