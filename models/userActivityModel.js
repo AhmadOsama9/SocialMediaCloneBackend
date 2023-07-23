@@ -87,7 +87,7 @@ userActivitySchema.statics.acceptFriendRequest = async function (userId, friendI
         throw Error("User or friend activity not found");
     }
     
-    if(!userActivity.frinedRequests.includes(friendId)) {
+    if(!userActivity.friendRequests.includes(friendId)) {
         throw Error("No friend request from this user");
     }
     
