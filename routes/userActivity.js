@@ -15,7 +15,7 @@ router.post("/acceptrequest", acceptFriendRequest);
 
 router.post("/remove", removeFriend);
 
-router.post("/getallfriends", getAllFriends);
+router.get("/getallfriends", getAllFriends);
 
 
 
