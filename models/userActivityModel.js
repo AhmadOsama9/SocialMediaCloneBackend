@@ -132,4 +132,13 @@ userActivitySchema.statics.removeFriend = async function (userId, friendId) {
 
 }
 
+userActivitySchema.statics.getAllFriends = async function (userId) {
+    const userActivity = await this.findById(userId);
+    if (!userActivity) {
+        throw Error("user activity not found");
+    }
+
+    return userActivity.friends;
+}
+
 module.exports = mongoose.model("UsersActivity", userActivitySchema);

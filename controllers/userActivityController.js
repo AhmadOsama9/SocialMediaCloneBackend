@@ -33,8 +33,20 @@ const removeFriend = async (req, res) => {
     }
 }
 
+const getAllFriends = async (req, res) => {
+    const { userId } = req.body;
+
+    try {
+        const friends = await UsersActivity.getAllFriends(userId);
+        res.status(200).json(friends);
+    } catch (error) {
+        res.status(400).json({error: error.message});
+    }
+}
+
 module.exports = {
     sendFriendRequest,
     acceptFriendRequest,
     removeFriend,
+    getAllFriends,
 }
