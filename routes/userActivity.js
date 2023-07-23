@@ -21,5 +21,4 @@ router.get("/getallfriends", getAllFriends);
 router.get("/getjoinedCommunities", getJoinedCommunities);
 
 
-
 module.exports = router;

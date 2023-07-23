@@ -49,7 +49,7 @@ const getJoinedCommunities = async (req, res) => {
 
     try {
         const joinedCommunities = await UsersActivity.getJoinedCommunities(userId);
-        res.status(200).json(friends);
+        res.status(200).json(joinedCommunities);
     } catch (error) {
         res.status(400).json({error: error.message});
     }
