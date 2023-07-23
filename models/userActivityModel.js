@@ -106,4 +106,30 @@ userActivitySchema.statics.acceptFriendRequest = async function (userId, friendI
     }
 }
 
+userActivitySchema.statics.removeFriend = async function (userId, friendId) {
+    const userActivity = await this.findOne({ user: userId});
+    const friendActivity = await this.findOne({ user: friendId});
+
+    if (!userActivity || !friendActivity) {
+        throw Error("User or Friend actvity not found");
+    }
+    
+    if (!userActivity.friends.includes(friendId)) {
+        throw Error("No friend request from this user");
+    }
+
+    userActivity.friends.pull(friendId);
+    const updatedUserActivity = await userActivity.save();
+    if (!updatedUserActivity) {
+        throw Error("Failed to save the updated user activity");
+    }
+
+    friendActivity.friends.pull(userId);
+    const updatedFriendActivity = await friendActivity.save();
+    if (!updatedFriendActivity) {
+        throw Error("Failed to save the updated friend activity");
+    }
+
+}
+
 module.exports = mongoose.model("UsersActivity", userActivitySchema);
