@@ -74,7 +74,7 @@ chatSchema.statics.getChatMessages = async function (chatId) {
         throw Error("Chat not found");
     }
 
-    this.message.sort((a, b) => a.timestamp - b.timestamp);
+    chat.messages.sort((a, b) => a.timestamp - b.timestamp);
 
     return chat.messages;
 }

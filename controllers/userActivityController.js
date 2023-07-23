@@ -27,7 +27,7 @@ const removeFriend = async (req, res) => {
 
     try {
         await UsersActivity.removeFriend(userId, friendId);
-        res.status(200).json({message: "That user has been remove from the friends"});
+        res.status(200).json({message: "That user has been removed from the friends"});
     } catch (error) {
         res.status(400).json({error: error.message});
     }

@@ -115,7 +115,7 @@ userActivitySchema.statics.removeFriend = async function (userId, friendId) {
     }
     
     if (!userActivity.friends.includes(friendId)) {
-        throw Error("No friend request from this user");
+        throw Error("That user is not in your friend list");
     }
 
     userActivity.friends.pull(friendId);
