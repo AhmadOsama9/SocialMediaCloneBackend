@@ -34,7 +34,7 @@ const removeFriend = async (req, res) => {
 }
 
 const getAllFriends = async (req, res) => {
-    const { userId } = query.userId;
+    const { userId } = req.query
 
     try {
         const friends = await UsersActivity.getAllFriends(userId);
