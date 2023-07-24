@@ -45,7 +45,7 @@ const getAllFriends = async (req, res) => {
 }
 
 const getJoinedCommunities = async (req, res) => {
-    const { userId } = req.body;
+    const { userId } = req.query;
 
     try {
         const joinedCommunities = await UsersActivity.getJoinedCommunities(userId);
