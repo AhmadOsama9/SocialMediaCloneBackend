@@ -66,6 +66,17 @@ const getFriendRelationshipStatus = async (req, res) => {
     }
 }
 
+const declineFriendRequest = async (req, res) => {
+    const { userId, otherUserId } = req.body;
+
+    try {
+        await UsersActivity.declineFriendRequest(userId, otherUserId);
+        res.status(200).json({message: "The request has been remove Successfully"});
+    } catch (error) {
+        res.status(400).json({error: error.message});
+    }
+}
+
 module.exports = {
     sendFriendRequest,
     acceptFriendRequest,
@@ -73,4 +84,5 @@ module.exports = {
     getAllFriends,
     getJoinedCommunities,
     getFriendRelationshipStatus,
+    declineFriendRequest,
 }

@@ -119,6 +119,30 @@ userActivitySchema.statics.acceptFriendRequest = async function (userId, friendI
     }
 }
 
+userActivitySchema.statics.declineFriendRequest = async function (userId, otherUserId) {
+    const userActivity = await this.findOne({ user: userId});
+    if (!userActivity) {
+        throw Error("User is not found");
+    }
+
+    const otherUserActivity = await this.findOne({user: otherUserId});
+    if (!otherUserActivity) {
+        throw Error("OtherUser is not found");
+    }
+
+    if (userActivity.friendRequests.includes(otherId)) {
+        userActivity.friendRequests.pull(otherUserId);
+        const updatedUserActivity = await userActivity.save();
+
+        if (!updatedUserActivity) {
+            throw Error("Failed to save the updated user Activity");
+        }
+    }
+    else {
+        throw Error("The other user is not in your friend requests");
+    }
+}
+
 userActivitySchema.statics.removeFriend = async function (userId, friendId) {
     const userActivity = await this.findOne({ user: userId});
     const friendActivity = await this.findOne({ user: friendId});
