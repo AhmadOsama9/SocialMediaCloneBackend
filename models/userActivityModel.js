@@ -163,14 +163,16 @@ userActivitySchema.statics.getJoinedCommunities = async function (userId) {
     return userActivity.joinedCommunities;
 }
 userActivitySchema.statics.getFriendRelationshipStatus = async function (userId, otherUserId) {
+    console.log("the userId is: ", userId);
+    console.log("the otheruserId is: ", otherUserId);
     const userActivity = await this.findOne({ user: userId });
     if (!userActivity) {
-      throw Error("User activity not found", userId);
+      throw Error("User activity not found");
     }
   
     const friendActivity = await this.findOne({ user: otherUserId });
     if (!friendActivity) {
-      throw Error("Friend activity not found", otherUserId);
+      throw Error("Friend activity not found");
     }
   
     if (userActivity.friends.some((friend) => friend.userId.equals(otherUserId))) {
