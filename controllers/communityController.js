@@ -80,7 +80,7 @@ const makeMemberAdmin = async (req, res) => {
 }
 
 const searchCommunityByName = async (req, res) => {
-    const { communityName } = req.body;
+    const { communityName } = req.query;
 
     try {
         const community = await Community.searchCommunityByName(communityName);
