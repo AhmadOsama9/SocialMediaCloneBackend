@@ -80,10 +80,10 @@ const makeMemberAdmin = async (req, res) => {
 }
 
 const searchCommunityByName = async (req, res) => {
-    const { communityName } = req.query;
+    const { name } = req.query;
 
     try {
-        const community = await Community.searchCommunityByName(communityName);
+        const community = await Community.searchCommunityByName(name);
         res.status(200).json(community);
     } catch (error) {
         res.status(400).json({error: error.message});
