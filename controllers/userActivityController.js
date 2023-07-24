@@ -55,10 +55,22 @@ const getJoinedCommunities = async (req, res) => {
     }
 }
 
+const getFriendRelationshipStatus = async (req, res) => {
+    const { userId, otherUserId } = req.query;
+
+    try {
+        const relation = await UsersActivity.getFriendRelationshipStatus(userId, otherUserId);
+        res.status(200).json({relation: relation});
+    } catch (error) {
+        res.status(400).json({error: error.message});
+    }
+}
+
 module.exports = {
     sendFriendRequest,
     acceptFriendRequest,
     removeFriend,
     getAllFriends,
     getJoinedCommunities,
+    getFriendRelationshipStatus,
 }

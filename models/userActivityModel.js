@@ -162,5 +162,33 @@ userActivitySchema.statics.getJoinedCommunities = async function (userId) {
 
     return userActivity.joinedCommunities;
 }
+userActivitySchema.statics.getFriendRelationshipStatus = async function (userId, otherUserId) {
+    const userActivity = await this.findOne({ user: userId });
+    if (!userActivity) {
+      throw Error("User activity not found");
+    }
+  
+    const friendActivity = await this.findOne({ user: otherUserId });
+    if (!friendActivity) {
+      throw Error("Friend activity not found");
+    }
+  
+    if (userActivity.friends.some((friend) => friend.userId.equals(otherUserId))) {
+      return "Friends";
+    }
+  
+    if (userActivity.pendingRequests.includes(otherUserId)) {
+      return "Pending";
+    }
+  
+    if (friendActivity.pendingRequests.includes(userId)) {
+      return "Received";
+    }
+  
+    return "None";
+  };
+  
+  module.exports = mongoose.model("UsersActivity", userActivitySchema);
+  
 
 module.exports = mongoose.model("UsersActivity", userActivitySchema);
