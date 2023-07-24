@@ -86,7 +86,7 @@ const searchCommunityByName = async (req, res) => {
         const community = await Community.searchCommunityByName(communityName);
         res.status(200).json(community);
     } catch (error) {
-        res.status(400).json({eror: error.message});
+        res.status(400).json({error: error.message});
     }
 }
 
