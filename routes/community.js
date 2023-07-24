@@ -31,7 +31,7 @@ router.post("/accept", acceptMemberRequest);
 
 router.post("/makeadmin", makeMemberAdmin);  
 
-router.post("/search", searchCommunityByName);
+router.get("/search", searchCommunityByName);
 
 router.get("/getall", getAllCommunities);
 
