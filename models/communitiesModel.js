@@ -188,6 +188,7 @@ communitySchema.statics.makeMemberAdmin = async function (userId, communityId) {
 
 communitySchema.statics.searchCommunityByName = async function (communityName) {
     const community = await this.findOne({ name: communityName });
+    console.log("community name is : ", communityName);
     if (!community) {
         throw Error("No Community with that name");
     }
