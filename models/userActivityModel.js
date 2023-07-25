@@ -130,7 +130,7 @@ userActivitySchema.statics.declineFriendRequest = async function (userId, otherU
         throw Error("OtherUser is not found");
     }
 
-    if (userActivity.friendRequests.includes(otherId)) {
+    if (userActivity.friendRequests.includes(otherUserId)) {
         userActivity.friendRequests.pull(otherUserId);
         const updatedUserActivity = await userActivity.save();
 
