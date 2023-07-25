@@ -180,10 +180,10 @@ userActivitySchema.statics.removeFriend = async function (userId, friendId) {
 userActivitySchema.statics.getPendingRequests = async function(userId) {
     const userActivity = await this.findOne({ user: userId }).populate({
         path: "pendingRequests",
-        select: "nickname",
+        select: "",
         model: "Profiles"
     });
-    console.log(userId);
+
     if (!userActivity) {
         throw Error("User activity not found");
     }

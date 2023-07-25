@@ -46,7 +46,6 @@ const removeFriend = async (req, res) => {
 
 const getPendingRequests = async (req, res) => {
     const { userId } = req.query;
-    console.log(userId);
 
     try {
         const pendingRequests = await UsersActivity.getPendingRequests(userId);
