@@ -60,8 +60,12 @@ userActivitySchema.statics.sendFriendRequest = async function (senderId, receive
     const senderActivity = await this.findOne({ user: senderId });
     const receiverActivity = await this.findOne({ user: receiverId});
 
-    if (!senderActivity || !receiverActivity) {
-        throw Error("Sender or Receiver activity is not found");
+    if (!senderActivity) {
+        throw Error("Sender Activity not found");
+    }
+
+    if (!receiverActivity) {
+        throw Error("Receiver Activity not found");
     }
 
     if (senderActivity.friends.includes(receiverId)) {
