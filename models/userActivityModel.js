@@ -76,6 +76,10 @@ userActivitySchema.statics.sendFriendRequest = async function (senderId, receive
         throw Error("Waiting for the receiver to accept")
     }
 
+    if (receiverActivity.pendingRequests.includes(senderId)) {
+        throw Error("Accept or Decline the request that that user sent you");
+    }
+
     senderActivity.pendingRequests.push(receiverId);
     const updatedSenderActivity = senderActivity.save();
     if (!updatedSenderActivity) {
