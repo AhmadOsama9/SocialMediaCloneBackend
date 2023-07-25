@@ -178,7 +178,7 @@ userActivitySchema.statics.removeFriend = async function (userId, friendId) {
 }
 
 userActivitySchema.statics.getPendingRequests = async function(userId) {
-    const userActivity = await this.findOne({ user: userId }).pupulate({
+    const userActivity = await this.findOne({ user: userId }).populate({
         path: "pendingRequests",
         select: "nickname",
         model: "Profiles"
