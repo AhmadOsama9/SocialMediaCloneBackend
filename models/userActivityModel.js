@@ -183,7 +183,7 @@ userActivitySchema.statics.getPendingRequests = async function(userId) {
         select: "",
         model: "Profiles"
     });
-
+    console.log("userId: ", userId);
     if (!userActivity) {
         throw Error("User activity not found");
     }
