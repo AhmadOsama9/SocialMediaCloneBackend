@@ -8,6 +8,8 @@ const {
     getJoinedCommunities,
     getFriendRelationshipStatus,
     declineFriendRequest,
+    cancelRequest,
+    getPendingRequests,
 } = require("../controllers/userActivityController");
 
 const router = express.Router();
@@ -19,6 +21,10 @@ router.post("/acceptrequest", acceptFriendRequest);
 router.post("/remove", removeFriend);
 
 router.post("/decline", declineFriendRequest);
+
+router.post("/cancelrequest", cancelRequest);
+
+router.get("/pendingrequests", getPendingRequests);
 
 router.get("/getallfriends", getAllFriends);
 

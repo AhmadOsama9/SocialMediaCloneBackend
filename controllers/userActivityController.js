@@ -1,10 +1,10 @@
 const UsersActivity = require("../models/userActivityModel");
 
 const sendFriendRequest = async (req, res) => {
-    const { senderId, receiverId } = req.body;
+    const { userId, otherUserId } = req.body;
 
     try {
-        await UsersActivity.sendFriendRequest(senderId, receiverId);
+        await UsersActivity.sendFriendRequest(userId, otherUserId);
         res.status(200).json({message: "The request has been sent Successfully"});
     } catch (error) {
         res.status(400).json({error: error.message});
@@ -12,22 +12,44 @@ const sendFriendRequest = async (req, res) => {
 }
 
 const acceptFriendRequest = async (req, res) => {
-    const { userId, friendId } = req.body;
+    const { userId, otherUserId } = req.body;
 
     try {
-        await UsersActivity.acceptFriendRequest(userId, friendId);
+        await UsersActivity.acceptFriendRequest(userId, otherUserId);
         res.status(200).json({message: "The request has been accepted Successfully"});
     } catch (error) {
         res.status(400).json({error: error.message});
     }
 }
 
-const removeFriend = async (req, res) => {
-    const { userId, friendId } = req.body;
+const cancelRequest = async (req, res) => {
+    const { userId, otherUserId } = req.body;
 
     try {
-        await UsersActivity.removeFriend(userId, friendId);
+        await UsersActivity.cancelRequest(userId, otherUserId);
+        res.status(200).json({message: "The request has been cancelled Successfully"});
+    } catch (error) {
+        res.status(400).json({error: error.message});
+    }
+}
+
+const removeFriend = async (req, res) => {
+    const { userId, otherUserId } = req.body;
+
+    try {
+        await UsersActivity.removeFriend(userId, otherUserId);
         res.status(200).json({message: "That user has been removed from the friends"});
+    } catch (error) {
+        res.status(400).json({error: error.message});
+    }
+}
+
+const getPendingRequests = async (req, res) => {
+    const [userId] = req.query;
+
+    try {
+        const pendingRequests = await UsersActivity.getPendingRequests(userId);
+        res.status(200).json(pendingRequests);
     } catch (error) {
         res.status(400).json({error: error.message});
     }
@@ -85,4 +107,7 @@ module.exports = {
     getJoinedCommunities,
     getFriendRelationshipStatus,
     declineFriendRequest,
+    cancelRequest,
+    getPendingRequests,
+
 }

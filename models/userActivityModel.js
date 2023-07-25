@@ -177,14 +177,57 @@ userActivitySchema.statics.removeFriend = async function (userId, friendId) {
 
 }
 
+userActivitySchema.statics.getPendingRequests = async function(userId) {
+    const userActivity = await this.findOne({ user: userId }).pupulate({
+        path: "pendingRequests",
+        select: "nickname",
+        model: "Profiles"
+    });
+    if (!userActivity) {
+        throw Error("User activity not found");
+    }
+    return userActivity.pendingRequests;
+}
+
+userActivitySchema.statics.cancelRequest = async function (userId, otherUserId) {
+    const userActivity = await this.findOne({ user: userId });
+    if (!userActivity) {
+        throw Error("User activity not found");
+    }
+
+    const otherUserActivity = await this.findOne({ user: otherUserId });
+    if (!otherUserActivity) {
+        throw Error("OtherUser activity not found");
+    }
+
+    if (!userActivity.pendingRequests.includes(otherUserId)) {
+        throw Error("That user is not in your pending requests");
+    }
+
+    userActivity.pendingRequests.pull(otherUserId);
+    otherUserActivity.friendRequests.pull(userId);
+
+    const updatedUserActivity = await userActivity.save();
+    if (!updatedUserActivity) {
+        throw Error("Failed to update the userActivity");
+    }
+
+    const updatedOtherUserActivity = await otherUserActivity.save();
+    if (!updatedOtherUserActivity) {
+        throw Error("Failed to update the otheruseractivity");
+    }
+}
+
 userActivitySchema.statics.getAllFriends = async function (userId) {
-    const userActivity = await this.findOne({ user: userId});
+    const userActivity = await this.findOne({ user: userId });
     if (!userActivity) {
         throw Error("user activity not found");
     }
 
     return userActivity.friends;
 }
+
+
 
 userActivitySchema.statics.getJoinedCommunities = async function (userId) {
     const userActivity = await this.findOne({ user: userId});
