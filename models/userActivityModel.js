@@ -51,7 +51,7 @@ const userActivitySchema = new Schema({
         ref: "Users",
     }],
     pendingRequests: [{
-        type: mongoose.SchemaTypes.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: "Users",
     }],
 });
@@ -238,8 +238,6 @@ userActivitySchema.statics.getJoinedCommunities = async function (userId) {
     return userActivity.joinedCommunities;
 }
 userActivitySchema.statics.getFriendRelationshipStatus = async function (userId, otherUserId) {
-    console.log("the userId is: ", userId);
-    console.log("the otheruserId is: ", otherUserId);
     const userActivity = await this.findOne({ user: userId });
     if (!userActivity) {
       throw Error("User activity not found");
@@ -249,6 +247,9 @@ userActivitySchema.statics.getFriendRelationshipStatus = async function (userId,
     if (!friendActivity) {
       throw Error("Friend activity not found");
     }
+
+    console.log("this is the pending requests", userActivity.pendingRequests);
+    console.log("this is the friend requests", userActivity.friendRequests);
   
     if (userActivity.friends.some((friend) => friend.userId.equals(otherUserId))) {
       return "Friends";
@@ -258,7 +259,7 @@ userActivitySchema.statics.getFriendRelationshipStatus = async function (userId,
       return "Pending";
     }
   
-    if (userActivity.frinedRequests.includes(otherUserId)) {
+    if (userActivity.friendRequests.includes(otherUserId)) {
       return "Received";
     }
   
