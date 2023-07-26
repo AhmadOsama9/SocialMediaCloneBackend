@@ -183,7 +183,6 @@ userActivitySchema.statics.getPendingRequests = async function(userId) {
         select: "",
         model: "Profiles"
     });
-    console.log("userId: ", userId);
     if (!userActivity) {
         throw Error("User activity not found");
     }
@@ -259,7 +258,7 @@ userActivitySchema.statics.getFriendRelationshipStatus = async function (userId,
       return "Pending";
     }
   
-    if (friendActivity.pendingRequests.includes(userId)) {
+    if (userActivity.frinedRequests.includes(otherUserId)) {
       return "Received";
     }
   
