@@ -23,8 +23,32 @@ const getChatMessages = async (req, res) => {
     }
 }
 
+const getChatMessagesByChatId = async (req, res) => {
+    const { chatId } = req.body;
+
+    try {
+        const messages = await Chat.getChatMessages(chatId);
+        res.status(200).json(messages);
+    } catch (error) {
+        res.status(400).json({error: error.message});
+    }
+}
+
+const getChats = async (req, res) => {
+    const { userId } = req.body;
+
+    try {
+        const chats = await Chat.getChats(userId);
+        res.status(200).json(chats);
+    } catch (error) {
+        res.status(400).json({error: error.message});
+    }
+}
+
 
 module.exports = {
     sendMessage,
     getChatMessages,
+    getChatMessagesByChatId,
+    getChats,
 }

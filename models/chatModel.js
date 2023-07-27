@@ -82,13 +82,26 @@ chatSchema.statics.getChatMessages = async function (userId, otherUserId) {
     return chat.messages;
 }
 
+chatSchema.statics.getChatMessagesByChatId = async function (chatId) {
+    const chat = await this.findById(chatId);
+    if (!chat) {
+        throw Error("Chat not found");
+    }
+    
+    chat.messages.sort((a, b) => a.timestamp - b.timestamp);
+
+    return chat.messages;
+}
+
 chatSchema.statics.getChats = async function (userId) {
-    const user = await this.findOne({ user: userId});
+    const user = await this.findOne({ participants: userId});
     if (!user) {
         throw Error("User not found");
     }
 
-    return chats;
+    const chatIds = chats.map((chat) => chat._id);
+
+    return chatIds;
 }
 
 module.exports = mongoose.model("Chats", chatSchema);
