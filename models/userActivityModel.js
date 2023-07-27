@@ -105,6 +105,9 @@ userActivitySchema.statics.acceptFriendRequest = async function (userId, friendI
         throw Error("No friend request from this user");
     }
     
+    if(userActivity.includes(friendId)) {
+        throw Error("You are already friends");
+    }
     const userProfile = await Profile.findOne({ user: userId });
     const friendProfile = await Profile.findOne({ user: friendId });
 
@@ -176,19 +179,19 @@ userActivitySchema.statics.removeFriend = async function (userId, friendId) {
     }
 
 }
-
-userActivitySchema.statics.getPendingRequests = async function(userId) {
-    const userActivity = await this.findOne({ user: userId }).populate({
-        path: "pendingRequests",
-        select: "",
-        model: "Profiles"
-    });
+userActivitySchema.statics.getPendingRequests = async function (userId) {
+    const userActivity = await this.findOne({ user: userId });
+  
     if (!userActivity) {
-        throw Error("User activity not found");
+      throw Error("User activity not found");
     }
-    return userActivity.pendingRequests;
-}
-
+  
+    const pendingRequestsIds = userActivity.pendingRequests;
+  
+    const pendingProfiles = await Profile.find({ user: { $in: pendingRequestsIds } });
+  
+    return pendingProfiles;
+  };
 userActivitySchema.statics.cancelRequest = async function (userId, otherUserId) {
     const userActivity = await this.findOne({ user: userId });
     if (!userActivity) {
