@@ -44,12 +44,12 @@ const removeFriend = async (req, res) => {
     }
 }
 
-const getPendingRequests = async (req, res) => {
+const getReceivedRequests = async (req, res) => {
     const { userId } = req.query;
 
     try {
-        const pendingRequests = await UsersActivity.getPendingRequests(userId);
-        res.status(200).json(pendingRequests);
+        const receivedRequests = await UsersActivity.getReceivedRequests(userId);
+        res.status(200).json(receivedRequests);
     } catch (error) {
         res.status(400).json({error: error.message});
     }
@@ -108,6 +108,6 @@ module.exports = {
     getFriendRelationshipStatus,
     declineFriendRequest,
     cancelRequest,
-    getPendingRequests,
+    getReceivedRequests,
 
 }
