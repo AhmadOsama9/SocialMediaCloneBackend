@@ -148,6 +148,13 @@ userActivitySchema.statics.declineFriendRequest = async function (userId, otherU
         if (!updatedUserActivity) {
             throw Error("Failed to save the updated user Activity");
         }
+
+        otherUserActivity.pendingRequests.pull(userId);
+        const updatedOtherUserActivity = await otherUserActivity.save();
+
+        if (updatedOtherUserActivity) {
+            throw Error("Failed to save the updated other user Activity");
+        }
     }
     else {
         throw Error("The other user is not in your friend requests");
