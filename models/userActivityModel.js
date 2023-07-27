@@ -187,7 +187,7 @@ userActivitySchema.statics.removeFriend = async function (userId, friendId) {
 
 }
 
-userActivitySchema.statics.getRecievedRequests = async function (userId) {
+userActivitySchema.statics.getReceivedRequests = async function (userId) {
     const userActivity = await this.findOne({ user: userId });
   
     if (!userActivity) {
