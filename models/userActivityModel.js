@@ -105,7 +105,7 @@ userActivitySchema.statics.acceptFriendRequest = async function (userId, friendI
         throw Error("No friend request from this user");
     }
     
-    if(userActivity.includes(friendId)) {
+    if(userActivity.friends.includes(friendId)) {
         throw Error("You are already friends");
     }
     const userProfile = await Profile.findOne({ user: userId });
@@ -152,7 +152,7 @@ userActivitySchema.statics.declineFriendRequest = async function (userId, otherU
         otherUserActivity.pendingRequests.pull(userId);
         const updatedOtherUserActivity = await otherUserActivity.save();
 
-        if (updatedOtherUserActivity) {
+        if (!updatedOtherUserActivity) {
             throw Error("Failed to save the updated other user Activity");
         }
     }
