@@ -186,23 +186,24 @@ userActivitySchema.statics.removeFriend = async function (userId, friendId) {
     }
 
 }
-userActivitySchema.statics.getPendingRequests = async function (userId) {
+
+userActivitySchema.statics.getRecievedRequests = async function (userId) {
     const userActivity = await this.findOne({ user: userId });
   
     if (!userActivity) {
       throw Error("User activity not found");
     }
   
-    const pendingRequestsIds = userActivity.pendingRequests;
+    const frinedRequestsIds = userActivity.friendRequests;
   
-    const pendingProfiles = await Promise.all(
-      pendingRequestsIds.map(async (profileId) => {
+    const frinedProfiles = await Promise.all(
+      frinedRequestsIds.map(async (profileId) => {
         const profile = await Profile.findOne({ user: profileId });
         return profile;
       })
     );
   
-    return pendingProfiles;
+    return frinedProfiles;
 };
 
 userActivitySchema.statics.cancelRequest = async function (userId, otherUserId) {
