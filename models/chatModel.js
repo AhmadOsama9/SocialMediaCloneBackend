@@ -68,8 +68,11 @@ chatSchema.statics.sendMessage = async function (senderId, receiverId, content) 
     
 }
 
-chatSchema.statics.getChatMessages = async function (chatId) {
-    const chat = await this.findById(chatId);
+chatSchema.statics.getChatMessages = async function (userId, otherUserId) {
+    const chat = await this.findOne({
+        participants: {$all: [userId, otherUserId] },
+    });
+    
     if (!chat) {
         throw Error("Chat not found");
     }
