@@ -110,7 +110,7 @@ chatSchema.statics.getChats = async function (userId) {
         if (!otherUserProfile) {
             throw new Error("Can not find other participant profile");
         }
-        results.push({ chatId: chat._id, nickname: otherUserProfile.nickname });
+        results.push({ chatId: chat._id, otherUserNickname: otherUserProfile.nickname });
     }
 
     return results;
