@@ -5,7 +5,7 @@ const sendMessage = async (req, res) => {
     const { userId, otherUserId, content } = req.body;
 
     try {
-        await Chat.sendMessage(userId, otherUserId, message);
+        await Chat.sendMessage(userId, otherUserId, content);
         res.status(200).json({message: "The message has been sent Successfully"});
     } catch (error) {
         res.status(400).json({error: error.message});
