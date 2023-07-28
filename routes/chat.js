@@ -2,6 +2,7 @@ const express = require("express");
 
 const {
     sendMessage,
+    sendMessageByChatId,
     getChatMessages,
     getChatMessagesByChatId,
     getChats,
@@ -10,6 +11,8 @@ const {
 const router = express.Router();
 
 router.post("/send", sendMessage);
+
+router.post("/sendbychatid", sendMessageByChatId);
 
 router.post("/getmessages", getChatMessages);
 

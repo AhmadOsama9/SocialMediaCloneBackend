@@ -5,8 +5,19 @@ const sendMessage = async (req, res) => {
     const { userId, otherUserId, message } = req.body;
 
     try {
-        const chat = await Chat.sendMessage(userId, otherUserId, message);
+        await Chat.sendMessage(userId, otherUserId, message);
         res.status(200).json({message: "The message has been sent Successfully"});
+    } catch (error) {
+        res.status(400).json({error: error.message});
+    }
+}
+
+const sendMessageByChatId = async (req, res) => {
+    const { chatId, userId, content} = req.body;
+
+    try {
+        await Chat.sendMessageByChatId(chatId, userId, content);
+        res.status(200).json({message: "The message has been sent Succesfully"});
     } catch (error) {
         res.status(400).json({error: error.message});
     }
@@ -48,6 +59,7 @@ const getChats = async (req, res) => {
 
 module.exports = {
     sendMessage,
+    sendMessageByChatId,
     getChatMessages,
     getChatMessagesByChatId,
     getChats,

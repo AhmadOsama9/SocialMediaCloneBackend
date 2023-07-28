@@ -69,6 +69,24 @@ chatSchema.statics.sendMessage = async function (senderId, receiverId, content) 
     
 }
 
+chatSchema.statics.sendMessageByChatId = async function (chatId, userId, content) {
+    const chat = await this.findById(chatId);
+    if (!chat) {
+        throw Error("Cannot find the chat");
+    }
+
+    chat.messages.push({
+        sender: userId,
+        content: content,
+    });
+
+    const updatedChat = chat.save();
+    if (!updatedChat) {
+        throw Error("Failed to save the updated chat");
+    }
+    return chat;
+}
+
 chatSchema.statics.getChatMessages = async function (userId, otherUserId) {
     const chat = await this.findOne({
         participants: {$all: [userId, otherUserId] },
@@ -93,6 +111,7 @@ chatSchema.statics.getChatMessagesByChatId = async function (chatId) {
 
     return chat.messages;
 }
+
 chatSchema.statics.getChats = async function (userId) {
     const chats = await this.find({ participants: userId });
     if (!chats || chats.length === 0) {
