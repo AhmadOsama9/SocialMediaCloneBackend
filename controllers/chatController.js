@@ -2,7 +2,7 @@ const Chat = require("../models/chatModel");
 
 
 const sendMessage = async (req, res) => {
-    const { userId, otherUserId, message } = req.body;
+    const { userId, otherUserId, content } = req.body;
 
     try {
         await Chat.sendMessage(userId, otherUserId, message);
