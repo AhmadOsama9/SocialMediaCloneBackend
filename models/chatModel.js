@@ -1,5 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const Profile = require("./profileModel");
 
 const Schema = mongoose.Schema;
 
@@ -92,16 +93,28 @@ chatSchema.statics.getChatMessagesByChatId = async function (chatId) {
 
     return chat.messages;
 }
-
 chatSchema.statics.getChats = async function (userId) {
-    const chats = await this.findOne({ participants: userId});
-    if (!chats) {
-        throw Error("User not found");
+    const chats = await this.find({ participants: userId });
+    if (!chats || chats.length === 0) {
+        throw new Error("User not found in any chat");
     }
 
-    const chatIds = chats.map((chat) => chat._id);
+    const results = [];
 
-    return chatIds;
+    for (const chat of chats) {
+        const otherParticipantId = chat.participants.find(
+            (participant) => participant !== userId
+        );
+
+        const otherUserProfile = await Profile.findOne({ user: otherParticipantId });
+        if (!otherUserProfile) {
+            throw new Error("Can not find other participant profile");
+        }
+        results.push({ chatId: chat._id, nickname: otherUserProfile.nickname });
+    }
+
+    return results;
 }
+
 
 module.exports = mongoose.model("Chats", chatSchema);
