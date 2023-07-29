@@ -104,7 +104,7 @@ chatSchema.statics.getChatMessages = async function (userId, otherUserId) {
 chatSchema.statics.getChatMessagesByChatId = async function (chatId) {
     const chat = await this.findById(chatId);
     if (!chat) {
-        throw Error("Chat not found", chatId);
+        throw Error("Chat not found");
     }
     
     chat.messages.sort((a, b) => a.timestamp - b.timestamp);
