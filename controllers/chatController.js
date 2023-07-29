@@ -37,8 +37,6 @@ const getChatMessages = async (req, res) => {
 const getChatMessagesByChatId = async (req, res) => {
     const { chatId } = req.query;
 
-    console.log("The chatId is: ", chatId);
-
     try {
         const messages = await Chat.getChatMessages(chatId);
         res.status(200).json(messages);
