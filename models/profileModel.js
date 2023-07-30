@@ -16,10 +16,6 @@ const profileSchema = new Schema({
     enum: ["male", "female"],
   },
   bio: String,
-  image: {
-    data: Buffer,
-    contentType: String,
-  },
 });
 
 profileSchema.statics.updateNickname = async function (userId, nickname) {

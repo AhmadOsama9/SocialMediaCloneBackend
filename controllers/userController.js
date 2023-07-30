@@ -31,9 +31,8 @@ const signupUser = async (req, res) => {
         
         const profile = await Profile.create({
             user: user._id,
-            nickname: "Enter your nickname",
-            age: 0,
-            bio: "Enter your bio"
+            nickname: "",
+            bio: ""
         });
         if(!profile) {
             throw Error("Failed to create a profile");
