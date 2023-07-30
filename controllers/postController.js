@@ -135,6 +135,7 @@ const removeShare = async (req, res) => {
 
 module.exports = {
     addPost,
+    getPosts,
     updatePost,
     deletePost,
     addReaction,
