@@ -82,6 +82,16 @@ postSchema.statics.addPost = async function (content, owner, community, imageDat
     return createdPost;
 };
 
+postSchema.statics.getPosts = async function (userId) {
+  const posts = this.find({ owner: userId });
+  if (!posts) {
+    throw Error("No posts array for that user");
+  }
+
+  return posts;
+
+}
+
 postSchema.statics.updatePost = async function (postId, content, community, imageData, contentType) {
   const updatedPost = {};
 

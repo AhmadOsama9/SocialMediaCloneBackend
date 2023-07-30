@@ -12,6 +12,17 @@ const addPost = async (req, res) => {
     }
 }
 
+const getPosts = async (req, res) => {
+    const {userId} = req.query;
+
+    try {
+        const posts = await Posts.getPosts(userId);
+        res.status(200).json(posts);
+    } catch (error) {
+        res.status(400).json({error: error.message});
+    }
+}
+
 const updatePost = async (req, res) => {
     const { postId, content, community } = req.body; 
 
