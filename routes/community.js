@@ -10,6 +10,9 @@ const {
     makeMemberAdmin,
     searchCommunityByName,
     getAllCommunities,
+    getRelation,
+    declineMemberRequest,
+    cancelRequest,
  } 
  = require("../controllers/communityController");
 
@@ -29,10 +32,17 @@ router.post("/addtorequests", addToRequests);
 
 router.post("/accept", acceptMemberRequest);
 
-router.post("/makeadmin", makeMemberAdmin);  
+router.post("/makeadmin", makeMemberAdmin); 
+
+router.post("/decline", declineMemberRequest);
+
+router.post("cancelRequest", cancelRequest);
+
 
 router.get("/search", searchCommunityByName);
 
 router.get("/getall", getAllCommunities);
+
+router.get("/relation", getRelation);
 
 module.exports = router;

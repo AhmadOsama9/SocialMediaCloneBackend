@@ -163,8 +163,26 @@ communitySchema.statics.acceptMemberRequest = async function (userId, communityI
     }
 
     community.membershipRequests.splice(index, 1);
-    await this.addMember(userId, communityId);
+    const updatedCommunity = await this.addMember(userId, communityId);
+    if (!updatedCommunity) {
+        throw Error("Failed to save the updated community");
+    }
     
+}
+
+communitySchema.statics.declineMemberRequest = async function (userId, communityId) {
+    const community = await this.findById(communityId);
+    if (!community) {
+        throw Error("Community not found");
+    }
+    if (!community.membershipRequests.includes(userId)) {
+        throw Error("that user didn't make a membership request");
+    }
+    community.membershipRequests.pull(userId);
+    const updatedCommunity = await community.save();
+    if (!updatedCommunity) {
+        throw Error("Failed to save the updated community");
+    }
 }
 
 communitySchema.statics.makeMemberAdmin = async function (userId, communityId) {
@@ -200,6 +218,38 @@ communitySchema.statics.getAllCommunities = async function () {
         throw Error("Currently No Communities");
     }
     return communities;
+}
+
+communitySchema.statics.getRelation = async function(userId, communityId) {
+    const community = await this.findById(communityId);
+    if (!community) {
+        throw Error("Community not found");
+    }
+    if (community.admins.includes(userId)) {
+        return "admin"
+    }
+    if (community.members.includes(userId)) {
+        return "member";
+    }
+    if (community.membershipRequests.includes(userId)) {
+        return "pending"
+    }
+    return "None"  
+}
+
+communitySchema.statics.cancelRequest = async function (userId, communityId) {
+    const community = await this.findById(communityId);
+    if (!community) {
+        throw Error("Community not found");
+    }
+    if (!community.membershipRequests.includes(userId)) {
+        throw Error("That user didn't make a membership request");
+    }
+    community.membershipRequests.pull(userId);
+    const updatedCommunity = await community.save();
+    if (!updatedCommunity) {
+        throw Error("Failed to save the updated community");
+    }
 }
 
 

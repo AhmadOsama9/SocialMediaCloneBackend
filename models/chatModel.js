@@ -113,7 +113,6 @@ chatSchema.statics.getChatMessagesByChatId = async function (chatId) {
 }
 
 chatSchema.statics.getChats = async function (userId) {
-    console.log(userId);
     const chats = await this.find({ participants: userId });
     if (!chats) {
         throw new Error("User not found in any chat");

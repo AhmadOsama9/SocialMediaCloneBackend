@@ -99,6 +99,39 @@ const getAllCommunities = async (req, res) => {
     }
 }
 
+const declineMemberRequest = async (req, res) => {
+    const { userId, communityId } = req.body;
+
+    try {
+        await Community.declineMemberRequest(userId, memberId);
+        res.status(200).json({message: "The request has been declined Successsfully"});
+    } catch (error) {
+        res.status(400).json{{error: error.message}};
+    }
+}
+const cancelRequest = async (req, res) => {
+    const { userId, communityId } = req.body;
+
+    try {
+        await Community.cancelRequest(userId, memberId);
+        res.status(200).json({message: "The request has been cancelled Successsfully"});
+    } catch (error) {
+        res.status(400).json{{error: error.message}};
+    }
+}
+const getRelation = async (req, res) => {
+    const { userId, communityId } = req.body;
+
+    try {
+        const relation = await Community.getRelation(userId, memberId);
+        res.status(200).json({relation: relation});
+    } catch (error) {
+        res.status(400).json{{error: error.message}};
+    }
+}
+
+
+
 module.exports = {
     createCommunity,
     removeCommunity,
@@ -109,5 +142,7 @@ module.exports = {
     makeMemberAdmin,
     searchCommunityByName,
     getAllCommunities,
-
+    declineMemberRequest,
+    cancelRequest,
+    getRelation,
 }
