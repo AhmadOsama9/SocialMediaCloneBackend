@@ -3,7 +3,6 @@ const express = require("express");
 const { 
     createCommunity,
     removeCommunity,
-    addMember,
     removeMember,
     addToRequests,
     acceptMemberRequest,
@@ -13,6 +12,7 @@ const {
     getRelation,
     declineMemberRequest,
     cancelRequest,
+    getMembers,
  } 
  = require("../controllers/communityController");
 
@@ -23,8 +23,6 @@ const router = express.Router();
 router.post("/create", createCommunity);
 
 router.post("/remove", removeCommunity);
-
-router.post("/add", addMember);
 
 router.post("/removemember", removeMember);
 
@@ -44,5 +42,7 @@ router.get("/search", searchCommunityByName);
 router.get("/getall", getAllCommunities);
 
 router.get("/relation", getRelation);
+
+router.get("/getmembers", getMembers);
 
 module.exports = router;

@@ -125,7 +125,7 @@ const getMembers = async (req, res) => {
     
     try {
         const result = await Community.getMembers(communityId);
-        res.status.json(results);
+        res.status.json(result);
     } catch (error) {
         res.status(400).json({error: error.message});
     }
@@ -145,4 +145,5 @@ module.exports = {
     declineMemberRequest,
     cancelRequest,
     getRelation,
+    getMembers,
 }
