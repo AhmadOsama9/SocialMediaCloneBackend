@@ -106,7 +106,7 @@ const declineMemberRequest = async (req, res) => {
         await Community.declineMemberRequest(userId, memberId);
         res.status(200).json({message: "The request has been declined Successsfully"});
     } catch (error) {
-        res.status(400).json{{error: error.message}};
+        res.status(400).json({error: error.message});
     }
 }
 const cancelRequest = async (req, res) => {
