@@ -83,11 +83,10 @@ postSchema.statics.addPost = async function (content, owner, community, imageDat
 };
 
 postSchema.statics.getPosts = async function (userId) {
-  const posts = this.find({ owner: userId });
+  const posts = await this.find({ owner: userId });
   if (!posts) {
     throw Error("No posts array for that user");
   }
-  console.log("The posts are", posts);
   return posts;
 }
 
