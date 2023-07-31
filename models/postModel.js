@@ -87,9 +87,8 @@ postSchema.statics.getPosts = async function (userId) {
   if (!posts) {
     throw Error("No posts array for that user");
   }
-
+  console.log("The posts are", posts);
   return posts;
-
 }
 
 postSchema.statics.updatePost = async function (postId, content, community, imageData, contentType) {
