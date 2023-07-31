@@ -24,17 +24,6 @@ const removeCommunity = async (req, res) => {
     }
 }
 
-const addMember = async (req, res) => {
-    const { userId, communityId } = req.body;
-
-    try {
-        await Community.addMember(userId, communityId);
-        res.status(200).json({message: "The user has been added Successfully"});
-    } catch (error) {
-        res.status(400).json({error: error.message});
-    }
-}
-
 const removeMember = async (req, res) => {
     const { userId, communityId } = req.body;
 
@@ -116,9 +105,10 @@ const cancelRequest = async (req, res) => {
         await Community.cancelRequest(userId, memberId);
         res.status(200).json({message: "The request has been cancelled Successsfully"});
     } catch (error) {
-        res.status(400).json{{error: error.message}};
+        res.status(400).json({error: error.message});
     }
 }
+
 const getRelation = async (req, res) => {
     const { userId, communityId } = req.body;
 
@@ -126,7 +116,18 @@ const getRelation = async (req, res) => {
         const relation = await Community.getRelation(userId, memberId);
         res.status(200).json({relation: relation});
     } catch (error) {
-        res.status(400).json{{error: error.message}};
+        res.status(400).json({error: error.message});
+    }
+}
+
+const getMembers = async (req, res) => {
+    const {communityId} = req.query;
+    
+    try {
+        const result = await Community.getMembers(communityId);
+        res.status.json(results);
+    } catch (error) {
+        res.status(400).json({error: error.message});
     }
 }
 
@@ -135,7 +136,6 @@ const getRelation = async (req, res) => {
 module.exports = {
     createCommunity,
     removeCommunity,
-    addMember,
     removeMember,
     addToRequests,
     acceptMemberRequest,

@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const UsersActivity = require("./userActivityModel");
 const Users = require("./userModel");
+const Profile = require("./profileModel");
 
 const Schema = mongoose.Schema;
 
@@ -250,6 +251,24 @@ communitySchema.statics.cancelRequest = async function (userId, communityId) {
     if (!updatedCommunity) {
         throw Error("Failed to save the updated community");
     }
+}
+
+communitySchema.statics.getMembers = async function (communityId) {
+    const community = await this.findById(communityId);
+    if (!community) {
+        throw Error("Community not found");
+    }
+
+    const members = community.members;
+    const results = [];
+    for (const member of members) {
+        const memberProfile = await Profile.findOne({user: member});
+        if (!memberProfile) {
+            throw Error("Cannot find member profile");
+        }
+        results.push({ nickname: memberProfile.nickname, userId: member});
+    }
+    return results;
 }
 
 
