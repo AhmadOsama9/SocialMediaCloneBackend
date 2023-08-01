@@ -22,7 +22,7 @@ const router = express.Router();
 
 router.post("/create", createCommunity);
 
-router.post("/remove", removeCommunity);
+router.post("/delete", removeCommunity);
 
 router.post("/removemember", removeMember);
 
