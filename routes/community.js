@@ -26,7 +26,7 @@ router.post("/remove", removeCommunity);
 
 router.post("/removemember", removeMember);
 
-router.post("/addtorequests", addToRequests);
+router.post("/sendrequest", addToRequests);
 
 router.post("/accept", acceptMemberRequest);
 
