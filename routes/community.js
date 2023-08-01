@@ -28,13 +28,13 @@ router.post("/removemember", removeMember);
 
 router.post("/sendrequest", addToRequests);
 
-router.post("/accept", acceptMemberRequest);
+router.post("/acceptrequest", acceptMemberRequest);
 
 router.post("/makeadmin", makeMemberAdmin); 
 
-router.post("/decline", declineMemberRequest);
+router.post("/declinerequest", declineMemberRequest);
 
-router.post("cancelRequest", cancelRequest);
+router.post("cancelrequest", cancelRequest);
 
 
 router.get("/search", searchCommunityByName);
