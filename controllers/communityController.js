@@ -142,6 +142,17 @@ const getMembershipRequests = async (req, res) => {
     }
 }
 
+const leaveCommunity = async (req, res) => {
+    const {userId, communityId} = req.query;
+
+    try {
+        await Community.leaveCommunity(userId, communityId);
+        res.status(200).json({message: "The user have left the community Successfully"});
+    } catch (error) {
+        res.status(400).json({error: error.message});
+    }
+}
+
 
 
 module.exports = {
@@ -158,4 +169,5 @@ module.exports = {
     getRelation,
     getMembers,
     getMembershipRequests,
+    leaveCommunity,
 }

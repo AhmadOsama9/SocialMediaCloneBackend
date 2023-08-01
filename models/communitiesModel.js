@@ -124,16 +124,25 @@ communitySchema.statics.removeMember = async function (userId, communityId) {
     if (!community) {
         throw Error("Community not found");
     }
-    community.members.pull(userId);
-    const updatedCommunity = await community.save();
-    if (!updatedCommunity) {
-        throw Error("Failed to save the updated community");
-    }
-    
+
     const activity = await UsersActivity.findOne({ user: userId });
     if (!activity) {
         throw Error("Failed to find the user activity");
     }
+
+    if (!community.members.includes(userId)) {
+        throw Error("This user is not even a member");
+    }
+
+    community.members.pull(userId);
+    if (community.admins.includes(userId)) {
+        community.admins.pull(userId);
+    }
+    const updatedCommunity = await community.save();
+    if (!updatedCommunity) {
+        throw Error("Failed to save the updated community");
+    }
+     
     activity.joinedCommunities.pull(community);
     const updatedActivity = await activity.save();
     if (!updatedActivity) {
@@ -266,7 +275,11 @@ communitySchema.statics.getMembers = async function (communityId) {
         if (!memberProfile) {
             throw Error("Cannot find member profile");
         }
-        results.push({ nickname: memberProfile.nickname, userId: member});
+        let relation = "member";
+        if (community.admins.includes(member)) {
+            relation = "admin"
+        }
+        results.push({ nickname: memberProfile.nickname, relation: relation, userId: member});
     }
     return results;
 }
@@ -287,6 +300,39 @@ communitySchema.statics.getMembershipRequests = async function (communityId) {
         results.push({ nickname: memberProfile.nickname, userId: member});
     }
     return results;
+}
+
+communitySchema.statics.leaveCommunity = async function (userId, communityId) {
+    const community = await this.findById(communityId);
+    if (!community) {
+        throw Error("Community not found");
+    }
+
+    if (!community.members.includes(userId)) {
+        throw Error("This user is not even a member");
+    }
+
+    const activity = await UsersActivity.findOne({ user: userId });
+    if (!activity) {
+        throw Error("Failed to find the user Activity");
+    }
+
+    community.members.pull(userId);
+    if (community.admins.includes(userId)) {
+        community.admins.pull(userId);
+    }
+    const updatedCommunity = await community.save();
+    if (!updatedCommunity) {
+        throw Error("Failed to save the updated community");
+    }
+
+    activity.joinedCommunities.pull(community);
+    const updatedActivity = await activity.save();
+
+    if (!updatedActivity) {
+        throw Error("Failed to save the updated activity");
+    }
+
 }
 
 

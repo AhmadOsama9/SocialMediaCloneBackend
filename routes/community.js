@@ -14,6 +14,7 @@ const {
     cancelRequest,
     getMembers,
     getMembershipRequests,
+    leaveCommunity,
  } 
  = require("../controllers/communityController");
 
@@ -37,6 +38,8 @@ router.post("/declinerequest", declineMemberRequest);
 
 router.post("/cancelrequest", cancelRequest);
 
+
+router.get("/leave", leaveCommunity);
 
 router.get("/search", searchCommunityByName);
 
