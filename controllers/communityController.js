@@ -110,7 +110,7 @@ const cancelRequest = async (req, res) => {
 }
 
 const getRelation = async (req, res) => {
-    const { userId, communityId } = req.body;
+    const { userId, communityId } = req.query;
 
     try {
         const relation = await Community.getRelation(userId, communityId);
