@@ -92,7 +92,7 @@ const declineMemberRequest = async (req, res) => {
     const { userId, communityId } = req.body;
 
     try {
-        await Community.declineMemberRequest(userId, memberId);
+        await Community.declineMemberRequest(userId, communityId);
         res.status(200).json({message: "The request has been declined Successsfully"});
     } catch (error) {
         res.status(400).json({error: error.message});
@@ -102,7 +102,7 @@ const cancelRequest = async (req, res) => {
     const { userId, communityId } = req.body;
 
     try {
-        await Community.cancelRequest(userId, memberId);
+        await Community.cancelRequest(userId, communityId);
         res.status(200).json({message: "The request has been cancelled Successsfully"});
     } catch (error) {
         res.status(400).json({error: error.message});
@@ -113,7 +113,7 @@ const getRelation = async (req, res) => {
     const { userId, communityId } = req.body;
 
     try {
-        const relation = await Community.getRelation(userId, memberId);
+        const relation = await Community.getRelation(userId, communityId);
         res.status(200).json({relation: relation});
     } catch (error) {
         res.status(400).json({error: error.message});
