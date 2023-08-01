@@ -125,7 +125,18 @@ const getMembers = async (req, res) => {
     
     try {
         const result = await Community.getMembers(communityId);
-        res.status.json(result);
+        res.status(200).json(result);
+    } catch (error) {
+        res.status(400).json({error: error.message});
+    }
+}
+
+const getMembershipRequests = async (req, res) => {
+    const {communityId} = req.query;
+
+    try {
+        const result = await Community.getMembershipRequests(communityId);
+        res.status(200).json(result);
     } catch (error) {
         res.status(400).json({error: error.message});
     }
@@ -146,4 +157,5 @@ module.exports = {
     cancelRequest,
     getRelation,
     getMembers,
+    getMembershipRequests,
 }

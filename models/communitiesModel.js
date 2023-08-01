@@ -271,5 +271,23 @@ communitySchema.statics.getMembers = async function (communityId) {
     return results;
 }
 
+communitySchema.statics.getMembershipRequests = async function (communityId) {
+    const community = await this.findById(communityId);
+    if (!community) {
+        throw Error("Community not found");
+    }
+
+    const members = community.membershipRequests;
+    const results = [];
+    for (const member of members) {
+        const memberProfile = await Profile.findOne({user: member});
+        if (!memberProfile) {
+            throw Error("Cannot find member profile");
+        }
+        results.push({ nickname: memberProfile.nickname, userId: member});
+    }
+    return results;
+}
+
 
 module.exports = mongoose.model("Communities", communitySchema);

@@ -13,6 +13,7 @@ const {
     declineMemberRequest,
     cancelRequest,
     getMembers,
+    getMembershipRequests,
  } 
  = require("../controllers/communityController");
 
@@ -34,7 +35,7 @@ router.post("/makeadmin", makeMemberAdmin);
 
 router.post("/declinerequest", declineMemberRequest);
 
-router.post("cancelrequest", cancelRequest);
+router.post("/cancelrequest", cancelRequest);
 
 
 router.get("/search", searchCommunityByName);
@@ -44,5 +45,7 @@ router.get("/getall", getAllCommunities);
 router.get("/relation", getRelation);
 
 router.get("/getmembers", getMembers);
+
+router.get("/getmembershiprequests", getMembershipRequests);
 
 module.exports = router;
