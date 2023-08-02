@@ -260,7 +260,7 @@ userActivitySchema.statics.getJoinedCommunities = async function (userId) {
 
     const joinedCommunities = userActivity.joinedCommunities;
     for (const communityId of joinedCommunities) {
-        const community = Community.findById(communityId);
+        const community = await Community.findById(communityId);
         if (!community) {
             throw Error("Cannot find a community with that Id");
         }
