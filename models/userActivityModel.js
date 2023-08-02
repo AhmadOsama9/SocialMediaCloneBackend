@@ -264,7 +264,7 @@ userActivitySchema.statics.getJoinedCommunities = async function (userId) {
             throw Error("Cannot find a community with that Id");
         }
 
-        results.push(community);
+        results.push({ community });
     }
 
     return results;
