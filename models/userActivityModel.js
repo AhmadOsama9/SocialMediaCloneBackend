@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Profile = require("./profileModel");
+const Community = require("./communitiesModel");
 
 const Schema = mongoose.Schema;
 
@@ -255,7 +256,18 @@ userActivitySchema.statics.getJoinedCommunities = async function (userId) {
         throw Error("user activity not found");
     }
 
-    return userActivity.joinedCommunities;
+    const results = [];
+
+    for (const communityId of userActivity.joinedCommunities) {
+        const community = Community.findById(communityId);
+        if (!community) {
+            throw Error("Cannot find a community with that Id");
+        }
+
+        results.push(community);
+    }
+
+    return results;
 }
 
 
