@@ -1,10 +1,10 @@
 const Community = require("../models/communitiesModel")
 
 const createCommunity = async (req, res) => {
-    const {name, description, admins} = req.body;
+    const {name, description, userId} = req.body;
 
     try {
-        const community = await Community.createCommunity(name, description, admins);
+        const community = await Community.createCommunity(name, description, userId);
         res.status(200).json({communityId: community._Id});
 
     } catch (error) {

@@ -35,27 +35,29 @@ const communitySchema = new Schema({
     }],
 });
 
-communitySchema.statics.createCommunity = async function (name, description, admins) {
+communitySchema.statics.createCommunity = async function (name, description, userId) {
     const newCommunity = await this.create({
         name,
         description,
-        admins,
-        members: admins, // Initially, the admins are also members of the community
+        admins: [userId],
+        members: [userId],
     });
-    if(!newCommunity) {
+    if (!newCommunity) {
         throw Error("Failed to create the community");
     }
-    // Add the community to each admin's createdCommunities
-    const usersActivityUpdate = await UsersActivity.updateMany(
-        { user: { $in: admins } },
-        { $addToSet: { createdCommunities: newCommunity._id } }
-    );
-    if(!usersActivityUpdate) {
-        throw Error("Failed to make the creators admins");
+
+    const userActivity = await UsersActivity.findOne({ user: userId });
+    userActivity.createdCommunities.push(newCommunity._id);
+    userActivity.joinedCommunities.push(newCommunity._id);
+
+    const updatedUserActivity = await userActivity.save();
+    if (!updatedUserActivity) {
+        throw Error("Failed to save the updated user activity");
     }
 
     return newCommunity;
 };
+
 
 
 communitySchema.statics.removeCommunity = async function (userId, communityId) {
@@ -236,13 +238,13 @@ communitySchema.statics.getRelation = async function(userId, communityId) {
         throw Error("Community not found");
     }
     if (community.admins.includes(userId)) {
-        return "admin"
+        return "admin";
     }
     if (community.members.includes(userId)) {
         return "member";
     }
     if (community.membershipRequests.includes(userId)) {
-        return "pending"
+        return "pending";
     }
     return "None"  
 }
