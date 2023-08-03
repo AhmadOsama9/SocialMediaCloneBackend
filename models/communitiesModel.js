@@ -97,30 +97,6 @@ communitySchema.statics.removeCommunity = async function (userId, communityId) {
  
 }
 
-communitySchema.statics.addMember = async function (userId, communityId) {
-
-        // Add the member to the community's members
-        const community = await this.findById(communityId);
-        if (!community) {
-            throw Error("Community not found");
-        }
-        community.members.push(userId);
-        const updatedCommunity = await community.save();
-        if (!updatedCommunity) {
-            throw Error("Failed to save the updated coummunity");
-        }
-
-        const activity = await UsersActivity.findOne({ user: userId});
-        if (!activity) {
-            throw Error("Failed to find the user activity");
-        }
-        activity.joinedCommunities.push(community);
-        const updatedActivity = await activity.save();
-        if (!updatedActivity) {
-            throw Error("Failed to save the updated activity");
-        }
-};
-
 communitySchema.statics.removeMember = async function (userId, communityId) {
     const community = await this.findById(communityId);
     if (!community) {
@@ -152,39 +128,38 @@ communitySchema.statics.removeMember = async function (userId, communityId) {
     }
 };
 
-communitySchema.statics.addToRequests = async function(userId, communityId) {
-    const community = await this.findById(communityId);
-    if (!community) {
-        throw Error("Community not found");
-    }
-    community.membershipRequests.push(userId);
-    const updatedCommunity = await community.save();
-    if (!updatedCommunity) {
-        throw Error("Failed to save the updated community");
-    }
-}
 
 communitySchema.statics.acceptMemberRequest = async function (userId, communityId) {
     const community = await this.findById(communityId);
     if (!community) {
         throw Error("Community not found");
     }
-    const index = community.membershipRequests.indexOf(userId);
-    if(index === -1) {
-        throw Error("User request not found");
+    
+    if (!community.membershipRequests.includes(userId)) {
+        throw Error("That user is not in the membership requests");
     }
 
-    community.membershipRequests.splice(index, 1);
-    const updatedCommunity = await this.addMember(userId, communityId);
+    const userActivity = await UsersActivity.findOne({ user: userId });
+    if (!userActivity) {
+        throw Error("UserActivity not found");
+    }
+
+    community.membershipRequests.pull(userId);
+    community.members.push(userId);
+    const updatedCommunity = await community.save();
     if (!updatedCommunity) {
         throw Error("Failed to save the updated community");
+    }
+
+    userActivity.joinedCommunities.push(community._id);
+    const updatedUserActivity = await community.save();
+    if (!updatedUserActivity) {
+        throw Error("Failed to save the updated user Community");
     }
     
 }
 
 communitySchema.statics.declineMemberRequest = async function (userId, communityId) {
-    console.log("the communityId is: ", communityId);
-    
     const community = await this.findById(communityId);
     if (!community) {
         throw Error("Community not found");
