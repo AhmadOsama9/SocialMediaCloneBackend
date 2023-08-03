@@ -183,6 +183,8 @@ communitySchema.statics.acceptMemberRequest = async function (userId, communityI
 }
 
 communitySchema.statics.declineMemberRequest = async function (userId, communityId) {
+    console.log("the communityId is: ", communityId);
+    
     const community = await this.findById(communityId);
     if (!community) {
         throw Error("Community not found");
