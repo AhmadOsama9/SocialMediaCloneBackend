@@ -103,10 +103,9 @@ communitySchema.statics.removeMember = async function (userId, communityId) {
         throw Error("Community not found");
     }
 
-    console.log("The userId is: ", userId);
-    const activity = await UsersActivity.findOne({ user: userId });
-    if (!activity) {
-        throw Error("Failed to find the user activity");
+    const userActivity = await UsersActivity.findOne({ user: userId });
+    if (!userActivity) {
+        throw Error("UserActivity not found");
     }
 
     if (!community.members.includes(userId)) {
