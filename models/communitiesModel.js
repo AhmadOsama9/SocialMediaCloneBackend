@@ -96,14 +96,13 @@ communitySchema.statics.removeCommunity = async function (userId, communityId) {
     }
  
 }
-
 communitySchema.statics.removeMember = async function (userId, communityId) {
     const community = await this.findById(communityId);
     if (!community) {
         throw Error("Community not found");
     }
 
-    const userActivity = await UsersActivity.findOne({ user: userId });
+    const userActivity = await UsersActivity.findOne({ user: userId }); // Use userActivity here
     if (!userActivity) {
         throw Error("UserActivity not found");
     }
@@ -121,12 +120,13 @@ communitySchema.statics.removeMember = async function (userId, communityId) {
         throw Error("Failed to save the updated community");
     }
      
-    activity.joinedCommunities.pull(community);
-    const updatedActivity = await activity.save();
-    if (!updatedActivity) {
+    userActivity.joinedCommunities.pull(community); // Use userActivity here
+    const updatedUserActivity = await userActivity.save(); // Use userActivity here
+    if (!updatedUserActivity) {
         throw Error("Failed to save the updated activity");
     }
 };
+
 
 
 communitySchema.statics.acceptMemberRequest = async function (userId, communityId) {
