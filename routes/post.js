@@ -3,7 +3,6 @@ const express = require("express");
 const { 
     createPost,
     addPost, 
-    getPosts,
     updatePost, 
     deletePost,
     addReaction,
@@ -43,7 +42,5 @@ router.post("/share/add", addShare);
 router.post("/share/remove", removeShare);
 
 
-
-router.get("/getposts", getPosts);
 
 module.exports = router;

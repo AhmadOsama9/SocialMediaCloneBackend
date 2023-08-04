@@ -52,7 +52,7 @@ const postSchema = new Schema({
 });
 
 postSchema.statics.createPost = async function (header, content, owner, imageData, contentType) {
-  const profile = await Profile.findOne({ user: userId });
+  const profile = await Profile.findOne({ user: owner });
   if (!profile) {
     throw Error("Profile not found");
   }
