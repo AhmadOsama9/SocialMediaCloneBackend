@@ -58,6 +58,24 @@ communitySchema.statics.createCommunity = async function (name, description, use
     return newCommunity;
 };
 
+communityScehma.statics.addToRequests = async function (userId, communityId) {
+    const community = await this.findById(communityId);
+    if (!community) {
+        throw Error("Failed to find the community");
+    }
+
+    const userActivity = await UsersActivity.findOne({ user: userId });
+    if (!userActivity) {
+        throw Error("Failed to find the userAcitivty");
+    }
+
+    community.membershipRequests.push(userId);
+    const updatedCommunity = await community.save();
+    if (!updatedCommunity) {
+        throw Error("Failed to save the updated community");
+    }
+}
+
 
 
 communitySchema.statics.removeCommunity = async function (userId, communityId) {
@@ -102,7 +120,7 @@ communitySchema.statics.removeMember = async function (userId, communityId) {
         throw Error("Community not found");
     }
 
-    const userActivity = await UsersActivity.findOne({ user: userId }); // Use userActivity here
+    const userActivity = await UsersActivity.findOne({ user: userId }); 
     if (!userActivity) {
         throw Error("UserActivity not found");
     }
@@ -120,8 +138,8 @@ communitySchema.statics.removeMember = async function (userId, communityId) {
         throw Error("Failed to save the updated community");
     }
      
-    userActivity.joinedCommunities.pull(community); // Use userActivity here
-    const updatedUserActivity = await userActivity.save(); // Use userActivity here
+    userActivity.joinedCommunities.pull(community); 
+    const updatedUserActivity = await userActivity.save(); 
     if (!updatedUserActivity) {
         throw Error("Failed to save the updated activity");
     }
