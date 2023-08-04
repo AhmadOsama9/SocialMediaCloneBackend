@@ -26,7 +26,7 @@ router.post("/decline", declineFriendRequest);
 router.post("/cancelrequest", cancelRequest);
 
 
-router.get("/getPosts", getCreatedPosts);
+router.get("/getposts", getCreatedPosts);
 
 router.get("/receivedrequests", getReceivedRequests);
 

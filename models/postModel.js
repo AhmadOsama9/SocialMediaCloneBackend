@@ -60,7 +60,7 @@ postSchema.statics.createPost = async function (header, content, owner, imageDat
   const nickname = profile.nickname;
 
   const newPost = {
-    nickanme,
+    nickname,
     header,
     content,
     owner,
@@ -92,7 +92,7 @@ postSchema.statics.createPost = async function (header, content, owner, imageDat
 
 }
 
-postSchema.statics.addPost = async function (header, content, owner, community, imageData, contentType) {
+postSchema.statics.addPost = async function (header, content, owner, communityId, imageData, contentType) {
     const profile = await Profile.findOne({ user: userId });
     if (!profile) {
       throw Error("Profile not found");
@@ -132,7 +132,7 @@ postSchema.statics.addPost = async function (header, content, owner, community, 
       throw Error("Couldn't save the post to the userActivity");
     }
     
-    const community = await Communities.findById(community);
+    const community = await Communities.findById(communityId);
     if (!community) {
       throw Error("Community not found");
     }

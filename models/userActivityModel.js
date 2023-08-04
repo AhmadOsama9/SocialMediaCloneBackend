@@ -325,7 +325,7 @@ userActivitySchema.statics.getCreatedPosts = async function (userId) {
 
         const comments = [];
         for (const comment of userPost.comments) {
-            comments.push({nickname: comment.nickname, content: comment.content});
+            comments.push({nickname: comment.nickname, content: comment.content, createdAt: comment.createdAt});
         }
 
         results.push({nickname: post.nickname, header: post.header, content: post.content, reactions: reactions, comments: comments});

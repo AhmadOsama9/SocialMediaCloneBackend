@@ -14,10 +14,10 @@ const createPost = async (req, res) => {
 }
 
 const addPost = async (req, res) => {
-    const {header, content, owner, community} = req.body;
+    const {header, content, owner, communityId} = req.body;
 
     try {
-        await Posts.addPost(header, content, owner, community);
+        await Posts.addPost(header, content, owner, communityId);
         res.status(200).json({message: "The post has been created Successfully"});
     } catch (error) {
         res.status(400).json({error: error.message});
