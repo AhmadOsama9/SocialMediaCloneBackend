@@ -58,7 +58,7 @@ communitySchema.statics.createCommunity = async function (name, description, use
     return newCommunity;
 };
 
-communityScehma.statics.addToRequests = async function (userId, communityId) {
+communitySchema.statics.addToRequests = async function (userId, communityId) {
     const community = await this.findById(communityId);
     if (!community) {
         throw Error("Failed to find the community");

@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const Profile = require("./profileModel");
 const Community = require("./communitiesModel");
+const Post = require("./postModel");
 
 const Schema = mongoose.Schema;
 
@@ -300,7 +301,40 @@ userActivitySchema.statics.getFriendRelationshipStatus = async function (userId,
     }
   
     return "None";
-  };
+};
+
+userActivitySchema.statics.getCreatedPosts = async function (userId) {
+    const userActivity = await this.findOne({ user: userId });
+    if (!userActivity) {
+        throw Error("User activity not found");
+    }
+
+    const userPosts = userActivity.userPosts;
+    const results = [];
+
+    for (const userPost of userPosts) {
+        const post = await Post.findById(userPost);
+        if (!post) {
+            throw Error("Can not find the post");
+        }
+
+        const reactions = [];
+        for (const reaction of userPost.reactions) {
+            reactions.push({nickname: reaction.nickname, reaction: reaction.reaction});
+        }
+
+        const comments = [];
+        for (const comment of userPost.comments) {
+            comments.push({nickname: comment.nickname, content: comment.content});
+        }
+
+        results.push({nickname: post.nickname, header: post.header, content: post.content, reactions: reactions, comments: comments});
+    }
+
+    return results;
+
+}
+
   
   module.exports = mongoose.model("UsersActivity", userActivitySchema);
   

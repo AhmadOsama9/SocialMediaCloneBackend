@@ -3,10 +3,15 @@ const UsersActivity = require("./userActivityModel");
 const Communities = require("./communitiesModel");
 const Reactions = require("./reactionModel");
 const Comments = require("./commentModel");
+const Profile = require("./profileModel");
 
 const Schema = mongoose.Schema;
 
 const postSchema = new Schema({
+  nickname: {
+    type: String, 
+    required: true,
+  },
   header: {
     type: String, 
     required: true,
@@ -47,7 +52,15 @@ const postSchema = new Schema({
 });
 
 postSchema.statics.createPost = async function (header, content, owner, imageData, contentType) {
+  const profile = await Profile.findOne({ user: userId });
+  if (!profile) {
+    throw Error("Profile not found");
+  }
+
+  const nickname = profile.nickname;
+
   const newPost = {
+    nickanme,
     header,
     content,
     owner,
@@ -80,7 +93,15 @@ postSchema.statics.createPost = async function (header, content, owner, imageDat
 }
 
 postSchema.statics.addPost = async function (header, content, owner, community, imageData, contentType) {
+    const profile = await Profile.findOne({ user: userId });
+    if (!profile) {
+      throw Error("Profile not found");
+    }
+
+    const nickname = profile.nickname;
+
     const newPost = {
+      nickname,
       header,
       content,
       owner,
@@ -123,14 +144,6 @@ postSchema.statics.addPost = async function (header, content, owner, community, 
     }
     
 };
-
-postSchema.statics.getPosts = async function (userId) {
-  const posts = await this.find({ owner: userId });
-  if (!posts) {
-    throw Error("No posts array for that user");
-  }
-  return posts;
-}
 
 postSchema.statics.updatePost = async function (postId, content, community, imageData, contentType) {
   const updatedPost = {};
@@ -188,12 +201,18 @@ postSchema.statics.deletePost = async function (postId) {
 };
 
 postSchema.statics.addReaction = async function (userId, postId, reactionType) {
+  const profile = await Profile.findOne({ user: userId });
+  if (!profile) {
+    throw Error("Profile not found");
+  }
+
   if (!["like", "love", "care", "Sad", "Angry"].includes(reactionType)) {
     throw Error("Invalid reaction type");
   }
   const newReaction = await Reactions.create({
     user: userId,
     reaction: reactionType,
+    userNickname: profile.nickname,
   });
   if (!newReaction) {
     throw Error("Failed to add the reaction");
@@ -283,10 +302,17 @@ postSchema.statics.removeReaction = async function (userId, postId) {
 
 
 postSchema.statics.addComment = async function (userId, postId, commentContent) {
+
+  const profile = await Profile.findOne({ user: userId });
+  if (!profile) {
+    throw Error("Profile not found");
+  }
   
   const comment = await Comments.create({
     user: userId,
     content: commentContent,
+    userNickname: profile.nickname,
+    createdAt: Date.now(),
   });
   if (!comment) {
     throw Error("Failed to craete the comment");
@@ -367,8 +393,6 @@ postSchema.statics.removeComment = async function (userId, postId) {
   
 };
 
-//increase the post share count
-//add the shared post to the user
 postSchema.statics.addShare = async function (userId, postId) {
   const post = await this.findById(postId);
   if (!post) {

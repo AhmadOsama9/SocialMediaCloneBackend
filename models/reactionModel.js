@@ -13,6 +13,10 @@ const reactionSchema = new Schema({
     enum: ["like", "love", "care", "Sad", "Angry"],
     required: true,
   },
+  userNickname: {
+    type: String,
+    required: true,    
+  },
   createdAt: {
     type: Date,
     default: Date.now,

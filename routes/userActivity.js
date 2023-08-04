@@ -1,6 +1,7 @@
 const express = require("express");
 
 const {
+    getCreatedPosts,
     sendFriendRequest,
     acceptFriendRequest,
     removeFriend,
@@ -23,6 +24,9 @@ router.post("/remove", removeFriend);
 router.post("/decline", declineFriendRequest);
 
 router.post("/cancelrequest", cancelRequest);
+
+
+router.get("/getPosts", getCreatedPosts);
 
 router.get("/receivedrequests", getReceivedRequests);
 
