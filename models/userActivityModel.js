@@ -10,7 +10,11 @@ const userActivitySchema = new Schema({
         ref: "Users",
         required: true,
     },
-    posts: [{
+    userPosts: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Posts",
+    }],
+    communitiesPosts: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Posts",
     }],

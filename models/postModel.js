@@ -7,6 +7,10 @@ const Comments = require("./commentModel");
 const Schema = mongoose.Schema;
 
 const postSchema = new Schema({
+  header: {
+    type: String, 
+    required: true,
+  },
   content: {
     type: String,
     required: true,
@@ -35,7 +39,6 @@ const postSchema = new Schema({
   community: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Communities",
-    required: true,
   },
   createdAt: {
     type: Date,
@@ -43,8 +46,42 @@ const postSchema = new Schema({
   },
 });
 
-postSchema.statics.addPost = async function (content, owner, community, imageData, contentType) {
+postSchema.statics.createPost = async function (header, content, owner, imageData, contentType) {
+  const newPost = {
+    header,
+    content,
+    owner,
+    createdAt: Date.now(),
+  }
+
+  if (imageData && contentType) {
+    newPost.image = {
+      data: imageData,
+      contentType,
+    };
+  }
+
+  const createdPost = await this.create(newPost);
+  if (!createdPost) {
+    throw Error("Failed to create the post");
+  }
+
+  const userActivity = await UsersActivity.findOne({ user: owner});
+  if (!userActivity) {
+    throw Error("Failed to find the user activity");
+  }
+
+  userActivity.userPosts.push(createdPost._id);
+  const updatedUserActivity = await userActivity.save();
+  if (!updatedUserActivity) {
+    throw Error("Failed to save the updated user activity");
+  }
+
+}
+
+postSchema.statics.addPost = async function (header, content, owner, community, imageData, contentType) {
     const newPost = {
+      header,
       content,
       owner,
       community,
@@ -62,24 +99,29 @@ postSchema.statics.addPost = async function (content, owner, community, imageDat
     if (!createdPost) {
         throw Error("Cannot create the post");
     }
-    // Add the post to the user's posts array in UsersActivity
+
     const userActivity = await UsersActivity.findOne({ user: owner});
     if (!userActivity) {
         throw Error("Cannot find a UserActivity with that Id");
     }
 
-    userActivity.posts.push(createdPost._id);
-    const foundUserActivity = await userActivity.save();
-    if (!foundUserActivity) {
+    userActivity.communitiesPosts.push(createdPost._id);
+    const updatedUserActivity = await userActivity.save();
+    if (!updatedUserActivity) {
       throw Error("Couldn't save the post to the userActivity");
     }
-    // Add the post to the community's posts array
-    community = await Communities.findByIdAndUpdate(community, { $push: { posts: createdPost._id } });
+    
+    const community = await Communities.findById(community);
     if (!community) {
-        throw Error("Cannot find a community with that Id")
+      throw Error("Community not found");
     }
 
-    return createdPost;
+    community.posts.push(createdPost._id);
+    const updatedCommunity = community.save();
+    if (!updatedCommunity) {
+      throw Error("Failed to save the updated community");
+    }
+    
 };
 
 postSchema.statics.getPosts = async function (userId) {

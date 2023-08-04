@@ -1,12 +1,24 @@
 const Posts = require("../models/postModel");
 
-const addPost = async (req, res) => {
-    const {content, owner, community} = req.body;
+
+const createPost = async (req, res) => {
+    const {header, content, owner} = req.body;
 
     try {
-        const post = await Posts.addPost(content, owner, community);
+        await Posts.createPost(header, content, owner);
+        res.status(200).json({message: "The post has been created Successfully"});
+    } catch (error) {
+        res.status(400).json({error: error.message});
+    }
 
-        res.status(200).json({postId: post._postId});
+}
+
+const addPost = async (req, res) => {
+    const {header, content, owner, community} = req.body;
+
+    try {
+        await Posts.addPost(header, content, owner, community);
+        res.status(200).json({message: "The post has been created Successfully"});
     } catch (error) {
         res.status(400).json({error: error.message});
     }
@@ -134,6 +146,7 @@ const removeShare = async (req, res) => {
 }
 
 module.exports = {
+    createPost,
     addPost,
     getPosts,
     updatePost,
