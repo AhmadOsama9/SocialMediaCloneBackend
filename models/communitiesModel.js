@@ -64,7 +64,7 @@ communitySchema.statics.addToRequests = async function (userId, communityId) {
         throw Error("Failed to find the community");
     }
 
-    const userActivity = await UsersActivity.findOne({ "user" : userId });
+    const userActivity = await UsersActivity.collection.findOne({ user: userId });
     if (!userActivity) {
         throw Error("Failed to find the userAcitivty");
     }
