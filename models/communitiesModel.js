@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const UsersActivity = require("./userActivityModel");
-console.log("The UserActivity is: ", UsersActivity);
 const Users = require("./userModel");
 const Profile = require("./profileModel");
 
