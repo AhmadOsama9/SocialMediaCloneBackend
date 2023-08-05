@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const userActivity = require("./userActivityModel");
+const UsersActivity = require("./userActivityModel");
 const Users = require("./userModel");
 const Profile = require("./profileModel");
 
@@ -46,7 +46,7 @@ communitySchema.statics.createCommunity = async function (name, description, use
         throw Error("Failed to create the community");
     }
 
-    const userActivity = await userActivity.findOne({ user: userId });
+    const userActivity = await UsersActivity.findOne({ user: userId });
     userActivity.createdCommunities.push(newCommunity._id);
     userActivity.joinedCommunities.push(newCommunity._id);
 
@@ -64,7 +64,7 @@ communitySchema.statics.addToRequests = async function (userId, communityId) {
         throw Error("Failed to find the community");
     }
 
-    const userActivity = await userActivity.findOne({ user: userId });
+    const userActivity = await UsersActivity.findOne({ user: userId });
     if (!userActivity) {
         throw Error("Failed to find the userAcitivty");
     }
@@ -93,7 +93,7 @@ communitySchema.statics.removeCommunity = async function (userId, communityId) {
         throw Error("You are not authorized to delete this community");
     }
 
-    const userActivityUpdate = await userActivity.updateMany(
+    const userActivityUpdate = await UsersActivity.updateMany(
         {user: { $in: [...community.admins, ...community.members]}
     },
     {
@@ -120,7 +120,7 @@ communitySchema.statics.removeMember = async function (userId, communityId) {
         throw Error("Community not found");
     }
 
-    const userActivity = await userActivity.findOne({ user: userId }); 
+    const userActivity = await UsersActivity.findOne({ user: userId }); 
     if (!userActivity) {
         throw Error("UserActivity not found");
     }
@@ -157,7 +157,7 @@ communitySchema.statics.acceptMemberRequest = async function (userId, communityI
         throw Error("That user is not in the membership requests");
     }
 
-    const userActivity = await userActivity.findOne({ user: userId });
+    const userActivity = await UsersActivity.findOne({ user: userId });
     if (!userActivity) {
         throw Error("UserActivity not found");
     }
@@ -309,7 +309,7 @@ communitySchema.statics.leaveCommunity = async function (userId, communityId) {
         throw Error("This user is not even a member");
     }
 
-    const activity = await userActivity.findOne({ user: userId });
+    const activity = await UsersActivity.findOne({ user: userId });
     if (!activity) {
         throw Error("Failed to find the user Activity");
     }
