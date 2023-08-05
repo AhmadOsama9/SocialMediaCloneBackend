@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const UsersActivity = require("./userActivityModel");
+const UsersActivity = require("../models/userActivityModel");
 const Users = require("./userModel");
 const Profile = require("./profileModel");
 
@@ -64,7 +64,7 @@ communitySchema.statics.addToRequests = async function (userId, communityId) {
         throw Error("Failed to find the community");
     }
 
-    const userActivity = await UsersActivity.collection.findOne({ user: userId });
+    const userActivity = await UsersActivity.findOne({ user: userId });
     if (!userActivity) {
         throw Error("Failed to find the userAcitivty");
     }
