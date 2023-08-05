@@ -79,7 +79,7 @@ postSchema.statics.createPost = async function (header, content, owner, imageDat
     throw Error("Failed to create the post");
   }
 
-  const userActivity = await UsersActivity.findOne({ user: owner});
+  const userActivity = await UsersActivity.findOne({ "user": owner});
   if (!userActivity) {
     throw Error("Failed to find the user activity");
   }
@@ -93,7 +93,7 @@ postSchema.statics.createPost = async function (header, content, owner, imageDat
 }
 
 postSchema.statics.addPost = async function (header, content, owner, communityId, imageData, contentType) {
-    const profile = await Profile.findOne({ user: userId });
+    const profile = await Profile.findOne({ user: owner });
     if (!profile) {
       throw Error("Profile not found");
     }
