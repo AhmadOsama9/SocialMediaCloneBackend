@@ -5,7 +5,7 @@ const createCommunity = async (req, res) => {
 
     try {
         const community = await Community.createCommunity(name, description, userId);
-        res.status(200).json({communityId: community._Id});
+        res.status(200).json({message: "The community has been created Sucessfully"});
 
     } catch (error) {
         res.status(400).json({error: error.message});

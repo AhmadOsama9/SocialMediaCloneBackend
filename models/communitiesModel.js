@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const UsersActivity = require("./userActivityModel");
+console.log("The UserActivity is: ", UsersActivity);
 const Users = require("./userModel");
 const Profile = require("./profileModel");
 
@@ -36,6 +37,11 @@ const communitySchema = new Schema({
 });
 
 communitySchema.statics.createCommunity = async function (name, description, userId) {
+    const userActivity = await UsersActivity.findOne({ user: userId });
+    if (!userActivity) {
+        throw Error("User Activity not found");
+    }
+    
     const newCommunity = await this.create({
         name,
         description,
@@ -46,7 +52,6 @@ communitySchema.statics.createCommunity = async function (name, description, use
         throw Error("Failed to create the community");
     }
 
-    const userActivity = await UsersActivity.findOne({ user: userId });
     userActivity.createdCommunities.push(newCommunity._id);
     userActivity.joinedCommunities.push(newCommunity._id);
 
@@ -54,8 +59,6 @@ communitySchema.statics.createCommunity = async function (name, description, use
     if (!updatedUserActivity) {
         throw Error("Failed to save the updated user activity");
     }
-
-    return newCommunity;
 };
 
 communitySchema.statics.addToRequests = async function (userId, communityId) {
