@@ -334,9 +334,6 @@ userActivitySchema.statics.getCreatedPosts = async function (userId) {
     return results;
 
 }
-
-  
-  module.exports = mongoose.model("UsersActivity", userActivitySchema);
   
 
 module.exports = mongoose.model("UsersActivity", userActivitySchema);
