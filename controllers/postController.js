@@ -35,12 +35,23 @@ const updatePost = async (req, res) => {
     }
 }
 
-const deletePost = async (req, res) => {
+const deleteCommunityPost = async (req, res) => {
     const { postId } = req.body;
 
     try {
-        await Posts.deletePost(postId);
+        await Posts.deleteCommunityPost(postId);
         res.status(200).json({message: "The post has been deleted succesfully"});
+    } catch (error) {
+        res.status(400).json({error: error.message});
+    }
+}
+
+const deleteUserPost = async (req, res) => {
+    const { postId } = req.body;
+
+    try {
+        await Posts.deleteUserPost(postId);
+        res.status(200).json({message: "The post has been deleted successfully"});
     } catch (error) {
         res.status(400).json({error: error.message});
     }
@@ -138,7 +149,8 @@ module.exports = {
     createPost,
     addPost,
     updatePost,
-    deletePost,
+    deleteCommunityPost,
+    deleteUserPost,
     addReaction,
     updateReaction,
     removeReaction,

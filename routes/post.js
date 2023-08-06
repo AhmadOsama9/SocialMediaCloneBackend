@@ -4,7 +4,8 @@ const {
     createPost,
     addPost, 
     updatePost, 
-    deletePost,
+    deleteCommunityPost,
+    deleteUserPost,
     addReaction,
     updateReaction,
     removeReaction,
@@ -23,7 +24,9 @@ router.post("/add", addPost);
 
 router.post("/update", updatePost);
 
-router.post("/delete", deletePost);
+router.post("/deletecommunitypost", deleteCommunityPost);
+
+router.post("/deleteuserpost", deleteUserPost);
 
 router.post("/reaction/add", addReaction);
 

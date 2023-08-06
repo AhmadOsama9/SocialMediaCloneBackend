@@ -1,6 +1,4 @@
 const mongoose = require("mongoose");
-const Users = require("./userModel");
-const Profile = require("./profileModel");
 
 const Schema = mongoose.Schema;
 
@@ -82,6 +80,7 @@ communitySchema.statics.addToRequests = async function (userId, communityId) {
 
 
 communitySchema.statics.removeCommunity = async function (userId, communityId) {
+    const Users = require("./userModel");
     const UsersActivity = require("./userActivityModel");
     const community = await this.findById(communityId);
     if (!community) {
@@ -267,6 +266,7 @@ communitySchema.statics.cancelRequest = async function (userId, communityId) {
 }
 
 communitySchema.statics.getMembers = async function (communityId) {
+    const Profile = require("./profileModel");
     const community = await this.findById(communityId);
     if (!community) {
         throw Error("Community not found");
@@ -289,6 +289,7 @@ communitySchema.statics.getMembers = async function (communityId) {
 }
 
 communitySchema.statics.getMembershipRequests = async function (communityId) {
+    const Profile = require("./profileModel");
     const community = await this.findById(communityId);
     if (!community) {
         throw Error("Community not found");

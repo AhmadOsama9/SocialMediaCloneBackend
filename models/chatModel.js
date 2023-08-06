@@ -1,6 +1,4 @@
-const express = require("express");
 const mongoose = require("mongoose");
-const Profile = require("./profileModel");
 
 const Schema = mongoose.Schema;
 
@@ -113,6 +111,7 @@ chatSchema.statics.getChatMessagesByChatId = async function (chatId) {
 }
 
 chatSchema.statics.getChats = async function (userId) {
+    const Profile = require("./profileModel");
     const chats = await this.find({ participants: userId });
     if (!chats) {
         throw new Error("User not found in any chat");

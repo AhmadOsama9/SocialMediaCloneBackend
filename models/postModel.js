@@ -1,9 +1,6 @@
 const mongoose = require("mongoose");
-const UsersActivity = require("./userActivityModel");
-const Communities = require("./communitiesModel");
 const Reactions = require("./reactionModel");
 const Comments = require("./commentModel");
-const Profile = require("./profileModel");
 
 const Schema = mongoose.Schema;
 
@@ -52,6 +49,7 @@ const postSchema = new Schema({
 });
 
 postSchema.statics.createPost = async function (header, content, owner, imageData, contentType) {
+  const Profile = require("./profileModel");
   const profile = await Profile.findOne({ user: owner });
   if (!profile) {
     throw Error("Profile not found");
@@ -93,55 +91,58 @@ postSchema.statics.createPost = async function (header, content, owner, imageDat
 }
 
 postSchema.statics.addPost = async function (header, content, owner, communityId, imageData, contentType) {
-    const profile = await Profile.findOne({ user: owner });
-    if (!profile) {
-      throw Error("Profile not found");
-    }
+  const Communities = require("./communitiesModel");
+  const Profile = require("./profileModel");
+  const UsersActivity = require("./userActivityModel");
+  const profile = await Profile.findOne({ user: owner });
+  if (!profile) {
+    throw Error("Profile not found");
+  }
 
-    const nickname = profile.nickname;
+  const nickname = profile.nickname;
 
-    const newPost = {
-      nickname,
-      header,
-      content,
-      owner,
-      community,
-      createdAt: Date.now(),
+  const newPost = {
+    nickname,
+    header,
+    content,
+    owner,
+    community,
+    createdAt: Date.now(),
+  };
+
+  if (imageData && contentType) {
+    newPost.image = {
+      data: imageData,
+      contentType,
     };
+  }
 
-    if (imageData && contentType) {
-      newPost.image = {
-        data: imageData,
-        contentType,
-      };
-    }
+  const createdPost = await this.create(newPost);
+  if (!createdPost) {
+      throw Error("Cannot create the post");
+  }
 
-    const createdPost = await this.create(newPost);
-    if (!createdPost) {
-        throw Error("Cannot create the post");
-    }
+  const userActivity = await UsersActivity.findOne({ user: owner});
+  if (!userActivity) {
+      throw Error("Cannot find a UserActivity with that Id");
+  }
 
-    const userActivity = await UsersActivity.findOne({ user: owner});
-    if (!userActivity) {
-        throw Error("Cannot find a UserActivity with that Id");
-    }
+  userActivity.communitiesPosts.push(createdPost._id);
+  const updatedUserActivity = await userActivity.save();
+  if (!updatedUserActivity) {
+    throw Error("Couldn't save the post to the userActivity");
+  }
+  
+  const community = await Communities.findById(communityId);
+  if (!community) {
+    throw Error("Community not found");
+  }
 
-    userActivity.communitiesPosts.push(createdPost._id);
-    const updatedUserActivity = await userActivity.save();
-    if (!updatedUserActivity) {
-      throw Error("Couldn't save the post to the userActivity");
-    }
-    
-    const community = await Communities.findById(communityId);
-    if (!community) {
-      throw Error("Community not found");
-    }
-
-    community.posts.push(createdPost._id);
-    const updatedCommunity = community.save();
-    if (!updatedCommunity) {
-      throw Error("Failed to save the updated community");
-    }
+  community.posts.push(createdPost._id);
+  const updatedCommunity = community.save();
+  if (!updatedCommunity) {
+    throw Error("Failed to save the updated community");
+  }
     
 };
 
@@ -171,8 +172,9 @@ postSchema.statics.updatePost = async function (postId, content, community, imag
   return finishedupdatedPost;
 };
 
-postSchema.statics.deletePost = async function (postId) {
-
+postSchema.statics.deleteCommunityPost = async function (postId) {
+  const Communities = require("./communitiesModel");
+  const UsersActivity = require("./userActivityModel");
   const postToDelete = await this.findById(postId);
 
   if (!postToDelete) {
@@ -194,13 +196,36 @@ postSchema.statics.deletePost = async function (postId) {
     throw Error("Failed to find the community");
   }
 
-  deletedPost = await this.findByIdAndDelete(postId);
+  const deletedPost = await this.findByIdAndDelete(postId);
   if(!deletedPost) {
     throw Error("Failed to delete the post");
   }
 };
 
+postSchema.statics.deleteUserPost = async function (postId) {
+  const UsersActivity = require("./userActivityModel");
+  
+  const postToDelete = await this.findById(postId);
+  if (!postToDelete) {
+    throw Error("Post not found");
+  }
+  const userActivity = await UsersActivity.findOneAndUpdate(
+    {user: postToDelete.owner},
+    {$pull: {posts: postId}}
+  );
+  if (!userActivity) {
+    throw Error("Failed to find the userActivity");
+  }
+
+  const deletedPost = await this.findByIdAndDelete(postId);
+  if (!deletedPost) {
+    throw Error("FAiled to delete the post");
+  }
+
+}
+
 postSchema.statics.addReaction = async function (userId, postId, reactionType) {
+  const Profile = require("./profileModel");
   const profile = await Profile.findOne({ user: userId });
   if (!profile) {
     throw Error("Profile not found");
@@ -302,7 +327,7 @@ postSchema.statics.removeReaction = async function (userId, postId) {
 
 
 postSchema.statics.addComment = async function (userId, postId, commentContent) {
-
+  const Profile = require("./profileModel");
   const profile = await Profile.findOne({ user: userId });
   if (!profile) {
     throw Error("Profile not found");
@@ -360,6 +385,7 @@ postSchema.statics.updateComment = async function (userId, postId, newContent) {
 }
 
 postSchema.statics.removeComment = async function (userId, postId) {
+  const UsersActivity = require("./userActivityModel");
   const post = await this.findById(postId).populate("comments");
   if (!post) {
     throw Error("Post not found");
@@ -394,6 +420,7 @@ postSchema.statics.removeComment = async function (userId, postId) {
 };
 
 postSchema.statics.addShare = async function (userId, postId) {
+  const UsersActivity = require("./userActivityModel");
   const post = await this.findById(postId);
   if (!post) {
     throw Error("Post not found");
@@ -419,6 +446,7 @@ postSchema.statics.addShare = async function (userId, postId) {
 };
 
 postSchema.statics.removeShare = async function(userId, postId) {
+  const UsersActivity = require("./userActivityModel");
   const post = await this.findById(postId);
   if (!post) {
     throw Error("Post not found");

@@ -1,7 +1,4 @@
 const mongoose = require("mongoose");
-const Profile = require("./profileModel");
-const Community = require("./communitiesModel");
-const Post = require("./postModel");
 
 const Schema = mongoose.Schema;
 
@@ -100,6 +97,8 @@ userActivitySchema.statics.sendFriendRequest = async function (senderId, receive
 }
 
 userActivitySchema.statics.acceptFriendRequest = async function (userId, friendId) {
+    const Profile = require("./profileModel");
+
     const userActivity = await this.findOne({ user: userId });
     const friendActivity = await this.findOne({ user: friendId });
     
@@ -199,6 +198,8 @@ userActivitySchema.statics.removeFriend = async function (userId, friendId) {
 }
 
 userActivitySchema.statics.getReceivedRequests = async function (userId) {
+    const Profile = require("./profileModel");
+
     const userActivity = await this.findOne({ user: userId });
   
     if (!userActivity) {
@@ -256,6 +257,8 @@ userActivitySchema.statics.getAllFriends = async function (userId) {
 }
 
 userActivitySchema.statics.getJoinedCommunities = async function (userId) {
+    const Community = require("./communitiesModel");
+
     const userActivity = await this.findOne({ user: userId});
     if (!userActivity) {
         throw Error("user activity not found");
@@ -304,6 +307,8 @@ userActivitySchema.statics.getFriendRelationshipStatus = async function (userId,
 };
 
 userActivitySchema.statics.getCreatedPosts = async function (userId) {
+    const Post = require("./postModel");
+
     const userActivity = await this.findOne({ user: userId });
     if (!userActivity) {
         throw Error("User activity not found");
