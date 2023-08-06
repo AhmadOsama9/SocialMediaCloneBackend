@@ -50,6 +50,8 @@ const postSchema = new Schema({
 
 postSchema.statics.createPost = async function (header, content, owner, imageData, contentType) {
   const Profile = require("./profileModel");
+  const UsersActivity = require("./userActivityModel");
+
   const profile = await Profile.findOne({ user: owner });
   if (!profile) {
     throw Error("Profile not found");
@@ -94,6 +96,7 @@ postSchema.statics.addPost = async function (header, content, owner, communityId
   const Communities = require("./communitiesModel");
   const Profile = require("./profileModel");
   const UsersActivity = require("./userActivityModel");
+  
   const profile = await Profile.findOne({ user: owner });
   if (!profile) {
     throw Error("Profile not found");
