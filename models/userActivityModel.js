@@ -307,8 +307,6 @@ userActivitySchema.statics.getFriendRelationshipStatus = async function (userId,
 };
 
 userActivitySchema.statics.getCreatedPosts = async function (userId) {
-    const Post = require("./postModel");
-
     const userActivity = await this.findOne({ user: userId });
     if (!userActivity) {
         throw Error("User activity not found");
@@ -324,21 +322,35 @@ userActivitySchema.statics.getCreatedPosts = async function (userId) {
         }
 
         const reactions = [];
-        for (const reaction of userPost.reactions) {
-            reactions.push({nickname: reaction.nickname, reaction: reaction.reaction});
+        if (post.reactions && post.reactions.length > 0) {
+            for (const reaction of post.reactions) {
+                reactions.push({ nickname: reaction.nickname, reaction: reaction.reaction });
+            }
         }
 
         const comments = [];
-        for (const comment of userPost.comments) {
-            comments.push({nickname: comment.nickname, content: comment.content, createdAt: comment.createdAt});
+        if (post.comments && post.comments.length > 0) {
+            for (const comment of post.comments) {
+                comments.push({
+                    nickname: comment.nickname,
+                    content: comment.content,
+                    createdAt: comment.createdAt,
+                });
+            }
         }
 
-        results.push({nickname: post.nickname, header: post.header, content: post.content, reactions: reactions, comments: comments});
+        results.push({
+            nickname: post.nickname,
+            header: post.header,
+            content: post.content,
+            reactions: reactions,
+            comments: comments,
+        });
     }
 
     return results;
+};
 
-}
   
 
 module.exports = mongoose.model("usersactivities", userActivitySchema);
