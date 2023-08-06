@@ -341,10 +341,12 @@ userActivitySchema.statics.getCreatedPosts = async function (userId) {
             }
         }
 
+        console.log("nickname is: ", post.nickname);
+
         results.push({
-            nickname: userPost.nickname,
-            header: userPost.header,
-            content: userPost.content,
+            nickname: post.nickname,
+            header: post.header,
+            content: post.content,
             reactions: reactions,
             comments: comments,
         });
