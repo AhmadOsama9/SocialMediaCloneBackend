@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const UsersActivity = require("./userActivityModel");
 const Users = require("./userModel");
 const Profile = require("./profileModel");
 
@@ -36,6 +35,7 @@ const communitySchema = new Schema({
 });
 
 communitySchema.statics.createCommunity = async function (name, description, userId) {
+    const UsersActivity = require("./userActivityModel");
     const userActivity = await UsersActivity.findOne({ user: userId });
     if (!userActivity) {
         throw Error("User Activity not found");
@@ -61,6 +61,7 @@ communitySchema.statics.createCommunity = async function (name, description, use
 };
 
 communitySchema.statics.addToRequests = async function (userId, communityId) {
+    const UsersActivity = require("./userActivityModel");
     const community = await this.findById(communityId);
     if (!community) {
         throw Error("Failed to find the community");
@@ -81,6 +82,7 @@ communitySchema.statics.addToRequests = async function (userId, communityId) {
 
 
 communitySchema.statics.removeCommunity = async function (userId, communityId) {
+    const UsersActivity = require("./userActivityModel");
     const community = await this.findById(communityId);
     if (!community) {
         throw Error("Community not found");
@@ -117,6 +119,7 @@ communitySchema.statics.removeCommunity = async function (userId, communityId) {
  
 }
 communitySchema.statics.removeMember = async function (userId, communityId) {
+    const UsersActivity = require("./userActivityModel");
     const community = await this.findById(communityId);
     if (!community) {
         throw Error("Community not found");
@@ -150,6 +153,8 @@ communitySchema.statics.removeMember = async function (userId, communityId) {
 
 
 communitySchema.statics.acceptMemberRequest = async function (userId, communityId) {
+    const UsersActivity = require("./userActivityModel");
+
     const community = await this.findById(communityId);
     if (!community) {
         throw Error("Community not found");
@@ -302,6 +307,8 @@ communitySchema.statics.getMembershipRequests = async function (communityId) {
 }
 
 communitySchema.statics.leaveCommunity = async function (userId, communityId) {
+    const UsersActivity = require("./userActivityModel");
+
     const community = await this.findById(communityId);
     if (!community) {
         throw Error("Community not found");
