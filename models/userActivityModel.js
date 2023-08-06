@@ -307,6 +307,8 @@ userActivitySchema.statics.getFriendRelationshipStatus = async function (userId,
 };
 
 userActivitySchema.statics.getCreatedPosts = async function (userId) {
+    const Post = require("./postModel");
+
     const userActivity = await this.findOne({ user: userId });
     if (!userActivity) {
         throw Error("User activity not found");
