@@ -342,9 +342,9 @@ userActivitySchema.statics.getCreatedPosts = async function (userId) {
         }
 
         results.push({
-            nickname: post.nickname,
-            header: post.header,
-            content: post.content,
+            nickname: userPost.nickname,
+            header: userPost.header,
+            content: userPost.content,
             reactions: reactions,
             comments: comments,
         });
