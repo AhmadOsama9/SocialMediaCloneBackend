@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const Profile = require("./profileModel");
-const Community = require("./profileModel");
+const Community = require("./communitiesModel");
 const Post = require("./postModel");
 
 const Schema = mongoose.Schema;
