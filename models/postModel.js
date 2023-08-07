@@ -219,7 +219,7 @@ postSchema.statics.deleteUserPost = async function (postId) {
   }
   const userActivity = await UsersActivity.findOneAndUpdate(
     {user: postToDelete.owner},
-    {$pull: {posts: postId}}
+    {$pull: {userPosts: postId}}
   );
   if (!userActivity) {
     throw Error("Failed to find the userActivity");
