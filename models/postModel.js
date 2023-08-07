@@ -192,7 +192,7 @@ postSchema.statics.deleteCommunityPost = async function (postId) {
   // Remove the post from the user's posts array in UsersActivity
   const userActivity = await UsersActivity.findOneAndUpdate(
     {user: postToDelete.owner},
-    { $pull: { posts: postId } }
+    { $pull: { communitiesPosts: postId } }
   );
 
   if(!userActivity) {
