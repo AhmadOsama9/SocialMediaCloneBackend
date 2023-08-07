@@ -351,6 +351,7 @@ userActivitySchema.statics.getCreatedPosts = async function (userId) {
             content: content,
             reactions: reactions,
             comments: comments,
+            postId: post._id,
         });
     }
 
