@@ -149,8 +149,12 @@ postSchema.statics.addPost = async function (header, content, owner, communityId
     
 };
 
-postSchema.statics.updatePost = async function (postId, content, community, imageData, contentType) {
+postSchema.statics.updatePost = async function (postId, header, content, community, imageData, contentType) {
   const updatedPost = {};
+
+  if (header) {
+    updatedPost.header = header;
+  }
 
   if (content) {
     updatedPost.content = content;
@@ -168,12 +172,13 @@ postSchema.statics.updatePost = async function (postId, content, community, imag
   }
 
   const finishedupdatedPost = await this.findByIdAndUpdate(postId, updatedPost, { new: true });
-  if(!finishedupdatedPost) {
+  if (!finishedupdatedPost) {
     throw Error("Failed to update the post");
   }
 
   return finishedupdatedPost;
 };
+
 
 postSchema.statics.deleteCommunityPost = async function (postId) {
   const Communities = require("./communitiesModel");

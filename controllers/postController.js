@@ -25,10 +25,10 @@ const addPost = async (req, res) => {
 }
 
 const updatePost = async (req, res) => {
-    const { postId, content, community } = req.body; 
+    const { postId, header, content, community } = req.body; 
 
     try {
-        const updatedPost = await Posts.updatePost(postId, content, community);
+        const updatedPost = await Posts.updatePost(postId, header, content, community);
         res.status(200).json({postId: updatedPost._postId});
     } catch (error) {
         return res.status(400).json({error: error.message});
