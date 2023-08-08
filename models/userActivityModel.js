@@ -28,17 +28,9 @@ const userActivitySchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Communities",
     }],
-    savedPosts: [{
+    sharedPosts: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Posts",
-    }],
-    comments: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Comments",
-    }],
-    reactions: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Reactions",
     }],
     friends: [{
         userId: {

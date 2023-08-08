@@ -83,15 +83,15 @@ const removeReaction = async (req, res) => {
     const {userId, postId} = req.body;
 
     try {
-        await Posts.removeReaction(userId, postId);
-        res.status(200).json({message: "The reaction has been remove Succesfully"});
+        await Posts.deleteReaction(userId, postId);
+        res.status(200).json({message: "The reaction has been deleted Succesfully"});
     } catch (error) {
         res.status(400).json({error: error.message});
     }
 }
 
 const addComment = async (req, res) => {
-    const { userId, postId, content} = req.body;
+    const { userId, postId, content } = req.body;
 
     try {
         await Posts.addComment( userId, postId, content);
@@ -102,10 +102,10 @@ const addComment = async (req, res) => {
 }
 
 const updateComment = async (req, res) => {
-    const { userId, postId, content } = req.body;
+    const { userId, postId, content, commentId } = req.body;
     
     try {
-        await Posts.updateComment( userId, postId, content);
+        await Posts.updateComment( userId, postId, content, commentId);
         res.status(200).json({message: "The comment has been updated Succesfully"});
     } catch (error) {
         res.status(400).json({error: error.message});
@@ -113,11 +113,11 @@ const updateComment = async (req, res) => {
 }
 
 const removeComment = async (req, res) => {
-    const { userId, postId } = req.body;
+    const { userId, postId, commentId } = req.body;
 
     try {
-        await Posts.removeComment(userId, postId);
-        res.status(200).json({message: "The Comment has been remove successfully"});
+        await Posts.deleteComment(userId, postId, commentId);
+        res.status(200).json({message: "The Comment has been deleted successfully"});
     } catch (error) {
         res.status(400).json({error: error.message});
     }
@@ -145,6 +145,39 @@ const removeShare = async (req, res) => {
     }
 }
 
+const getPostReactions = async (req, res) => {
+    const {postId} = req.query;
+
+    try {
+        const results = await Posts.getPostReactions(postId);
+        res.status(200).json(results);
+    } catch (error) {
+        res.status(400).json({error: error.message});
+    }
+}
+
+const getPostComments = async (req, res) => {
+    const {postId} = req.query;
+
+    try {
+        const results = await Posts.getPostComments(postId);
+        res.status(200).json(results);
+    } catch (error) {
+        res.status(400).json({error: error.message});
+    }
+}
+
+const getPostSharesCount = async (req, res) => {
+    const {postId} = req.query;
+
+    try {
+        const count = await Posts.getPostSharesCount(postId);
+        res.status(200).json(count);
+    } catch (error) {
+        res.status(400).json({error: error.message});
+    }
+}
+
 module.exports = {
     createPost,
     addPost,
@@ -159,4 +192,7 @@ module.exports = {
     removeComment,
     addShare,
     removeShare,
+    getPostReactions,
+    getPostComments,
+    getPostSharesCount,
 }

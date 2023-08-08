@@ -14,6 +14,9 @@ const {
     removeComment,
     addShare,
     removeShare,
+    getPostReactions,
+    getPostComments,
+    getPostSharesCount,
 } = require("../controllers/postController");
 
 const router = express.Router();
@@ -44,6 +47,12 @@ router.post("/share/add", addShare);
 
 router.post("/share/remove", removeShare);
 
+
+router.get("/reactions", getPostReactions);
+
+router.get("/comments", getPostComments);
+
+router.get("/shares", getPostSharesCount);
 
 
 module.exports = router;
