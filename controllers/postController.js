@@ -102,7 +102,7 @@ const addComment = async (req, res) => {
 }
 
 const updateComment = async (req, res) => {
-    const { userId, postId, content, commentId } = req.body;
+    const { postId, content, commentId } = req.body;
     
     try {
         await Posts.updateComment( userId, postId, content, commentId);
@@ -113,7 +113,7 @@ const updateComment = async (req, res) => {
 }
 
 const removeComment = async (req, res) => {
-    const { userId, postId, commentId } = req.body;
+    const { postId, commentId } = req.body;
 
     try {
         await Posts.deleteComment(userId, postId, commentId);

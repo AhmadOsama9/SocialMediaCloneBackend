@@ -48,11 +48,11 @@ router.post("/share/add", addShare);
 router.post("/share/remove", removeShare);
 
 
-router.get("/reactions", getPostReactions);
+router.get("/reaction/get", getPostReactions);
 
-router.get("/comments", getPostComments);
+router.get("/comment/get", getPostComments);
 
-router.get("/shares", getPostSharesCount);
+router.get("/share/get", getPostSharesCount);
 
 
 module.exports = router;
