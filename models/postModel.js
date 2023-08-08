@@ -364,18 +364,12 @@ postSchema.statics.addComment = async function (userId, postId, commentContent) 
 
 };
 
-postSchema.statics.updateComment = async function (userId, postId, newContent, commentId) {
-  const Profile = require("./profileModel");
+postSchema.statics.updateComment = async function (postId, newContent, commentId) {
   const Comments = require("./commentModel");
 
   const post = await this.findById(postId);
   if (!post) {
     throw Error("post not found");
-  }
-
-  const profile = await Profile.findOne({ user: userId });
-  if (!profile) {
-    throw Error("Profile not found");
   }
 
   const comment = await Comments.findById(commentId);
@@ -391,18 +385,12 @@ postSchema.statics.updateComment = async function (userId, postId, newContent, c
 
 
 }
-postSchema.statics.deleteComment = async function (userId, postId, commentId) {
-  const Profile = require("./profileModel");
+postSchema.statics.deleteComment = async function (postId, commentId) {
   const Comments = require("./commentModel");
 
   const post = await this.findById(postId);
   if (!post) {
     throw new Error("Post not found");
-  }
-
-  const profile = await Profile.findOne({ user: userId });
-  if (!profile) {
-    throw new Error("Profile not found");
   }
 
   const comment = await Comments.findById(commentId);
