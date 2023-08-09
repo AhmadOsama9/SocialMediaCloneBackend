@@ -102,10 +102,10 @@ const addComment = async (req, res) => {
 }
 
 const updateComment = async (req, res) => {
-    const { postId, content, commentId } = req.body;
+    const { content, commentId } = req.body;
     
     try {
-        await Posts.updateComment( userId, postId, content, commentId);
+        await Posts.updateComment( content, commentId);
         res.status(200).json({message: "The comment has been updated Succesfully"});
     } catch (error) {
         res.status(400).json({error: error.message});

@@ -366,13 +366,8 @@ postSchema.statics.addComment = async function (userId, postId, commentContent) 
 
 };
 
-postSchema.statics.updateComment = async function (postId, newContent, commentId) {
+postSchema.statics.updateComment = async function (newContent, commentId) {
   const Comments = require("./commentModel");
-
-  const post = await this.findById(postId);
-  if (!post) {
-    throw Error("post not found");
-  }
 
   const comment = await Comments.findById(commentId);
   if (!comment) {
