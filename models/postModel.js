@@ -34,10 +34,10 @@ const postSchema = new Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: "Comments",
   }],
-  ShareCount: {
-    type: Number,
-    default: 0,
-  },
+  Shares: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Users"
+  }],
   community: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Communities",
@@ -407,37 +407,35 @@ postSchema.statics.deleteComment = async function (postId, commentId) {
   }
 };
 
-
-
 postSchema.statics.addShare = async function (userId, postId) {
   const UsersActivity = require("./userActivityModel");
   const post = await this.findById(postId);
   if (!post) {
-    throw Error("Post not found");
+    throw new Error("Post not found");
   }
 
   const userActivity = await UsersActivity.findOne({ user: userId });
   if (!userActivity) {
-    throw Error("user activity not found");
+    throw new Error("User activity not found");
   }
 
-  post.ShareCount++;
+  if (userActivity.sharedPosts.includes(postId)) {
+    throw new Error("The user has already shared that post");
+  }
+
+  userActivity.sharedPosts.push(postId);
+  const updatedUserActivity = await userActivity.save();
+  if (!updatedUserActivity) {
+    throw new Error("Failed to update the user activity");
+  }
+
+  post.shares.push(userId); // Add the user's ID to the shares array
   const updatedPost = await post.save();
   if (!updatedPost) {
-    throw Error("Failed to updated the number of shares in the post");
+    throw new Error("Failed to update the post");
   }
-
-  if (userActivity.sharedPosts.includes(post._id)) {
-    throw Error("The user has already shared that post");
-  }
-
-  userActivity.sharedPosts.push(post._id);
-  const updatedUserActivity = userActivity.save();
-  if (!updatedUserActivity) {
-    throw Error("Failed to update the user activity");
-  }
-  
 };
+
 postSchema.statics.removeShare = async function (userId, postId) {
   const UsersActivity = require("./userActivityModel");
   const post = await this.findById(postId);
@@ -450,22 +448,23 @@ postSchema.statics.removeShare = async function (userId, postId) {
     throw new Error("User activity not found");
   }
 
-  post.ShareCount--;
-  const updatedPost = await post.save();
-  if (!updatedPost) {
-    throw new Error("Failed to update the number of shares in the post");
-  }
-
-  if (!userActivity.sharedPosts.includes(post._id)) {
+  if (!userActivity.sharedPosts.includes(postId)) {
     throw new Error("The user hasn't shared that post");
   }
-  
-  userActivity.sharedPosts.pull(post._id);
-  const updatedUserActivity = userActivity.save();
+
+  userActivity.sharedPosts.pull(postId);
+  const updatedUserActivity = await userActivity.save();
   if (!updatedUserActivity) {
     throw new Error("Failed to update the user activity");
   }
+
+  post.shares.pull(userId); // Remove the user's ID from the shares array
+  const updatedPost = await post.save();
+  if (!updatedPost) {
+    throw new Error("Failed to update the post");
+  }
 };
+
 
 
 
@@ -511,13 +510,19 @@ postSchema.statics.getPostComments = async (postId) => {
   return results;
 }
 
-postSchema.statics.getPostSharesCount = async (postId) => {
+postSchema.statics.getPostShares = async (postId) => {
   const post = await this.findById(postId);
   if (!post) {
     throw Error("Post not found");
   }
 
-  return post.ShareCount;
+  const shares = post.shares;
+  const results = [];
+  for (const share of shares) {
+    results.push({userId: share});
+  }
+
+  return results;
 }
 
 module.exports = mongoose.model("Posts", postSchema);
