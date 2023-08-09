@@ -172,7 +172,7 @@ const getPostSharesCount = async (req, res) => {
 
     try {
         const count = await Posts.getPostSharesCount(postId);
-        res.status(200).json(count);
+        res.status(200).json({count: count});
     } catch (error) {
         res.status(400).json({error: error.message});
     }
