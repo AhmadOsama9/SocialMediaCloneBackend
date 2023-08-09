@@ -362,6 +362,8 @@ postSchema.statics.addComment = async function (userId, postId, commentContent) 
     throw Error("Failed to save the comment to the post");
   }
 
+  return comment._id;
+
 };
 
 postSchema.statics.updateComment = async function (postId, newContent, commentId) {
