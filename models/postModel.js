@@ -319,7 +319,7 @@ postSchema.statics.deleteReaction = async function (nickname, postId) {
       if (!updatedPostReactions) {
         throw new Error("Failed to save the updated post");
       }
-      const deletedReaction = await Reactions.findByIdAnddelete(reaction._id);
+      const deletedReaction = await Reactions.findByIdAndDelete(reaction._id);
       if (!deletedReaction) {
         throw new Error("Failed to delete the reaction from the reactions schema");
       }
