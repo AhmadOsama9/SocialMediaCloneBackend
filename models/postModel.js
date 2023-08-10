@@ -409,8 +409,7 @@ postSchema.statics.deleteComment = async function (postId, commentId) {
 
 postSchema.statics.addShare = async function (userId, postId) {
   const UsersActivity = require("./userActivityModel");
-  console.log("The postId is: ", postId);
-  console.log("The userId is: ", userId);
+  
   const post = await this.findById(postId);
   if (!post) {
     throw new Error("Post not found");
