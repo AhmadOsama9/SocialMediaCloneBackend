@@ -112,4 +112,12 @@ profileSchema.statics.searchByNickname = async function (nickname) {
   return userProfile;
 }
 
+profileSchema.statics.getNickname = async function (userId) {
+  const userProfile = await this.findOne({ user: userId });
+  if (!userProfile) {
+    throw Error("No user with that userId");
+  }
+  return userProfile.nickname;
+}
+
 module.exports = mongoose.model("Profiles", profileSchema);
