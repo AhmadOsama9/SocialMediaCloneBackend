@@ -244,9 +244,8 @@ postSchema.statics.addReaction = async function (nickname, postId, reactionType)
     throw Error("Invalid reaction type");
   }
   const newReaction = await Reactions.create({
-    user: userId,
     reaction: reactionType,
-    userNickname: nickname,
+    userNickname: profile.nickname,
   });
   if (!newReaction) {
     throw Error("Failed to create the reaction");
