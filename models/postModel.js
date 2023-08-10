@@ -245,7 +245,7 @@ postSchema.statics.addReaction = async function (nickname, postId, reactionType)
   }
   const newReaction = await Reactions.create({
     reaction: reactionType,
-    userNickname: profile.nickname,
+    userNickname: nickname,
   });
   if (!newReaction) {
     throw Error("Failed to create the reaction");
