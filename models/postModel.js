@@ -484,7 +484,7 @@ postSchema.statics.getPostReactions = async function (postId) {
     if (!postReaction) {
       throw Error("post reaction not found");
     }
-    results.push({nickname: postReaction.nickname, reaction: postReaction.reaction});
+    results.push({nickname: postReaction.userNickname, reaction: postReaction.reaction});
   }
   return results;
 
@@ -505,7 +505,7 @@ postSchema.statics.getPostComments = async function (postId) {
     if (!postComment) {
       throw Error("post comment not found");
     }
-    results.push({nickname: postComment.nickname, content: postComment.content, commentId: postComment._id});
+    results.push({nickname: postComment.userNickname, content: postComment.content, commentId: postComment._id});
   }
 
   return results;
