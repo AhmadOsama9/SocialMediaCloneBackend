@@ -472,6 +472,8 @@ postSchema.statics.removeShare = async function (userId, postId) {
 postSchema.statics.getPostReactions = async (postId) => {
   const Reactions = require("./reactionModel");
 
+  console.log("The postId is: ", postId);
+
   const post = await this.findById(postId);
   if (!post) {
     throw Error("Post not found");
