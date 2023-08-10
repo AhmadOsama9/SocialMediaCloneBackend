@@ -268,8 +268,7 @@ postSchema.statics.addReaction = async function (userId, postId, reactionType) {
 
 };
 
-postSchema.statics.updateReaction = async function (userId, postId, reactionType) {
-  const Profile = require("./profileModel");
+postSchema.statics.updateReaction = async function (nickname, postId, reactionType) {
   const Reactions = require("./reactionModel");
 
   const post = await this.findById(postId);
@@ -277,29 +276,29 @@ postSchema.statics.updateReaction = async function (userId, postId, reactionType
     throw Error("Post not found");
   }
 
-  const profile = await Profile.findOne({ user: userId });
-  if (!profile) {
-    throw Error("Profile not found");
-  }
-
   if (!["like", "love", "care", "sad", "angry"].includes(reactionType)) {
     throw new Error("Invalid reaction type");
   }
 
-  const reaction = await Reactions.findOne({ nickname: profile.nickname});
-  if (!reaction) {
-    throw Error("Reaction not found");
-  }
-  reaction.reaction = reactionType;
-  
-  const updatedReaction = await reaction.save();
-  if (!updatedReaction) {
-    throw Error("Failed to save the updated Reaction");
+  const reactions = post.reactions;
+  for (const reactionId of reactions) {
+    const reaction = await Reactions.findById(reactionId);
+    if (!reaction) {
+      throw new Error("Reaction not found");
+    }
+
+    if (reaction.nickname === nickname) {
+      reaction.reaction = reactionType;
+
+      const updatedReaction = await reaction.save();
+      if (!updatedReaction) {
+        throw Error("Failed to save the updated Reaction");
+      }
+    }
   }
 }
 
-postSchema.statics.deleteReaction = async function (userId, postId) {
-  const Profile = require("./profileModel");
+postSchema.statics.deleteReaction = async function (nickname, postId) {
   const Reactions = require("./reactionModel");
 
   const post = await this.findById(postId);
@@ -307,25 +306,24 @@ postSchema.statics.deleteReaction = async function (userId, postId) {
     throw new Error("Post not found");
   }
 
-  const profile = await Profile.findOne({ user: userId });
-  if (!profile) {
-    throw new Error("Profile not found");
-  }
+  const reactions = post.reactions;
+  for (const reactionId of reactions) {
+    const reaction = await Reactions.findById(reactionId);
+    if (!reaction) {
+      throw new Error("Reaction not found");
+    }
 
-  const reaction = await Reactions.findOne({ nickname: profile.nickname });
-  if (!reaction) {
-    throw new Error("Reaction not found");
-  }
-
-  post.reactions.pull(reaction._id);
-  const updatedPostReactions = await post.save();
-  if (!updatedPostReactions) {
-    throw new Error("Failed to save the updated post");
-  }
-
-  const deletedReaction = await reaction.remove();
-  if (!deletedReaction) {
-    throw new Error("Failed to delete the reaction from the reactions schema");
+    if (reaction.nickname === nickname) {
+      post.reactions.pull(reaction._id);
+      const updatedPostReactions = await post.save();
+      if (!updatedPostReactions) {
+        throw new Error("Failed to save the updated post");
+      }
+      const deletedReaction = await reaction.remove();
+      if (!deletedReaction) {
+        throw new Error("Failed to delete the reaction from the reactions schema");
+      }
+    }
   }
   
 }
@@ -465,8 +463,6 @@ postSchema.statics.removeShare = async function (userId, postId) {
     throw new Error("Failed to update the post");
   }
 };
-
-
 
 
 postSchema.statics.getPostReactions = async function (postId) {
