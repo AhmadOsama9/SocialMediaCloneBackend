@@ -95,7 +95,7 @@ const getNickname = async (req, res) => {
     const { userId } = req.query;
 
     try {
-        const nickanem = await Profile.getNickname(userId);
+        const nickname = await Profile.getNickname(userId);
         res.status(200).json({ nickname: nickname});
     } catch (error) {
         res.status(400).json({error: error.message});
