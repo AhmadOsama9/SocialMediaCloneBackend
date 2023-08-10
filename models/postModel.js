@@ -232,18 +232,12 @@ postSchema.statics.deleteUserPost = async function (postId) {
 
 }
 
-postSchema.statics.addReaction = async function (userId, postId, reactionType) {
-  const Profile = require("./profileModel");
+postSchema.statics.addReaction = async function (nickname, postId, reactionType) {
   const Reactions = require("./reactionModel");
 
   const post = await this.findById(postId);
   if(!post) {
     throw Error("Post not found");
-  }
-
-  const profile = await Profile.findOne({ user: userId });
-  if (!profile) {
-    throw Error("Profile not found");
   }
 
   if (!["like", "love", "care", "sad", "angry"].includes(reactionType)) {
@@ -252,7 +246,7 @@ postSchema.statics.addReaction = async function (userId, postId, reactionType) {
   const newReaction = await Reactions.create({
     user: userId,
     reaction: reactionType,
-    userNickname: profile.nickname,
+    userNickname: nickname,
   });
   if (!newReaction) {
     throw Error("Failed to create the reaction");
