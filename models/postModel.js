@@ -34,7 +34,7 @@ const postSchema = new Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: "Comments",
   }],
-  Shares: [{
+  shares: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: "Users"
   }],
@@ -409,7 +409,7 @@ postSchema.statics.deleteComment = async function (postId, commentId) {
 
 postSchema.statics.addShare = async function (userId, postId) {
   const UsersActivity = require("./userActivityModel");
-  
+
   const post = await this.findById(postId);
   if (!post) {
     throw new Error("Post not found");
