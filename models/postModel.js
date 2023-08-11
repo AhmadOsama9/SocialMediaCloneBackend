@@ -392,7 +392,7 @@ postSchema.statics.deleteComment = async function (postId, commentId) {
     throw new Error("Failed to save the updated post");
   }
 
-  const deletedComment = await comment.remove();
+  const deletedComment = await Comments.findByIdAndDelete(commentId);
   if (!deletedComment) {
     throw new Error("Failed to delete the comment from the comments schema");
   }
