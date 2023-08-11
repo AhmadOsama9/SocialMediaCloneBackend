@@ -105,7 +105,7 @@ const updateComment = async (req, res) => {
     const { content, commentId } = req.body;
     
     try {
-        await Posts.updateComment( content, commentId);
+        await Posts.updateComment(content, commentId);
         res.status(200).json({message: "The comment has been updated Succesfully"});
     } catch (error) {
         res.status(400).json({error: error.message});
@@ -116,7 +116,7 @@ const removeComment = async (req, res) => {
     const { postId, commentId } = req.body;
 
     try {
-        await Posts.deleteComment(userId, postId, commentId);
+        await Posts.deleteComment(postId, commentId);
         res.status(200).json({message: "The Comment has been deleted successfully"});
     } catch (error) {
         res.status(400).json({error: error.message});
