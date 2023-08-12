@@ -256,6 +256,8 @@ userActivitySchema.statics.getJoinedCommunities = async function (userId) {
         throw Error("user activity not found");
     }
 
+    console.log("Joined Communities Array:", userActivity.joinedCommunities);
+
     const results = [];
 
     const joinedCommunities = userActivity.joinedCommunities;
