@@ -176,7 +176,7 @@ communitySchema.statics.acceptMemberRequest = async function (userId, communityI
     }
 
     userActivity.joinedCommunities.push(community._id);
-    const updatedUserActivity = await community.save();
+    const updatedUserActivity = await userActivity.save();
     if (!updatedUserActivity) {
         throw Error("Failed to save the updated user Community");
     }
