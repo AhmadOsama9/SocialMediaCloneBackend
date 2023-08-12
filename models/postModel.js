@@ -109,7 +109,7 @@ postSchema.statics.addPost = async function (header, content, owner, communityId
     header,
     content,
     owner,
-    community,
+    communityId,
     createdAt: Date.now(),
   };
 
