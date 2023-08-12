@@ -283,7 +283,7 @@ communitySchema.statics.getMembers = async function (communityId) {
         if (community.admins.includes(member)) {
             relation = "admin"
         }
-        results.push({ nickname: memberProfile.nickname, relation: relation, userId: member});
+        results.push({ nickname: memberProfile.nickname, relation: relation, user: member});
     }
     return results;
 }
