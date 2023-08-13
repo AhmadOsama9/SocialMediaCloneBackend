@@ -189,19 +189,29 @@ postSchema.statics.deleteCommunityPost = async function (postId) {
     throw Error("Post not found");
   }
 
-  // Remove the post from the user's posts array in UsersActivity
-  const userActivity = await UsersActivity.findOneAndUpdate(
-    {user: postToDelete.owner},
-    { $pull: { communitiesPosts: postId } }
-  );
-
+  
+  const userActivity = await UsersActivity.findOne({user: postToDelete.owner});
   if(!userActivity) {
     throw Error("Failed to find the userActivity");
   }
-  // Remove the post from the community's posts array
-  const community = await Communities.findByIdAndUpdate(postToDelete.community, { $pull: { posts: postId } });
+  
+  userActivity.communitiesPosts.pull(postToDelete);
+  const updatedUserActivity = userActivity.save();
+  if (!updatedUserActivity) {
+    throw Error("Failed to save the updated user activity");
+  }
+
+  
+
+  const community = await Communities.findById(postToDelete.community);
   if(!community) {
     throw Error("Failed to find the community");
+  }
+
+  community.posts.pull(postToDelete);
+  const updatedCommunity = community.save();
+  if (!updatedCommunity) {
+    throw Error("Failed to save the updated community");
   }
 
   const deletedPost = await this.findByIdAndDelete(postId);
