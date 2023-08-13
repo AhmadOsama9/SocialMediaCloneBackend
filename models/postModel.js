@@ -109,7 +109,7 @@ postSchema.statics.addPost = async function (header, content, owner, communityId
     header,
     content,
     owner,
-    communityId,
+    community: communityId,
     createdAt: Date.now(),
   };
 
@@ -194,7 +194,7 @@ postSchema.statics.deleteCommunityPost = async function (postId) {
   if(!userActivity) {
     throw Error("Failed to find the userActivity");
   }
-  
+
   userActivity.communitiesPosts.pull(postToDelete);
   const updatedUserActivity = userActivity.save();
   if (!updatedUserActivity) {
