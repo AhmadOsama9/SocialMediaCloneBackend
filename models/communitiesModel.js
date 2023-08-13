@@ -342,5 +342,56 @@ communitySchema.statics.leaveCommunity = async function (userId, communityId) {
 
 }
 
+communitySchema.statics.getCreatedPosts = async function (communityId) {
+    const Post = require("./postModel");
+
+    const community = await this.findById(community);
+    if (!community) {
+        throw Error("Community not found");
+    }
+
+    const communityPosts = community.posts;
+    const results = [];
+    for (const postId of communityPosts) {
+        const post = await Post.findById(postId);
+        if (!post) {
+            throw Error("Can not find the post");
+        }
+
+        const reactions = [];
+        if (post.reactions && post.reactions.length > 0) {
+            for (const reaction of post.reactions) {
+                reactions.push({ nickname: reaction.nickname, reaction: reaction.reaction });
+            }
+        }
+
+        const comments = [];
+        if (post.comments && post.comments.length > 0) {
+            for (const comment of post.comments) {
+                comments.push({
+                    nickname: comment.nickname,
+                    content: comment.content,
+                    createdAt: comment.createdAt,
+                });
+            }
+        }
+
+        const nickname = post.nickname;
+        const header = post.header;
+        const content = post.content;
+
+        results.push({
+            nickname: nickname,
+            header: header,
+            content: content,
+            reactions: reactions,
+            comments: comments,
+            postId: post._id,
+        });
+    }
+
+    return results;
+}
+
 
 module.exports = mongoose.model("Communities", communitySchema);

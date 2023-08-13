@@ -153,6 +153,17 @@ const leaveCommunity = async (req, res) => {
     }
 }
 
+const getCreatedPost = async (req, res) => {
+    const { communityId } = req.query;
+
+    try {
+        const results = await Community.getCreatedPosts(communityId);
+        res.status(200).json(results);
+    } catch (error) {
+        res.status(400).json({error: error.message});
+    }
+}
+
 
 
 module.exports = {
@@ -170,4 +181,5 @@ module.exports = {
     getMembers,
     getMembershipRequests,
     leaveCommunity,
+    getCreatedPost,
 }

@@ -15,6 +15,7 @@ const {
     getMembers,
     getMembershipRequests,
     leaveCommunity,
+    getCreatedPost,
  } 
  = require("../controllers/communityController");
 
@@ -50,5 +51,7 @@ router.get("/relation", getRelation);
 router.get("/getmembers", getMembers);
 
 router.get("/getmembershiprequests", getMembershipRequests);
+
+router.get("/getcreatedposts", getCreatedPost);
 
 module.exports = router;
