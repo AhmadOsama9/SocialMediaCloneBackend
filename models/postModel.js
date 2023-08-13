@@ -149,7 +149,41 @@ postSchema.statics.addPost = async function (header, content, owner, communityId
     
 };
 
-postSchema.statics.updatePost = async function (postId, header, content, community, imageData, contentType) {
+postSchema.statics.createPagePost = async function (pageName, header, content) {
+  const Pages = require("./pageMdoel");
+  const Profile = require("./profileModel");
+
+  const page = await Pages.findOne({ name: pageName });
+  if (!page) {
+      throw Error("Page not found");
+  }
+
+  const profile = await Profile.findOne({ user: page.admin});
+  if (!profile) {
+      throw Error("Profile not found");
+  }
+
+  const newPost = {
+      nickname: profile.nickname,
+      header,
+      content,
+      owner: page.admin,
+      createdAt: Date.now(),
+  };
+
+  const createdPost = await this.create(newPost);
+  if (!createdPost) {
+      throw Error("Cannot create the post");
+  }
+
+  page.posts.push(createdPost._id);
+  const updatedPage = page.save();
+  if (!updatedPage) {
+      throw Error("Failed to save the updated Page");
+  }
+}
+
+postSchema.statics.updatePost = async function (postId, header, content ,imageData, contentType) {
   const updatedPost = {};
 
   if (header) {
@@ -158,10 +192,6 @@ postSchema.statics.updatePost = async function (postId, header, content, communi
 
   if (content) {
     updatedPost.content = content;
-  }
-
-  if (community) {
-    updatedPost.community = community;
   }
 
   if (imageData && contentType) {
@@ -238,6 +268,32 @@ postSchema.statics.deleteUserPost = async function (postId) {
   const deletedPost = await this.findByIdAndDelete(postId);
   if (!deletedPost) {
     throw Error("FAiled to delete the post");
+  }
+
+}
+
+postSchema.statics.deletePagePost = async function (pageName, postId) {
+  const Pages = require("./pageModel");
+
+  const postToDelete = await this.findById(postId);
+  if (!postToDelete) {
+    throw Error("Post not found");
+  }
+
+  const page = await Pages.findOne({ name: pageName });
+  if (!page) {
+    throw Error("Page not found");
+  }
+
+  page.posts.pull(postToDelete);
+  const updatedPage = page.save();
+  if (!updatedPage) {
+    throw Error("Failed to save the udpated page");
+  }
+
+  const deletedPost = await this.findByIdAndDelete(postId);
+  if (!deletedPost) {
+    throw Error("Failed to delete the post");
   }
 
 }

@@ -8,7 +8,10 @@ const profileSchema = new Schema({
     ref: "Users",
     required: true,
   },
-  nickname: String,
+  nickname: {
+    type: String,
+    unique: true,
+  },
   age: Number,
   gender: {
     type: String,

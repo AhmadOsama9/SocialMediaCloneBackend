@@ -24,8 +24,19 @@ const addPost = async (req, res) => {
     }
 }
 
+const createPagePost = async (req, res) => {
+    const { pageName, header, content } = req.body;
+
+    try {
+        await Posts.createPagePost(pageName, header, content);
+        res.status(200).json({message: "The post has been created Successfully"});
+    } catch (error) {
+        res.status(400).json({error: error.message});
+    }
+}
+
 const updatePost = async (req, res) => {
-    const { postId, header, content, community } = req.body; 
+    const { postId, header, content } = req.body; 
 
     try {
         const updatedPost = await Posts.updatePost(postId, header, content, community);
@@ -52,6 +63,17 @@ const deleteUserPost = async (req, res) => {
     try {
         await Posts.deleteUserPost(postId);
         res.status(200).json({message: "The post has been deleted successfully"});
+    } catch (error) {
+        res.status(400).json({error: error.message});
+    }
+}
+
+const deletePagePost = async (req, res) => {
+    const { pageName, postId } = req.body;
+
+    try {
+        await Posts.deletePagePost(postId);
+        res.status(200).json({message: "The post has been deleted Successfully"});
     } catch (error) {
         res.status(400).json({error: error.message});
     }
@@ -181,9 +203,11 @@ const getPostSharesCount = async (req, res) => {
 module.exports = {
     createPost,
     addPost,
+    createPagePost,
     updatePost,
     deleteCommunityPost,
     deleteUserPost,
+    deletePagePost,
     addReaction,
     updateReaction,
     removeReaction,

@@ -3,9 +3,11 @@ const express = require("express");
 const { 
     createPost,
     addPost, 
+    createPagePost,
     updatePost, 
     deleteCommunityPost,
     deleteUserPost,
+    deletePagePost,
     addReaction,
     updateReaction,
     removeReaction,
@@ -25,11 +27,15 @@ router.post("/create", createPost);
 
 router.post("/add", addPost);
 
+router.post("/createpagepost", createPagePost);
+
 router.post("/update", updatePost);
 
 router.post("/deletecommunitypost", deleteCommunityPost);
 
 router.post("/deleteuserpost", deleteUserPost);
+
+router.post("/deletepagepost", deletePagePost);
 
 router.post("/reaction/add", addReaction);
 
