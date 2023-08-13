@@ -494,7 +494,7 @@ postSchema.statics.getPostComments = async function (postId) {
     if (!postComment) {
       throw Error("post comment not found");
     }
-    results.push({nickname: postComment.userNickname, content: postComment.content, commentId: postComment._id});
+    results.push({nickname: postComment.userNickname, content: postComment.content, commentId: postComment._id, createdAt: postComment.createdAt});
   }
 
   return results;

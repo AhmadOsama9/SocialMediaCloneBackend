@@ -317,24 +317,6 @@ userActivitySchema.statics.getCreatedPosts = async function (userId) {
             throw Error("Can not find the post");
         }
 
-        const reactions = [];
-        if (post.reactions && post.reactions.length > 0) {
-            for (const reaction of post.reactions) {
-                reactions.push({ nickname: reaction.nickname, reaction: reaction.reaction });
-            }
-        }
-
-        const comments = [];
-        if (post.comments && post.comments.length > 0) {
-            for (const comment of post.comments) {
-                comments.push({
-                    nickname: comment.nickname,
-                    content: comment.content,
-                    createdAt: comment.createdAt,
-                });
-            }
-        }
-
         const nickname = post.nickname;
         const header = post.header;
         const content = post.content;
@@ -343,8 +325,6 @@ userActivitySchema.statics.getCreatedPosts = async function (userId) {
             nickname: nickname,
             header: header,
             content: content,
-            reactions: reactions,
-            comments: comments,
             postId: post._id,
         });
     }
