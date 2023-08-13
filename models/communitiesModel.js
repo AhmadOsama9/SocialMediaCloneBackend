@@ -345,7 +345,7 @@ communitySchema.statics.leaveCommunity = async function (userId, communityId) {
 communitySchema.statics.getCreatedPosts = async function (communityId) {
     const Post = require("./postModel");
 
-    const community = await this.findById(community);
+    const community = await this.findById(communityId);
     if (!community) {
         throw Error("Community not found");
     }
