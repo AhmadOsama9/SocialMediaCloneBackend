@@ -3,6 +3,7 @@ const {
     deletePage,
     getCreatedPosts,
     getPageLikers,
+    getPage,
 
 } = require("../controllers/pageController");
 
@@ -19,5 +20,6 @@ router.get("/posts", getCreatedPosts);
 
 router.get("/pagelikers", getPageLikers);
 
+router.get("/getpage", getPage);
 
 module.exports = router;

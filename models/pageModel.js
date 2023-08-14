@@ -125,4 +125,13 @@ pageSchema.statics.getPageLikers = async function (name) {
 }
 
 
+pageSchema.statics.getPage = async function (name) {
+    const page = await this.findOne({name});
+    if (!page) {
+        throw Error("Page not found");
+    }
+
+    return page;
+}
+
 module.exports = mongoose.model("Pages", pageSchema);

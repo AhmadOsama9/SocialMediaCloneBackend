@@ -44,10 +44,22 @@ const getPageLikers = async (req, res) => {
     }
 }
 
+const getPage = async (req, res) => {
+    const { name } = req.query;
+
+    try {
+        const page = await Pages.getPage(name);
+        res.status(200).json(page);
+    } catch (error) {
+        res.status(400).json({error: error.message});
+    }
+}
+
 
 module.exports = {
     createPage,
     deletePage,
     getCreatedPosts,
     getPageLikers,
+    getPage,
 }
