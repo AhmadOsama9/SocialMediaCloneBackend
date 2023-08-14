@@ -55,6 +55,17 @@ const getPage = async (req, res) => {
     }
 }
 
+const getPageAdmin = async (req, res) => {
+    const {name} = req.query;
+
+    try {
+        const admin = await Pages.getPageAdmin(name);
+        res.status(200).json(admin);
+    } catch (error) {
+        res.status(400).json({error: error.message});
+    }
+}
+
 
 module.exports = {
     createPage,
@@ -62,4 +73,5 @@ module.exports = {
     getCreatedPosts,
     getPageLikers,
     getPage,
+    getPageAdmin,
 }

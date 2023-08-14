@@ -4,6 +4,7 @@ const {
     getCreatedPosts,
     getPageLikers,
     getPage,
+    getPageAdmin,
 
 } = require("../controllers/pageController");
 
@@ -21,5 +22,7 @@ router.get("/posts", getCreatedPosts);
 router.get("/pagelikers", getPageLikers);
 
 router.get("/getpage", getPage);
+
+router.get("/getpageadmin/", getPageAdmin);
 
 module.exports = router;

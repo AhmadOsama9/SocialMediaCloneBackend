@@ -134,4 +134,13 @@ pageSchema.statics.getPage = async function (name) {
     return page;
 }
 
+pageSchema.statics.getPageAdmin = async function (name) {
+    const page = await this.findOne({name});
+    if (!page) {
+        throw Error("Page not found");
+    }
+
+    return page.admin;
+}
+
 module.exports = mongoose.model("Pages", pageSchema);
