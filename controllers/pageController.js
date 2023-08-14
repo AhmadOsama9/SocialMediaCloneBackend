@@ -45,7 +45,7 @@ const getPageLikers = async (req, res) => {
 }
 
 
-module.exporst = {
+module.exports = {
     createPage,
     deletePage,
     getCreatedPosts,

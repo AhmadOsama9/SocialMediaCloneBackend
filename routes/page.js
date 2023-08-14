@@ -20,4 +20,4 @@ router.get("/posts", getCreatedPosts);
 router.get("/pagelikers", getPageLikers);
 
 
-module.exporsts = router;
+module.exports = router;
