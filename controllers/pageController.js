@@ -66,6 +66,29 @@ const getPageAdmin = async (req, res) => {
     }
 }
 
+const addLike = async (req, res) => {
+    const {name, userId} = req.body;
+
+    try {
+        await Pages.addLike(name, userId);
+        res.status(200).json({message: "The like has been added Successfully"});
+    } catch (error) {
+        res.status(400).json({error: error.message});
+    }
+}
+
+const removeLike = async (req, res) => {
+    const {name, userId} = req.body;
+
+    try {
+        await Pages.removeLike(name, userId);
+        res.status(200).json({message: "The like has been removed Successfully"})
+    } catch (error) {
+        res.status(400).json({error: error.message});
+    }
+}
+
+
 
 module.exports = {
     createPage,
@@ -74,4 +97,6 @@ module.exports = {
     getPageLikers,
     getPage,
     getPageAdmin,
+    addLike,
+    removeLike,
 }

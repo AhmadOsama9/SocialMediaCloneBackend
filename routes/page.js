@@ -5,6 +5,8 @@ const {
     getPageLikers,
     getPage,
     getPageAdmin,
+    addLike,
+    removeLike,
 
 } = require("../controllers/pageController");
 
@@ -15,6 +17,10 @@ const router = express.Router();
 router.post("/create", createPage);
 
 router.post("/delete", deletePage);
+
+router.post("/addlike", addLike);
+
+router.post("/removelike", removeLike);
 
 
 router.get("/posts", getCreatedPosts);

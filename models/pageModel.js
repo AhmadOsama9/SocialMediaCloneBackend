@@ -143,4 +143,34 @@ pageSchema.statics.getPageAdmin = async function (name) {
     return page.admin;
 }
 
+pageSchema.statics.addLike = async function (name, userId) {
+    const page = await this.findOne([name]);
+    if (!page) {
+        throw Error("Page not found");
+    }
+
+    page.pageLikers.push(userId);
+    const updatedPage = await page.save();
+    if (!updatedPage) {
+        throw Error("Failed to save the updated Page");
+    }
+}
+
+postSchema.statics.removeLike = async function (name, userId) {
+    const page = await this.findOne({name});
+    if (!page) {
+        throw Error("Page not found");
+    }
+
+    if (!page.pageLikers.include(userId)) {
+        throw Error("That user is not liking the page");
+    }
+
+    page.pageLikers.pull(userId);
+    const updatedPage = await page.save();
+    if (!updatedPage) {
+        throw Error("Failed to save the updated Page");
+    }
+}
+
 module.exports = mongoose.model("Pages", pageSchema);
