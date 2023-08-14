@@ -53,7 +53,7 @@ pageSchema.statics.createPage = async function (name, description, userId) {
 
 }
 
-page.Schema.statics.deletePage = async function (name) {
+pageSchema.statics.deletePage = async function (name) {
     const UsersActivity = require("./userActivityModel");
     
     const page = await this.findOne({ name });
