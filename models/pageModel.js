@@ -156,7 +156,7 @@ pageSchema.statics.addLike = async function (name, userId) {
     }
 }
 
-postSchema.statics.removeLike = async function (name, userId) {
+pageSchema.statics.removeLike = async function (name, userId) {
     const page = await this.findOne({name});
     if (!page) {
         throw Error("Page not found");
