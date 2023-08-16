@@ -148,7 +148,7 @@ pageSchema.statics.getPageAdmin = async function (name) {
 }
 
 pageSchema.statics.addLike = async function (name, userId) {
-    const page = await this.findOne([name]);
+    const page = await this.findOne({name});
     if (!page) {
         throw Error("Page not found");
     }
