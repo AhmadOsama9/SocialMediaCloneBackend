@@ -121,12 +121,11 @@ pageSchema.statics.getPageLikers = async function (name) {
         throw Error("Page not found");
     }
 
-    const likers = await page.pageLikers;
-
-    console.log("The PageLikers are: ", likers);
+    
+    console.log("The PageLikers are: ", page.pagelikers);
     console.log("The page is: ", page);
 
-    return likers;
+    return page.pagelikers;
 }
 
 
