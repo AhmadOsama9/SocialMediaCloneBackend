@@ -148,12 +148,16 @@ pageSchema.statics.getPageAdmin = async function (name) {
 }
 
 pageSchema.statics.addLike = async function (name, userId) {
-    const page = await this.findOne({name});
+    const page = await this.findOne({ name });
     if (!page) {
         throw Error("Page not found");
     }
 
-    page.pageLikers.push(userId);
+    if (page.pagelikers.includes(userId)) {
+        throw Error("The page is already being liked");
+    }
+
+    page.pagelikers.push(userId);
     const updatedPage = await page.save();
     if (!updatedPage) {
         throw Error("Failed to save the updated Page");
@@ -166,11 +170,11 @@ pageSchema.statics.removeLike = async function (name, userId) {
         throw Error("Page not found");
     }
 
-    if (!page.pageLikers.include(userId)) {
+    if (!page.pagelikers.includes(userId)) {
         throw Error("That user is not liking the page");
     }
 
-    page.pageLikers.pull(userId);
+    page.pagelikers.pull(userId);
     const updatedPage = await page.save();
     if (!updatedPage) {
         throw Error("Failed to save the updated Page");
