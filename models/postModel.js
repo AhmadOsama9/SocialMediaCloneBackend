@@ -150,7 +150,7 @@ postSchema.statics.addPost = async function (header, content, owner, communityId
 };
 
 postSchema.statics.createPagePost = async function (pageName, header, content) {
-  const Pages = require("./pageMdoel");
+  const Pages = require("./pageModel");
   const Profile = require("./profileModel");
 
   const page = await Pages.findOne({ name: pageName });

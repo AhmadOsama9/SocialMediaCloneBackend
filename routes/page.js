@@ -29,6 +29,6 @@ router.get("/pagelikers", getPageLikers);
 
 router.get("/getpage", getPage);
 
-router.get("/getpageadmin/", getPageAdmin);
+router.get("/getpageadmin", getPageAdmin);
 
 module.exports = router;
