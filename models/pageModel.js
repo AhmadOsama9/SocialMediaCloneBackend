@@ -116,13 +116,13 @@ pageSchema.statics.getCreatedPosts = async function (name) {
 }
 pageSchema.statics.getPageLikers = async function (name) {
     const page = await this.findOne({ name })
-        .populate('pageLikers');
 
     if (!page) {
         throw Error("Page not found");
     }
 
     console.log("The PageLikers are: ", page.pageLikers);
+    console.log("The page is: ", page);
 
     return page.pageLikers;
 }
