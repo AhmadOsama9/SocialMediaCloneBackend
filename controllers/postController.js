@@ -39,7 +39,7 @@ const updatePost = async (req, res) => {
     const { postId, header, content } = req.body; 
 
     try {
-        const updatedPost = await Posts.updatePost(postId, header, content, community);
+        const updatedPost = await Posts.updatePost(postId, header, content);
         res.status(200).json({message: "The post has been updated Successfully"});
     } catch (error) {
         return res.status(400).json({error: error.message});
