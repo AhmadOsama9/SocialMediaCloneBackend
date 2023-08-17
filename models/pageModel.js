@@ -89,6 +89,7 @@ pageSchema.statics.deletePage = async function (name) {
 pageSchema.statics.getCreatedPosts = async function (name) {
     const Post = require("./postModel");
 
+    console.log("it somehow calls the function");
     const page = await this.findOne({name});
     if (!page) {
         throw Error("Page not found");
