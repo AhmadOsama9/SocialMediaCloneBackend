@@ -72,7 +72,7 @@ const deletePagePost = async (req, res) => {
     const { pageName, postId } = req.body;
 
     try {
-        await Posts.deletePagePost(postId);
+        await Posts.deletePagePost(pageName, postId);
         res.status(200).json({message: "The post has been deleted Successfully"});
     } catch (error) {
         res.status(400).json({error: error.message});
