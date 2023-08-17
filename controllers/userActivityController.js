@@ -110,10 +110,22 @@ const getCreatedPosts = async (req, res) => {
     }
 }
 
+const getSharedPosts = async (req, res) => {
+    const { userId } = req.query;
+
+    try {
+        const posts = await UsersActivity.getSharedPosts(userId);
+        res.status(200).json(posts);
+    } catch (error) {
+        res.status(400).json({error: error.message});
+    }
+}
+
 
 
 module.exports = {
     getCreatedPosts,
+    getSharedPosts,
     sendFriendRequest,
     acceptFriendRequest,
     removeFriend,

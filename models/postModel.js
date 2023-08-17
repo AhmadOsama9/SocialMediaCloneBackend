@@ -275,8 +275,6 @@ postSchema.statics.deleteUserPost = async function (postId) {
 postSchema.statics.deletePagePost = async function (pageName, postId) {
   const Pages = require("./pageModel");
 
-  console.log("The postId: ", postId, " and the page name is: ", pageName);
-
   const postToDelete = await this.findById(postId);
   if (!postToDelete) {
     throw Error("Post not found");

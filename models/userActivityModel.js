@@ -336,6 +336,33 @@ userActivitySchema.statics.getCreatedPosts = async function (userId) {
     return results;
 };
 
+
+userActivitySchema.statics.getSharedPosts = async function(userId) {
+    const Post = require("./postModel");
+
+    const userActivity = await this.findOne({ user: userId});
+    if (!userActivity) {
+        throw Error("User activity not found");
+    }
+
+    const userPosts = userActivity.userPosts;
+    const results = [];
+
+    for (const sharedPost of userPosts) {
+        const post = await Post.findById(sharedPost);
+        if (!post) {
+            throw Error("Shared post not found");
+        }
+
+        results.push({
+            nickname: post.nickname,
+            header: post.header,
+            content: post.content,
+            postId: post._id,
+        })
+    }
+    return results;
+}
   
 
 module.exports = mongoose.model("usersactivities", userActivitySchema);
