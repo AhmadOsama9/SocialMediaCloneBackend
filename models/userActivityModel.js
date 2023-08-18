@@ -359,7 +359,7 @@ userActivitySchema.statics.getSharedPosts = async function(userId) {
         const content = post.content;
 
         results.push({
-            nickname: nickname,
+            nickname: nickname, 
             header: header,
             content: content,
             postId: post._id,
