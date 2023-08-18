@@ -6,6 +6,8 @@ const cors = require("cors");
 const passport = require("passport");
 const cookieSession = require("cookie-session");
 
+const passportSetup = require("./passport");
+
 
 const userRoutes = require("./routes/user");
 const profileRoutes = require("./routes/profile");
