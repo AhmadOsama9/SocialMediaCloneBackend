@@ -16,7 +16,7 @@ const userActivitySchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Posts",
     }],
-    sharedPosts: [{
+    SharedPosts: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Posts",
     }],
@@ -345,7 +345,7 @@ userActivitySchema.statics.getSharedPosts = async function(userId) {
         throw Error("User activity not found");
     }
 
-    const userPosts = userActivity.userPosts;
+    const userPosts = userActivity.sharedPost;
     const results = [];
 
     for (const sharedPost of userPosts) {
