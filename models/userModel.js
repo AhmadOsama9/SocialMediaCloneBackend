@@ -51,6 +51,31 @@ userSchema.statics.signup = async function(email, password, role) {
     return user;
 }
 
+userSchema.statics.googleSignup = async function(email, role) {
+    if(!email) {
+        throw Error("All Fields Must Be Filled");
+    }
+
+    if(!validator.isEmail(email)) {
+        throw Error("Email is not valid");
+    }    
+
+    const exist = await this.findOne({ email });
+
+    if(exist) {
+        throw Error("Email is Already Registered");
+    }
+     
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash("`-_GOACCOGUNTLE_?", salt);
+
+    const user = await this.create({ email, password: hash, role: role || "user"});
+
+    return user;
+}
+
+
+
 userSchema.statics.login = async function(email, password) {
     if(!email || !password) {
         throw Error("All Fields Must Be Filed");
@@ -66,6 +91,21 @@ userSchema.statics.login = async function(email, password) {
 
     if(!match) {
         throw Error("Incorrect Password");
+    }
+
+    return user;
+
+}
+
+userSchema.statics.googleLogin = async function(email) {
+    if(!email) {
+        throw Error("All Fields Must Be Filed");
+    }
+
+    const user = await this.findOne({ email });
+
+    if(!user) {
+        throw Error("Incorrect Email");
     }
 
     return user;

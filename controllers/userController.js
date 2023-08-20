@@ -23,6 +23,47 @@ const loginUser = async (req, res) => {
     }
 }
 
+const googleLogin = async (req, res) => {
+    try {
+        const profile = req.user;
+        
+        if (!profile) {
+            return res.status(400).json({ error: "Google profile not found" });
+        }
+
+        const email = profile.emails[0].value;
+
+        const user = await User.googleLogin(email);
+        
+        const token = createToken(user._id);
+
+        res.status(200).json({ email, token, role: 'user', userId: user._id });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+};
+
+const googleSignup = async (req, res) => {
+    try {
+        const profile = req.user; 
+
+        if (!profile) {
+            return res.status(400).json({ error: "Google profile not found" });
+        }
+
+        const email = profile.emails[0].value; 
+    
+        const user = await User.googleSignup(email, "user");
+
+        const token = createToken(user._id);
+
+        res.status(200).json({ email, token, role: 'user', userId: user._id });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+};
+
+
 const signupUser = async (req, res) => {
     const {email, password, role} = req.body;
 
@@ -56,4 +97,6 @@ const signupUser = async (req, res) => {
 module.exports = {
     signupUser, 
     loginUser,
+    googleLogin,
+    googleSignup,
 }
