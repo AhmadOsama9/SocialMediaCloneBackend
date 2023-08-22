@@ -15,13 +15,13 @@ const pageRoutes = require("./routes/page");
 
 const app = express();
 
-app.use(passport.initialize());
-app.use(passport.session());
-
-
 app.use(cors());
 
 app.use(express.json());
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 
 app.use((req, res, next) => {
     console.log(req.path, req.method);
