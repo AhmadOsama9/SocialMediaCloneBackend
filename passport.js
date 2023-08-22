@@ -1,6 +1,6 @@
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const passport = require("passport");
-const User = require("../models/userModel"); 
+const User = require("../models/userModel");
 
 passport.use(
     "google-signup",
@@ -9,17 +9,16 @@ passport.use(
             clientID: process.env.CLIENT_ID,
             clientSecret: process.env.CLIENT_SECRET,
             callbackURL: "/auth/google/signup/callback",
-            scope: ["email"],
+            scope: ["email"], // Only request email access
         },
         async function (accessToken, refreshToken, profile, callback) {
             try {
-                callback(null, email);
+                callback(null, profile.emails[0].value); // Use the first email
             } catch (error) {
                 callback(error, null);
             }
         }
     )
-
 );
 
 passport.use(
@@ -29,25 +28,25 @@ passport.use(
             clientID: process.env.CLIENT_ID,
             clientSecret: process.env.CLIENT_SECRET,
             callbackURL: "/auth/google/login/callback",
-            scope: ["email"],
+            scope: ["email"], // Only request email access
         },
         async function (accessToken, refreshToken, profile, callback) {
             try {
-                callback(null, email);
+                callback(null, profile.emails[0].value); // Use the first email
             } catch (error) {
                 callback(error, null);
             }
         }
     )
-)
+);
 
 passport.serializeUser((user, done) => {
-    done(null, user.id);
+    done(null, user);
 });
 
-passport.deserializeUser(async (id, done) => {
+passport.deserializeUser(async (email, done) => {
     try {
-        const user = await User.findById(id);
+        const user = await User.findOne({ email });
         done(null, user);
     } catch (error) {
         done(error, null);

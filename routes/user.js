@@ -6,38 +6,33 @@ const {
     loginUser,
     googleLogin,
     googleSignup
-
 } = require("../controllers/userController");
 
 const router = express.Router();
 
 router.post("/login", loginUser);
-
 router.post("/signup", signupUser);
-
 
 router.get(
     "/auth/google/signup",
     passport.authenticate("google-signup", { scope: ["email"] })
-  );
-  
-  router.get(
+);
+
+router.get(
     "/auth/google/signup/callback",
-    passport.authenticate("google", { failureRedirect: "/login" }),
-    googleSignup();
-  );
+    passport.authenticate("google-signup", { failureRedirect: "/login" }),
+    googleSignup
+);
   
-  
-  router.get(
+router.get(
     "/auth/google/login",
     passport.authenticate("google-login", { scope: ["email"] })
-  );
+);
   
-  router.get(
+router.get(
     "/auth/google/login/callback",
-    passport.authenticate("google", { failureRedirect: "/login" }),
-    googleLogin();
-  );
-
+    passport.authenticate("google-login", { failureRedirect: "/login" }),
+    googleLogin
+);
 
 module.exports = router;

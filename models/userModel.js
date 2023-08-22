@@ -97,19 +97,5 @@ userSchema.statics.login = async function(email, password) {
 
 }
 
-userSchema.statics.googleLogin = async function(email) {
-    if(!email) {
-        throw Error("All Fields Must Be Filed");
-    }
-
-    const user = await this.findOne({ email });
-
-    if(!user) {
-        throw Error("Incorrect Email");
-    }
-
-    return user;
-
-}
 
 module.exports = mongoose.model('Users', userSchema);
