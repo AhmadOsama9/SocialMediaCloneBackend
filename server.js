@@ -4,9 +4,6 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const passport = require("passport");
-const session = require("express.session");
-
-
 
 const userRoutes = require("./routes/user");
 const profileRoutes = require("./routes/profile");
@@ -17,14 +14,6 @@ const userActivityRoutes = require("./routes/userActivity");
 const pageRoutes = require("./routes/page");
 
 const app = express();
-
-app.use(
-    session({
-        secret: ">^8qDdz4_+`EbBAk",
-        resave: false,
-        saveUninitialized: true,
-    })
-);
 
 app.use(passport.initialize);
 app.use(passport.session());
