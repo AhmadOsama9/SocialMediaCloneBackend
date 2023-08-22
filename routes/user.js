@@ -16,29 +16,27 @@ router.post("/login", loginUser);
 router.post("/signup", signupUser);
 
 
-router.get("/google", passport.authenticate("google", { scope: ["profile", "email"] }));
-
 router.get(
-    "/google/signup",
-    passport.authenticate("google", { scope: ["profile", "email"] })
+    "/auth/google/signup",
+    passport.authenticate("google-signup", { scope: ["email"] })
   );
   
   router.get(
-    "/google/signup/callback",
+    "/auth/google/signup/callback",
     passport.authenticate("google", { failureRedirect: "/login" }),
-    googleSignup
+    googleSignup();
   );
   
   
   router.get(
-    "/google/login",
-    passport.authenticate("google", { scope: ["profile", "email"] })
+    "/auth/google/login",
+    passport.authenticate("google-login", { scope: ["email"] })
   );
   
   router.get(
-    "/google/login/callback",
+    "/auth/google/login/callback",
     passport.authenticate("google", { failureRedirect: "/login" }),
-    googleLogin
+    googleLogin();
   );
 
 

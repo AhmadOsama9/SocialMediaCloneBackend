@@ -25,7 +25,7 @@ const loginUser = async (req, res) => {
 
 const googleLogin = async (req, res) => {
     try {
-        const profile = req.user;
+        const profile = req.email;
         
         if (!profile) {
             return res.status(400).json({ error: "Google profile not found" });
@@ -45,7 +45,7 @@ const googleLogin = async (req, res) => {
 
 const googleSignup = async (req, res) => {
     try {
-        const profile = req.user; 
+        const profile = req.email; 
 
         if (!profile) {
             return res.status(400).json({ error: "Google profile not found" });
