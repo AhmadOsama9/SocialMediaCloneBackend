@@ -15,8 +15,9 @@ const pageRoutes = require("./routes/page");
 
 const app = express();
 
-app.use(passport.initialize);
+app.use(passport.initialize());
 app.use(passport.session());
+
 
 app.use(cors());
 
