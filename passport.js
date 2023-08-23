@@ -13,7 +13,7 @@ passport.use(
         },
         async function (accessToken, refreshToken, profile, callback) {
             try {
-                callback(null, profile.emails[0].value); // Use the first email
+                callback(null, profile); 
             } catch (error) {
                 callback(error, null);
             }
@@ -32,7 +32,7 @@ passport.use(
         },
         async function (accessToken, refreshToken, profile, callback) {
             try {
-                callback(null, profile.emails[0].value); // Use the first email
+                callback(null, profile);
             } catch (error) {
                 callback(error, null);
             }
