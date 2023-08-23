@@ -20,7 +20,7 @@ router.get(
 
 router.get(
     "/auth/google/signup/callback",
-    passport.authenticate("google-signup", { failureRedirect: "/login" }),
+    passport.authenticate("google-signup", { failureRedirect: "http://localhost:5173/" }),
     googleSignup
 );
   
@@ -31,7 +31,7 @@ router.get(
   
 router.get(
     "/auth/google/login/callback",
-    passport.authenticate("google-login", { failureRedirect: "/login" }),
+    passport.authenticate("google-login", { failureRedirect: "http://localhost:5173/" }),
     googleLogin
 );
 
