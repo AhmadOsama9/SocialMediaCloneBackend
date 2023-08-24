@@ -7,7 +7,7 @@ passport.use(
         {
             clientID: process.env.CLIENT_ID,
             clientSecret: process.env.CLIENT_SECRET,
-            callbackURL: "https://merngymprojectbackend.onrender.com/api/user/auth/google/signup/callback",
+            callbackURL: "http://localhost:5173/signup",
             passReqToCallback   : true,
             scope: ["email"], // Only request email access
         },
