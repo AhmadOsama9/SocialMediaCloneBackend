@@ -10,7 +10,6 @@ passport.deserializeUser(function(user, done) {
 });
 
 passport.use(
-    "google-signup",
     new GoogleStrategy(
         {
             clientID: process.env.CLIENT_ID,
