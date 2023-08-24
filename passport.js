@@ -27,7 +27,7 @@ passport.use(
             passReqToCallback   : true,
             scope: ["email"], // Only request email access
         },
-        async function (request, accessToken, refreshToken, profile, done) {
+        function (request, accessToken, refreshToken, profile, done) {
             return done(null, profile);
         }
     )
