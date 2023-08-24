@@ -46,6 +46,7 @@ const googleLogin = async (req, res) => {
 };
 
 const googleSignup = async (req, res) => {
+    console.log("It enters the googleSignup that being called through callback of googleSignup");
     try {
         const profile = req.user;
 
