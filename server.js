@@ -15,7 +15,7 @@ const pageRoutes = require("./routes/page");
 
 const app = express();
 
-
+app.use(cors());
 
 app.use(express.json());
 
