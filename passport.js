@@ -28,7 +28,7 @@ passport.use(
             scope: ["email"], // Only request email access
         },
         function (request, accessToken, refreshToken, profile, done) {
-            return done(null, profile);
+            return done(null, profile.id);
         }
     )
 );
