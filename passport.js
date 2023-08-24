@@ -1,13 +1,5 @@
-const GoogleStrategy = require("passport-google-oauth20").Strategy;
+const GoogleStrategy = require("passport-google-oauth2").Strategy;
 const passport = require("passport");
-
-passport.serializeUser(function(user, done) {
-    done(null, user);
-});
-
-passport.deserializeUser(function(user, done) {
-        done(null, user);
-});
 
 passport.use(
     "google-signup",
