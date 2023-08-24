@@ -78,5 +78,4 @@ module.exports = {
     signupUser,
     loginUser,
     googleLogin,
-    googleSignup,
 };
