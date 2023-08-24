@@ -20,7 +20,6 @@ router.get(
 
 router.get(
     "/auth/google/signup/callback",
-    passport.authenticate("google-signup", { failureRedirect: "http://localhost:5173/" }),
     googleSignup
 );
   
