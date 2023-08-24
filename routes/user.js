@@ -15,7 +15,7 @@ router.post("/signup", signupUser);
 
 router.get(
     "/auth/google/signup",
-    passport.authenticate("google", { scope: ["email"] })
+    passport.authenticate("google-signup", { scope: ["email"] })
 );
 
 router.get(
