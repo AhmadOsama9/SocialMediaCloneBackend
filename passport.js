@@ -11,8 +11,8 @@ passport.use(
             passReqToCallback   : true,
             scope: ["email"], // Only request email access
         },
-        async function (accessToken, refreshToken, profile, done) {
-            return done(null, profile);
+        async function (accessToken, refreshToken, profile, callback) {
+            return callback(null, profile);
         }
     )
 );
@@ -27,8 +27,8 @@ passport.use(
             passReqToCallback   : true,
             scope: ["email"], // Only request email access
         },
-        function (accessToken, refreshToken, profile, done) {
-            return done(null, profile);
+        function (accessToken, refreshToken, profile, callback) {
+            return callback(null, profile);
         }
     )
 );
