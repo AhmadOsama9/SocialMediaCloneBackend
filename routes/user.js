@@ -15,23 +15,23 @@ const router = express.Router();
 router.post("/login", loginUser);
 router.post("/signup", signupUser);
 
-router.get("/auth/google/signup", (req, res, next) => {
-    passport.authenticate("google-signup", { scope: ["email"] })(req, res, next);
-});
+router.get(
+    "/auth/google/signup",
+    passport.authenticate("google-signup", { scope: ["email"] })
+);
 
 router.get(
-    "/auth/google/signup/callback", (req, res, next) => {
-    passport.authenticate("google-signup", { failureRedirect: "http://localhost:5173/" }),
+    "/auth/google/signup/callback",
+    passport.authenticate("google-signup", {
+        failureRedirect: "http://localhost:5173/"
+    }),
     async function (req, res) {
         console.log("It enters the googleSignup that being called through callback of googleSignup");
         try {
             const profile = req.user;
 
-            if (!profile ) {
-                return res.status(400).json({ error: "Google profile not found" });
-            }
-            if (!profile.emails || !profile.emails[0] || !profile.emails[0].value) {
-                return res.status(400).json({ error: "Google email not found" });
+            if (!profile || !profile.emails || !profile.emails[0] || !profile.emails[0].value) {
+                return res.status(400).json({ error: "Google profile or email not found" });
             }
 
             const email = profile.emails[0].value;
@@ -60,8 +60,7 @@ router.get(
         } catch (error) {
             res.status(400).json({ error: error.message });
         }
-    }(req, res, next);
-}
+    }
 );
   
 router.get(
