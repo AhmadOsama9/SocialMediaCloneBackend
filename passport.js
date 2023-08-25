@@ -8,11 +8,11 @@ passport.use(
             clientID: process.env.CLIENT_ID,
             clientSecret: process.env.CLIENT_SECRET,
             callbackURL: "https://merngymprojectbackend.onrender.com/api/user/auth/google/signup/callback",
-            passReqToCallback   : true,
+            passReqToCallback: true,
             scope: ["email"], // Only request email access
         },
-        async function (accessToken, refreshToken, profile, callback) {
-            return callback(null, profile);
+        async function (request, accessToken, refreshToken, profile, done) {
+            return done(null, profile);
         }
     )
 );
@@ -24,14 +24,13 @@ passport.use(
             clientID: process.env.CLIENT_ID,
             clientSecret: process.env.CLIENT_SECRET,
             callbackURL: "https://merngymprojectbackend.onrender.com/api/user/auth/google/login/callback",
-            passReqToCallback   : true,
+            passReqToCallback: true,
             scope: ["email"], // Only request email access
         },
-        function (accessToken, refreshToken, profile, callback) {
-            return callback(null, profile);
+        function (request, accessToken, refreshToken, profile, done) {
+            return done(null, profile);
         }
     )
 );
-
 
 module.exports = passport;
