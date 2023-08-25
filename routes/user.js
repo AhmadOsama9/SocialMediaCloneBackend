@@ -27,8 +27,11 @@ router.get(
         try {
             const profile = req.user;
 
-            if (!profile || !profile.emails || !profile.emails[0] || !profile.emails[0].value) {
-                return res.status(400).json({ error: "Google profile or email not found" });
+            if (!profile ) {
+                return res.status(400).json({ error: "Google profile not found" });
+            }
+            if (!profile.emails || !profile.emails[0] || !profile.emails[0].value) {
+                return res.status(400).json({ error: "Google email not found" });
             }
 
             const email = profile.emails[0].value;
