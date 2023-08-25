@@ -12,7 +12,7 @@ passport.use(
             scope: ["email"], // Only request email access
         },
         async function (accessToken, refreshToken, profile, done) {
-            return done(null, profile.id);
+            return done(null, profile);
         }
     )
 );
@@ -28,7 +28,7 @@ passport.use(
             scope: ["email"], // Only request email access
         },
         function (accessToken, refreshToken, profile, done) {
-            return done(null, profile.id);
+            return done(null, profile);
         }
     )
 );
