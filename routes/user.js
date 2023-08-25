@@ -15,10 +15,9 @@ const router = express.Router();
 router.post("/login", loginUser);
 router.post("/signup", signupUser);
 
-router.get(
-    "/auth/google/signup",
-    passport.authenticate("google-signup", { scope: ["email"] })
-);
+router.get("/auth/google/signup", (req, res, next) => {
+    passport.authenticate("google-signup", { scope: ["email"] })(req, res, next);
+});
 
 router.get(
     "/auth/google/signup/callback", (req, res, next) => {
