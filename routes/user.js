@@ -21,7 +21,7 @@ router.get(
 );
 
 router.get(
-    "/auth/google/signup/callback", (req, res) => {
+    "/auth/google/signup/callback", (req, res, next) => {
     passport.authenticate("google-signup", { failureRedirect: "http://localhost:5173/" }),
     async function (req, res) {
         console.log("It enters the googleSignup that being called through callback of googleSignup");
@@ -58,7 +58,7 @@ router.get(
         } catch (error) {
             res.status(400).json({ error: error.message });
         }
-    }
+    }(req, res, next);
 }
 );
   
