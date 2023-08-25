@@ -4,6 +4,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const passport = require("passport");
+const cookieSession = require('cookie-session');
 
 const userRoutes = require("./routes/user");
 const profileRoutes = require("./routes/profile");
@@ -19,8 +20,14 @@ app.use(cors());
 
 app.use(express.json());
 
-app.use(passport.initialize());
+app.use(cookieSession({
+    name: 'google-auth-session',
+    keys: ['key1', 'key2']
+}))
+  
 
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use((req, res, next) => {
     console.log(req.path, req.method);
