@@ -85,6 +85,8 @@ const googleSignup = async (req, res) => {
 
         const email = profile.emails[0].value;
 
+        const user = await User.googleSignup(email, "user");
+
         const userProfile = await Profile.create({
             user: user._id,
             nickname: "",
@@ -99,9 +101,7 @@ const googleSignup = async (req, res) => {
         });
         if (!userActivity) {
             throw Error("Failed to create a userActivity");
-        }
-
-        const user = await User.googleSignup(email, "user");
+        }  
 
         const token = createToken(user._id);
 
