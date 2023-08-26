@@ -15,7 +15,7 @@ passport.use(
         {
             clientID: process.env.CLIENT_ID,
             clientSecret: process.env.CLIENT_SECRET,
-            callbackURL: "http://localhost:5173/signupcallback",
+            callbackURL: "https://merngymprojectbackend.onrender.com/api/user/auth/google/signup/callback",
             passReqToCallback: true,
             scope: ["email"], // Only request email access
         },
@@ -31,7 +31,7 @@ passport.use(
         {
             clientID: process.env.CLIENT_ID,
             clientSecret: process.env.CLIENT_SECRET,
-            callbackURL: "http://localhost:5173/logincallback",
+            callbackURL: "https://merngymprojectbackend.onrender.com/api/user/auth/google/login/callback",
             passReqToCallback: true,
             scope: ["email"], // Only request email access
         },
