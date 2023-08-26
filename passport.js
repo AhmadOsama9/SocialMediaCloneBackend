@@ -15,7 +15,7 @@ passport.use(
         {
             clientID: process.env.CLIENT_ID,
             clientSecret: process.env.CLIENT_SECRET,
-            callbackURL: "http://localhost:5173/googlesignupcallback",
+            callbackURL: "http://localhost:5173/signupcallback",
             passReqToCallback: true,
             scope: ["email"], // Only request email access
         },
@@ -31,7 +31,7 @@ passport.use(
         {
             clientID: process.env.CLIENT_ID,
             clientSecret: process.env.CLIENT_SECRET,
-            callbackURL: "http://localhost:5173/googlelogincallback",
+            callbackURL: "http://localhost:5173/logincallback",
             passReqToCallback: true,
             scope: ["email"], // Only request email access
         },
