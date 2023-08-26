@@ -24,13 +24,7 @@ const loginUser = async (req, res) => {
 
 const googleLogin = async (req, res) => {
     try {
-        const profile = req.user;
-
-        if (!profile || !profile.emails || !profile.emails[0] || !profile.emails[0].value) {
-            return res.status(400).json({ error: "Google profile or email not found" });
-        }
-
-        const email = profile.emails[0].value;
+        const { email } = req.body;
 
         const user = await User.findOne({ email });
 
@@ -81,14 +75,8 @@ const signupUser = async (req, res) => {
 const googleSignup = async (req, res) => {
     console.log("It enters the googleSignup that being called through callback of googleSignup");
     try {
-        const profile = req.user;
-
-        if (!profile || !profile.emails || !profile.emails[0] || !profile.emails[0].value) {
-            return res.status(400).json({ error: "Google profile or email not found" });
-        }
-
-        const email = profile.emails[0].value;
-
+        const { email } = req.body;
+        
         const user = await User.googleSignup(email, "user");
 
         const userProfile = await Profile.create({
@@ -117,11 +105,14 @@ const googleSignup = async (req, res) => {
 }
 
 const getUserToken = async (req, res) => {
+    const userId = req.query;
+
+    const user = User.findById(userId);
     if (!user.jwt) {
         res.status(400).json({error: "The user doesn't have a token"});
     }
     else {
-        res.status(200).json(token: user.token);
+        res.status(200).json(user.jwt);
     }
 }
 
@@ -130,4 +121,5 @@ module.exports = {
     loginUser,
     googleLogin,
     googleSignup,
+    getUserToken,
 };
