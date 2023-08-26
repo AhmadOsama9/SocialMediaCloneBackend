@@ -104,8 +104,15 @@ const googleSignup = async (req, res) => {
         }  
 
         const token = createToken(user._id);
+        const toBeStored = {
+            email: email,
+            token: token,
+            role: "user",
+            userId: user._id,
+        };
 
-        res.status(200).json({ email, token, role: 'user', userId: user._id });
+    localStorage.setItem("user", JSON.stringify(toBeStored));
+
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
