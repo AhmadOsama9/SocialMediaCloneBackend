@@ -19,9 +19,10 @@ const userSchema = new Schema({
         type: String,
         enum: ["user", "admin"],
         default: "user",
+    },
+    jwt: {
+        type: String,
     }
-
-    
 })
 
 userSchema.statics.signup = async function(email, password, role) {

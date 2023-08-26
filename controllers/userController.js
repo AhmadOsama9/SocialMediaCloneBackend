@@ -14,6 +14,7 @@ const loginUser = async (req, res) => {
         const user = await User.login(email, password);
 
         const token = createToken(user._id);
+        user.jwt = token;
 
         res.status(200).json({ email, token, role: user.role, userId: user._id });
     } catch (error) {
@@ -38,6 +39,7 @@ const googleLogin = async (req, res) => {
         }
 
         const token = createToken(user._id);
+        user.jwt = token;
 
         res.status(200).json({ email, token, role: 'user', userId: user._id });
     } catch (error) {
@@ -68,6 +70,8 @@ const signupUser = async (req, res) => {
         }
 
         const token = createToken(user._id);
+        user.jwt = token;
+
         res.status(200).json({ email, token, role: user.role, userId: user._id });
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -104,17 +108,20 @@ const googleSignup = async (req, res) => {
         }  
 
         const token = createToken(user._id);
-        const toBeStored = {
-            email: email,
-            token: token,
-            role: "user",
-            userId: user._id,
-        };
+        user.jwt = token;
 
-    localStorage.setItem("user", JSON.stringify(toBeStored));
-
+        res.status(200).json({ email, token, role: 'user', userId: user._id });
     } catch (error) {
         res.status(400).json({ error: error.message });
+    }
+}
+
+const getUserToken = async (req, res) => {
+    if (!user.jwt) {
+        res.status(400).json({error: "The user doesn't have a token"});
+    }
+    else {
+        res.status(200).json(token: user.token);
     }
 }
 
