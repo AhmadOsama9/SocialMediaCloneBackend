@@ -77,7 +77,7 @@ const signupUser = async (req, res) => {
 const googleSignup = async (req, res) => {
     console.log("It enters the googleSignup that being called through callback of googleSignup");
     try {
-        const profile = req.user;
+        const profile = req.profile;
 
         if (!profile || !profile.emails || !profile.emails[0] || !profile.emails[0].value) {
             return res.status(400).json({ error: "Google profile or email not found" });

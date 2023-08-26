@@ -8,7 +8,7 @@ const {
     signupUser, 
     loginUser,
     googleLogin,
-    googleSignup
+    googleSignup,
 } = require("../controllers/userController");
 
 const router = express.Router();
