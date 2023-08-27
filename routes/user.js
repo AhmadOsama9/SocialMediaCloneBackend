@@ -8,13 +8,18 @@ const {
     signupUser, 
     loginUser,
     googleLogin,
-    googleSignup
+    googleSignup,
+    getUserToken,
+    getUserInfo,
 } = require("../controllers/userController");
 
 const router = express.Router();
 
 router.post("/login", loginUser);
 router.post("/signup", signupUser);
+
+router.get("/usertoken", getUserToken);
+router.get("/userinfo", getUserInfo);
 
 router.get(
     "/auth/google/signup",
