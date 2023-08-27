@@ -16,9 +16,6 @@ const router = express.Router();
 router.post("/login", loginUser);
 router.post("/signup", signupUser);
 
-router.post("/googlesignup", googleSignup);
-router.post("/googlelogin", googleLogin);
-
 router.get(
     "/auth/google/signup",
     passport.authenticate("google-signup", { scope: ["email"] })
@@ -26,11 +23,7 @@ router.get(
 router.get(
     "/auth/google/signup/callback",
     passport.authenticate("google-signup", { failureRedirect: "http://localhost:5173/" }),
-    (req, res) => {
-        const email = req.user.emails[0].value;
-        const redirectURL = `http://localhost:5173/signupcallback?email=${email}`;
-        res.redirect(redirectURL);
-    }
+    googleSignup
 );
   
 router.get(
@@ -40,11 +33,7 @@ router.get(
 router.get(
     "/auth/google/login/callback",
     passport.authenticate("google-login", { failureRedirect: "http://localhost:5173/" }),
-    (req, res) => {
-        const email = req.user.emails[0].value;
-        const redirectURL = `http://localhost:5173/logincallback?email=${email}`;
-        res.redirect(redirectURL);
-    }
+    googleLogin
 );
 
 

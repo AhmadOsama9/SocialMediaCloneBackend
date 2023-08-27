@@ -66,7 +66,8 @@ const signupUser = async (req, res) => {
         const token = createToken(user._id);
         user.jwt = token;
 
-        res.status(200).json({ email, token, role: user.role, userId: user._id });
+        const redirectURL = `http://localhost:5173/logincallback?email=${email}&token=${token}&role=${"user"}&userId=${user._id}`;
+        res.redirect(redirectURL);
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
@@ -76,7 +77,7 @@ const googleSignup = async (req, res) => {
     console.log("It enters the googleSignup that being called through callback of googleSignup");
     try {
         const { email } = req.body;
-        
+
         const user = await User.googleSignup(email, "user");
 
         const userProfile = await Profile.create({
@@ -98,7 +99,8 @@ const googleSignup = async (req, res) => {
         const token = createToken(user._id);
         user.jwt = token;
 
-        res.status(200).json({ email, token, role: 'user', userId: user._id });
+        const redirectURL = `http://localhost:5173/signupcallback?email=${email}&token=${token}&role=${"user"}&userId=${user._id}`;
+        res.redirect(redirectURL);
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
