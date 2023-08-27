@@ -31,8 +31,12 @@ router.get(
         console.log("It enters the googleSignup that being called through callback of googleSignup");
         try {
             const { email } = req.user.emails[0].value;
-    
-            const user = await User.googleSignup(email, "user");
+
+            User.googleSignup(email, "user")
+            .then(user => {
+                const user = await User.googleSignup(email, "user");
+                
+            });
     
             const userProfile = await Profile.create({
                 user: user._id,
