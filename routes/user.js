@@ -8,7 +8,6 @@ const {
     signupUser, 
     loginUser,
     googleLogin,
-    googleSignup,
     getUserToken,
     getUserInfo,
 } = require("../controllers/userController");
@@ -28,8 +27,43 @@ router.get(
 router.get(
     "/auth/google/signup/callback",
     passport.authenticate("google-signup", { failureRedirect: "http://localhost:5173/" }),
-    googleSignup
-);
+    (req, res) => {
+        console.log("It enters the googleSignup that being called through callback of googleSignup");
+        try {
+            const { email } = req.user.emails[0].value;
+    
+            const user = await User.googleSignup(email, "user");
+    
+            const userProfile = await Profile.create({
+                user: user._id,
+                nickname: "",
+                bio: "",
+            });
+            if (!userProfile) {
+                throw Error("Failed to create a profile");
+            }
+    
+            const userActivity = await UserActivity.create({
+                user: user._id,
+            });
+            if (!userActivity) {
+                throw Error("Failed to create a userActivity");
+            }  
+    
+            const token = createToken(user._id);
+            user.jwt = token;
+    
+            //I think about returning a password that being changed
+            //after being used once, that will make sure that even
+            //if they copied the same url it won't work
+    
+            const redirectURL = `http://localhost:5173/signupcallback?email=${email}&token=${token}&role=${"user"}&userId=${user._id}`;
+            res.redirect(redirectURL);
+        } catch (error) {
+            res.status(400).json({ error: error.message });
+        }
+    }
+)
   
 router.get(
     "/auth/google/login",
