@@ -24,7 +24,7 @@ const loginUser = async (req, res) => {
 
 const googleLogin = async (req, res) => {
     try {
-        const { email } = req.body;
+        const { email } = req.user.emails[0];
 
         const user = await User.findOne({ email });
 
@@ -76,7 +76,7 @@ const signupUser = async (req, res) => {
 const googleSignup = async (req, res) => {
     console.log("It enters the googleSignup that being called through callback of googleSignup");
     try {
-        const { email } = req.body;
+        const { email } = req.user.emails[0];
 
         const user = await User.googleSignup(email, "user");
 
