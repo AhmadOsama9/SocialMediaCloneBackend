@@ -15,6 +15,10 @@ const loginUser = async (req, res) => {
 
         const token = createToken(user._id);
         user.jwt = token;
+        const savedUser = await user.save();
+        if (!savedUser) {
+            throw Error("Failed to save the user");
+        }
 
         res.status(200).json({ email, token, role: user.role, userId: user._id });
     } catch (error) {
@@ -39,7 +43,8 @@ const googleLogin = async (req, res) => {
             throw Error("Failed to save the user");
         }
 
-        res.status(200).json({ email, token, role: 'user', userId: user._id });
+        const redirectURL = `http://localhost:5173/logincallback?email=${email}&token=${token}&role=${"user"}&userId=${user._id}`;
+        res.redirect(redirectURL);
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
@@ -75,8 +80,7 @@ const signupUser = async (req, res) => {
             throw Error("Failed to save the user");
         }
 
-        const redirectURL = `http://localhost:5173/logincallback?email=${email}&token=${user.jwt}&role=${"user"}&userId=${user._id}`;
-        res.redirect(redirectURL);
+        res.status(200).json({ email, token, role: 'user', userId: user._id });
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
