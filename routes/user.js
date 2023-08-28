@@ -30,7 +30,7 @@ router.get(
     async (req, res) => {
         try {
             const { email } = req.user.emails[0].value;         
-    
+            console.log("the email is: ", email);
             // Perform the rest of the operations asynchronously within a function
             async function handleAsyncOperations() {
 
@@ -59,7 +59,6 @@ router.get(
                 res.redirect(redirectURL);
             }
     
-            // Call the async function to handle the operations
             await handleAsyncOperations();
         } catch (error) {
             res.status(400).json({ error: error.message });
