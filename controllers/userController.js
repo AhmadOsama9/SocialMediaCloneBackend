@@ -128,15 +128,20 @@ const googleSignup = async (req, res) => {
     }
 }
 
-
-const getUserToken = async (req, res) => {
-    const { userId } = req.query;
+const checkToken = async (req, res) => {
+    const { userId, token } = req.query;
 
     const user = await User.findById(userId);
+    if (!user) {
+        res.status(400).json({error: "User not found"});
+    }
     if (!user.jwt) {
         res.status(400).json({error: "The user doesn't have a token"});
     }
-    else {
+    if (user.jwt !== token) {
+        res.status(400).json({error: "The token is not valid"});
+    }
+    if ( user.jwt === token) {
         res.status(200).json(user.jwt);
     }
 }
@@ -149,8 +154,6 @@ const getUserInfo = async (req, res) => {
         res.status(400).json({error: "User not found"});
     }
     else {
-        console.log("email: ", user.email);
-        console.log("token: ", user.jwt);
         res.status(200).json({email: user.email, token: user.jwt, role: user.role, userId: user._id});
     }
 }
@@ -160,6 +163,6 @@ module.exports = {
     loginUser,
     googleLogin,
     googleSignup,
-    getUserToken,
     getUserInfo,
+    checkToken,
 };
