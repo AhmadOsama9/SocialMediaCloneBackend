@@ -71,16 +71,12 @@ const signupUser = async (req, res) => {
         }
 
         const token = createToken(user._id);
-        user.jwt = token;
-        const savedUser = await user.save();
-        if (!savedUser) {
-            throw Error("Failed to save the user");
-        }
-        if (savedUser) {
-            console.log("savedUser, the token is: ", user.jwt);
-        }
 
-        const redirectURL = `http://localhost:5173/logincallback?email=${email}&token=${token}&role=${"user"}&userId=${user._id}`;
+        user.jwt = token;
+        await user.save();
+        console.log("User saved, JWT token:", user.jwt);
+
+        const redirectURL = `http://localhost:5173/logincallback?email=${email}&token=${user.jwt}&role=${"user"}&userId=${user._id}`;
         res.redirect(redirectURL);
     } catch (error) {
         res.status(400).json({ error: error.message });
