@@ -95,6 +95,8 @@ const getUserInfo = async (req, res) => {
         res.status(400).json({error: "User not found"});
     }
     else {
+        console.log("email: ", user.email);
+        console.log("token: ", user.jwt);
         res.status(200).json({email: user.email, token: user.jwt, role: user.role});
     }
 }
