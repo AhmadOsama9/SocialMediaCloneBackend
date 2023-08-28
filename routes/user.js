@@ -34,9 +34,8 @@ router.get(
                 res.status(400).json({ error: 'Missing or invalid user data' });
                 return;
             }
-            const { email } = req.user.emails[0].value;         
-            console.log("the email is: ", req.user.emails[0].value);
-            // Perform the rest of the operations asynchronously within a function
+            const email  = req.user.emails[0].value;         
+
             async function handleAsyncOperations() {
 
                 const user = await User.googleSignup(email, "user");
