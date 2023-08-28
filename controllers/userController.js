@@ -34,6 +34,13 @@ const googleLogin = async (req, res) => {
 
         const token = createToken(user._id);
         user.jwt = token;
+        const savedUser = await user.save();
+        if (!savedUser) {
+            throw Error("Failed to save the user");
+        }
+        if (saveUser) {
+            console.log("savedUser, the token is: ", user.jwt);
+        }
 
         res.status(200).json({ email, token, role: 'user', userId: user._id });
     } catch (error) {
