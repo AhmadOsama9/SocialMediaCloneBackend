@@ -76,7 +76,7 @@ const signupUser = async (req, res) => {
 
 
 const getUserToken = async (req, res) => {
-    const userId = req.query;
+    const { userId } = req.query;
 
     const user = User.findById(userId);
     if (!user.jwt) {
@@ -88,7 +88,7 @@ const getUserToken = async (req, res) => {
 }
 
 const getUserInfo = async (req, res) => {
-    const userId = req.query;
+    const { userId } = req.query;
 
     const user = User.findById(userId);
     if (!user) {
