@@ -38,7 +38,7 @@ const googleLogin = async (req, res) => {
         if (!savedUser) {
             throw Error("Failed to save the user");
         }
-        if (saveUser) {
+        if (savedUser) {
             console.log("savedUser, the token is: ", user.jwt);
         }
 
