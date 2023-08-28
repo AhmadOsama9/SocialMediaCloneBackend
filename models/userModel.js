@@ -22,6 +22,7 @@ const userSchema = new Schema({
     },
     jwt: {
         type: String,
+        default: "Not Created Yet",
     }
 })
 
@@ -70,7 +71,7 @@ userSchema.statics.googleSignup = async function(email, role) {
     const salt = await bcrypt.genSalt(10);
     const hash = await bcrypt.hash("`-_GOACCOGUNTLE_?", salt);
 
-    const user = await this.create({ email, password: hash, role: role || "user"});
+    const user = await this.create({ email, password: hash, role: role || "user", jwt: "Not Created Yet"});
 
     return user;
 }
