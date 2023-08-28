@@ -134,6 +134,9 @@ const checkToken = async (req, res) => {
     const { userId, token } = req.query;
 
     const user = await User.findById(userId);
+    if (!userId || !token) {
+        res.status(400).json({error: "userId or the token is missing"});
+    }
     if (!user) {
         res.status(400).json({error: "User not found"});
     }
