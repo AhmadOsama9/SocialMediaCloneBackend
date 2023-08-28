@@ -24,7 +24,7 @@ const loginUser = async (req, res) => {
 
 const googleLogin = async (req, res) => {
     try {
-        const { email } = req.user.emails[0].value;
+        const  email  = req.user.emails[0].value;
 
         const user = await User.findOne({ email });
 
@@ -37,9 +37,6 @@ const googleLogin = async (req, res) => {
         const savedUser = await user.save();
         if (!savedUser) {
             throw Error("Failed to save the user");
-        }
-        if (savedUser) {
-            console.log("savedUser, the token is: ", user.jwt);
         }
 
         res.status(200).json({ email, token, role: 'user', userId: user._id });
@@ -85,6 +82,51 @@ const signupUser = async (req, res) => {
     }
 }
 
+const googleSignup = async (req, res) => {
+    try {
+        if (!req.user || !req.user.emails || !req.user.emails[0].value) {
+            console.error('Missing or invalid user data');
+            res.status(400).json({ error: 'Missing or invalid user data' });
+            return;
+        }
+        const email  = req.user.emails[0].value;         
+
+        async function handleAsyncOperations() {
+
+            const user = await User.googleSignup(email, "user");
+
+            const userProfile = await Profile.create({
+                user: user._id,
+                nickname: "",
+                bio: "",
+            });
+            if (!userProfile) {
+                throw Error("Failed to create a profile");
+            }
+
+            const userActivity = await UserActivity.create({
+                user: user._id,
+            });
+            if (!userActivity) {
+                throw Error("Failed to create a userActivity");
+            }
+
+            const token = createToken(user._id);
+            user.jwt = token;
+            const savedUser = await user.save();
+            if (!savedUser) {
+                throw Error("Failed to save the user");
+            }
+
+            const redirectURL = `http://localhost:5173/signupcallback?email=${email}&token=${token}&role=${"user"}&userId=${user._id}`;
+            res.redirect(redirectURL);
+        }
+
+        await handleAsyncOperations();
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+}
 
 
 const getUserToken = async (req, res) => {
@@ -109,7 +151,7 @@ const getUserInfo = async (req, res) => {
     else {
         console.log("email: ", user.email);
         console.log("token: ", user.jwt);
-        res.status(200).json({email: user.email, token: user.jwt, role: user.role});
+        res.status(200).json({email: user.email, token: user.jwt, role: user.role, userId: user._id});
     }
 }
 
@@ -117,6 +159,7 @@ module.exports = {
     signupUser,
     loginUser,
     googleLogin,
+    googleSignup,
     getUserToken,
     getUserInfo,
 };
