@@ -78,7 +78,7 @@ const signupUser = async (req, res) => {
 const getUserToken = async (req, res) => {
     const { userId } = req.query;
 
-    const user = User.findById(userId);
+    const user = await User.findById(userId);
     if (!user.jwt) {
         res.status(400).json({error: "The user doesn't have a token"});
     }
@@ -90,7 +90,7 @@ const getUserToken = async (req, res) => {
 const getUserInfo = async (req, res) => {
     const { userId } = req.query;
 
-    const user = User.findById(userId);
+    const user = await User.findById(userId);
     if (!user) {
         res.status(400).json({error: "User not found"});
     }
