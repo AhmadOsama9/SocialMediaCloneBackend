@@ -11,6 +11,7 @@ const profileSchema = new Schema({
   nickname: {
     type: String,
     unique: true,
+    sparse: true,
   },
   age: Number,
   gender: {
