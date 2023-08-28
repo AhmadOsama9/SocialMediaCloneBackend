@@ -58,7 +58,6 @@ const signupUser = async (req, res) => {
 
         const profile = await Profile.create({
             user: user._id,
-            nickname: "",
             bio: "",
         });
         if (!profile) {
@@ -101,7 +100,6 @@ const googleSignup = async (req, res) => {
 
             const userProfile = await Profile.create({
                 user: user._id,
-                nickname: "",
                 bio: "",
             });
             if (!userProfile) {
