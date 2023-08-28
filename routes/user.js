@@ -3,6 +3,11 @@ const passport = require("../passport");
 const User = require("../models/userModel");
 const Profile = require("../models/profileModel");
 const UserActivity = require("../models/userActivityModel");
+const jwt = require("jsonwebtoken");
+
+const createToken = (_id) => {
+    return jwt.sign({ _id }, process.env.SECRET_JWT, { expiresIn: "3d" });
+};
 
 const { 
     signupUser, 
