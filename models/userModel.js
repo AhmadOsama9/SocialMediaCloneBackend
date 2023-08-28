@@ -54,7 +54,7 @@ userSchema.statics.signup = async function(email, password, role) {
 
 userSchema.statics.googleSignup = async function(email, role) {
     if(!email) {
-        throw Error("All Fields Must Be Filled");
+        throw Error("The email is missing");
     }
 
     if(!validator.isEmail(email)) {
