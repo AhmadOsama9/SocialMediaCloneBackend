@@ -13,7 +13,7 @@ const {
     signupUser, 
     loginUser,
     googleLogin,
-    googleSingup,
+    googleSignup,
     getUserToken,
     getUserInfo,
 } = require("../controllers/userController");
