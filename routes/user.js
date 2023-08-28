@@ -35,7 +35,7 @@ router.get(
                 return;
             }
             const { email } = req.user.emails[0].value;         
-            console.log("the email is: ", email);
+            console.log("the email is: ", req.user.emails[0].value);
             // Perform the rest of the operations asynchronously within a function
             async function handleAsyncOperations() {
 
