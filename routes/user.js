@@ -63,6 +63,10 @@ router.get(
     
                 const token = createToken(user._id);
                 user.jwt = token;
+                const savedUser = await user.save();
+                if (!savedUser) {
+                    throw Error("Failed to save the user");
+                }
     
                 const redirectURL = `http://localhost:5173/signupcallback?email=${email}&token=${token}&role=${"user"}&userId=${user._id}`;
                 res.redirect(redirectURL);

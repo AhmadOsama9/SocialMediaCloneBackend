@@ -71,10 +71,12 @@ const signupUser = async (req, res) => {
         }
 
         const token = createToken(user._id);
-
+        
         user.jwt = token;
-        await user.save();
-        console.log("User saved, JWT token:", user.jwt);
+        const savedUser = await user.save();
+        if (!savedUser) {
+            throw Error("Failed to save the user");
+        }
 
         const redirectURL = `http://localhost:5173/logincallback?email=${email}&token=${user.jwt}&role=${"user"}&userId=${user._id}`;
         res.redirect(redirectURL);
