@@ -46,7 +46,8 @@ const googleLogin = async (email, res) => {
         const redirectURL = `http://localhost:5173/logincallback?email=${email}&token=${token}&role=${"user"}&userId=${user._id}`;
         res.redirect(redirectURL);
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        const redirectURL = `http://localhost:5173/logincallback?error=${error}`;
+        res.redirect(redirectURL);
     }
 };
 
@@ -119,7 +120,8 @@ const googleSignup = async (email, res) => {
 
         await handleAsyncOperations();
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        const redirectURL = `http://localhost:5173/signupcallback?error=${error}`;
+        res.redirect(redirectURL);
     }
 }
 
