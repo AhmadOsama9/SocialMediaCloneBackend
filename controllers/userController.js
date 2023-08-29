@@ -140,7 +140,7 @@ const google = async (req, res) => {
     if(exist && exist.password === hash) {
         googleLogin(email);
     } 
-    if (exist && exist.password !hash) {
+    if (exist && exist.password !== hash) {
         res.status(400).json({error: "Your email is registered but not as a google account"});
     }
     if (!exist) {
