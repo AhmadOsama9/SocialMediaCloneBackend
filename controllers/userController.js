@@ -143,6 +143,7 @@ const google = async (req, res) => {
         googleLogin(email, res);
     } 
     if (exist && exist.password !== hash) {
+        const error = "Your email is already registered but not as a google account";
         const redirectURL = `http://localhost:5173/signupcallback?error=${error}`;
         res.redirect(redirectURL);
     }
