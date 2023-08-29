@@ -2,6 +2,7 @@ const User = require("../models/userModel");
 const Profile = require("../models/profileModel");
 const UserActivity = require("../models/userActivityModel");
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 
 const createToken = (_id) => {
     return jwt.sign({ _id }, process.env.SECRET_JWT, { expiresIn: "3d" });
@@ -26,9 +27,8 @@ const loginUser = async (req, res) => {
     }
 };
 
-const googleLogin = async (req, res) => {
+const googleLogin = async (email) => {
     try {
-        const  email  = req.user.emails[0].value;
 
         const user = await User.findOne({ email });
 
@@ -85,15 +85,8 @@ const signupUser = async (req, res) => {
     }
 }
 
-const googleSignup = async (req, res) => {
+const googleSignup = async (email) => {
     try {
-        if (!req.user || !req.user.emails || !req.user.emails[0].value) {
-            console.error('Missing or invalid user data');
-            res.status(400).json({ error: 'Missing or invalid user data' });
-            return;
-        }
-        const email  = req.user.emails[0].value;         
-
         async function handleAsyncOperations() {
 
             const user = await User.googleSignup(email, "user");
@@ -127,6 +120,31 @@ const googleSignup = async (req, res) => {
         await handleAsyncOperations();
     } catch (error) {
         res.status(400).json({ error: error.message });
+    }
+}
+
+const google = async (req, res) => {
+    if (!req.user || !req.user.emails || !req.user.emails[0].value) {
+        console.error('Missing or invalid user data');
+        res.status(400).json({ error: 'Missing or invalid user data' });
+        return;
+    }
+
+    const email = req.user.emails[0].value;
+
+    
+    const exist = await this.findOne({ email });
+
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash("`-_GOACCOGUNTLE_?", salt);
+    if(exist && exist.password === hash) {
+        googleLogin(email);
+    } 
+    if (exist && exist.password !hash) {
+        res.status(400).json({error: "Your email is registered but not as a google account"});
+    }
+    if (!exist) {
+        googleSignup(email);
     }
 }
 
@@ -166,8 +184,7 @@ const getUserInfo = async (req, res) => {
 module.exports = {
     signupUser,
     loginUser,
-    googleLogin,
-    googleSignup,
+    google,
     getUserInfo,
     checkToken,
 };

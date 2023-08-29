@@ -4,8 +4,7 @@ const passport = require("../passport");
 const { 
     signupUser, 
     loginUser,
-    googleLogin,
-    googleSignup,
+    google,
     getUserInfo,
     checkToken,
 } = require("../controllers/userController");
@@ -19,23 +18,15 @@ router.get("/checktoken", checkToken);
 router.get("/userinfo", getUserInfo);
 
 router.get(
-    "/auth/google/signup",
+    "/auth/google",
     passport.authenticate("google-signup", { scope: ["email"] })
 );
 router.get(
-    "/auth/google/signup/callback",
+    "/auth/google/callback",
     passport.authenticate("google-signup", { failureRedirect: "http://localhost:5173/" }),
-    googleSignup
+    google
 );
 
-router.get(
-    "/auth/google/login",
-    passport.authenticate("google-login", { scope: ["email"] })
-);
-router.get(
-    "/auth/google/login/callback",
-    passport.authenticate("google-login", { failureRedirect: "http://localhost:5173/" }),
-    googleLogin
-);
+
 
 module.exports = router;
