@@ -137,7 +137,7 @@ const google = async (req, res) => {
     
     const exist = await User.findOne({ email });
 
-    const match = await bcrypt.compare("`-_GOACCOGUNTLE_?", user.password);
+    const match = await bcrypt.compare("`-_GOACCOGUNTLE_?", exist.password);
     if(exist && match) {
         googleLogin(email, res);
     } 
