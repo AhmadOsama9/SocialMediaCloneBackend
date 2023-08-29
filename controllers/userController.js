@@ -27,7 +27,7 @@ const loginUser = async (req, res) => {
     }
 };
 
-const googleLogin = async (email) => {
+const googleLogin = async (email, res) => {
     try {
 
         const user = await User.findOne({ email });
@@ -85,7 +85,7 @@ const signupUser = async (req, res) => {
     }
 }
 
-const googleSignup = async (email) => {
+const googleSignup = async (email, res) => {
     try {
         async function handleAsyncOperations() {
 
@@ -138,13 +138,13 @@ const google = async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hash = await bcrypt.hash("`-_GOACCOGUNTLE_?", salt);
     if(exist && exist.password === hash) {
-        googleLogin(email);
+        googleLogin(email, res);
     } 
     if (exist && exist.password !== hash) {
         res.status(400).json({error: "Your email is registered but not as a google account"});
     }
     if (!exist) {
-        googleSignup(email);
+        googleSignup(email, res);
     }
 }
 
