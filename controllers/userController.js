@@ -133,7 +133,7 @@ const google = async (req, res) => {
     const email = req.user.emails[0].value;
 
     
-    const exist = await this.findOne({ email });
+    const exist = await User.findOne({ email });
 
     const salt = await bcrypt.genSalt(10);
     const hash = await bcrypt.hash("`-_GOACCOGUNTLE_?", salt);
