@@ -19,11 +19,11 @@ router.get("/userinfo", getUserInfo);
 
 router.get(
     "/auth/google",
-    passport.authenticate("google-signup", { scope: ["email"] })
+    passport.authenticate("google", { scope: ["email"] })
 );
 router.get(
     "/auth/google/callback",
-    passport.authenticate("google-signup", { failureRedirect: "http://localhost:5173/" }),
+    passport.authenticate("google", { failureRedirect: "http://localhost:5173/" }),
     google
 );
 
