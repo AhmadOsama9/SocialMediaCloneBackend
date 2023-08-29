@@ -10,32 +10,15 @@ passport.deserializeUser(function(user, done) {
 });
 
 passport.use(
-    "google-signup",
     new GoogleStrategy(
         {
             clientID: process.env.CLIENT_ID,
             clientSecret: process.env.CLIENT_SECRET,
-            callbackURL: "https://merngymprojectbackend.onrender.com/api/user/auth/google/signup/callback",
+            callbackURL: "https://merngymprojectbackend.onrender.com/api/user/auth/google/callback",
             passReqToCallback: true,
             scope: ["email"], // Only request email access
         },
         async function (request, accessToken, refreshToken, profile, done) {
-            return done(null, profile);
-        }
-    )
-);
-
-passport.use(
-    "google-login",
-    new GoogleStrategy(
-        {
-            clientID: process.env.CLIENT_ID,
-            clientSecret: process.env.CLIENT_SECRET,
-            callbackURL: "https://merngymprojectbackend.onrender.com/api/user/auth/google/login/callback",
-            passReqToCallback: true,
-            scope: ["email"], // Only request email access
-        },
-        function (request, accessToken, refreshToken, profile, done) {
             return done(null, profile);
         }
     )
