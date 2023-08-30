@@ -105,7 +105,7 @@ const getNickname = async (req, res) => {
 const checkAllInfo = async (req, res) => {
     const { userId } = req.query;
 
-    const user = await Profile.findOne(user: userId);
+    const user = await Profile.findOne({user: userId});
     if (!user) {
         res.status(400).json({error: "User not found"});
     }
