@@ -19,6 +19,7 @@ const profileSchema = new Schema({
     enum: ["male", "female"],
   },
   bio: String,
+  image: String,
 });
 
 profileSchema.statics.updateNickname = async function (userId, nickname) {
@@ -30,7 +31,11 @@ profileSchema.statics.updateNickname = async function (userId, nickname) {
     }
 
     profile.nickname = nickname;
-    await profile.save();
+    
+    const updatedProfile = await profile.save();
+    if (!updatedProfile) {
+      throw Error("Failed to svae the udpated profile")
+    }
 
     return profile;
   
@@ -49,7 +54,11 @@ profileSchema.statics.updateAge = async function (userId, age) {
       }
 
     profile.age = age;
-    await profile.save();
+    
+    const updatedProfile = await profile.save();
+    if (!updatedProfile) {
+      throw Error("Failed to svae the udpated profile")
+    }
 
     return profile;
   
@@ -67,7 +76,11 @@ profileSchema.statics.updateGender = async function (userId, gender) {
     }
 
     profile.gender = gender;
-    await profile.save();
+    
+    const updatedProfile = await profile.save();
+    if (!updatedProfile) {
+      throw Error("Failed to svae the udpated profile")
+    }
 
     return profile;
   
@@ -82,13 +95,17 @@ profileSchema.statics.updateBio = async function (userId, bio) {
     }
 
     profile.bio = bio;
-    await profile.save();
+    
+    const updatedProfile = await profile.save();
+    if (!updatedProfile) {
+      throw Error("Failed to svae the udpated profile")
+    }
 
     return profile;
   
 };
 
-profileSchema.statics.updateImage = async function (userId, icon) {
+profileSchema.statics.updateImage = async function (userId, iconNumber) {
   
     const profile = await this.findOne({ user: new mongoose.Types.ObjectId(userId)  });
 
@@ -96,12 +113,12 @@ profileSchema.statics.updateImage = async function (userId, icon) {
       throw Error("Profile not found");
     }
 
-    profile.image = {
-        data: Buffer.from(icon, "utf-8"),
-        contentType: "image/svg+xml"
-      };
+    profile.image = iconNumber;
 
-    await profile.save();
+    const updatedProfile = await profile.save();
+    if (!updatedProfile) {
+      throw Error("Failed to svae the udpated profile")
+    }
 
     return profile;
   
@@ -122,6 +139,15 @@ profileSchema.statics.getNickname = async function (userId) {
     throw Error("No user with that userId");
   }
   return userProfile.nickname;
+}
+
+profileSchema.statics.checkAllInfo = async (userId) {
+  const userProfile = await this.findONe({ user: userId});
+  if (!userPRofile) {
+    throw Error("User not found");
+  }
+  
+  
 }
 
 module.exports = mongoose.model("Profiles", profileSchema);

@@ -59,7 +59,7 @@ const signupUser = async (req, res) => {
 
         const profile = await Profile.create({
             user: user._id,
-            bio: "",
+            image: "0",
         });
         if (!profile) {
             throw Error("Failed to create a profile");
@@ -153,16 +153,14 @@ const google = async (req, res) => {
 
 const checkToken = async (req, res) => {
     const { userId, token } = req.query;
-
-    const user = await User.findById(userId);
     if (!userId || !token) {
         res.status(400).json({error: "userId or the token is missing"});
     }
+
+    const user = await User.findById(userId);
+
     if (!user) {
         res.status(400).json({error: "User not found"});
-    }
-    if (!user.jwt) {
-        res.status(400).json({error: "The user doesn't have a token"});
     }
     if (user.jwt !== token) {
         res.status(400).json({error: "The token is not valid"});
@@ -172,15 +170,24 @@ const checkToken = async (req, res) => {
     }
 }
 
-const getUserInfo = async (req, res) => {
-    const { userId } = req.query;
+const checkUserInfo = async (req, res) => {
+    const { userId, role, email, token } = req.query;
 
     const user = await User.findById(userId);
     if (!user) {
         res.status(400).json({error: "User not found"});
     }
+    if (user.email !== email) {
+        res.status(400).json({error: "Invalid User Info"});
+    }
+    if (user.role !== role) {
+        res.status(400).json({error: "Invalid User Info"});
+    }
+    if (user.jwt !== token) {
+        res.status(400).json({error: "Invalid User Info"});
+    }
     else {
-        res.status(200).json({email: user.email, token: user.jwt, role: user.role, userId: user._id});
+        res.status(200).json({message: "Valid User Info"});
     }
 }
 
@@ -188,6 +195,6 @@ module.exports = {
     signupUser,
     loginUser,
     google,
-    getUserInfo,
+    checkUserInfo,
     checkToken,
 };

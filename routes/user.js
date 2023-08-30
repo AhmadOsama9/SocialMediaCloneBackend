@@ -5,7 +5,7 @@ const {
     signupUser, 
     loginUser,
     google,
-    getUserInfo,
+    checkUserInfo,
     checkToken,
 } = require("../controllers/userController");
 
@@ -15,7 +15,7 @@ router.post("/login", loginUser);
 router.post("/signup", signupUser);
 
 router.get("/checktoken", checkToken);
-router.get("/userinfo", getUserInfo);
+router.post("/checkuserinfo", checkUserInfo);
 
 router.get(
     "/auth/google",
