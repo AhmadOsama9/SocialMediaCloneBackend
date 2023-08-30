@@ -172,7 +172,7 @@ const checkToken = async (req, res) => {
 }
 
 const checkUserInfo = async (req, res) => {
-    const { userId, role, email, token } = req.query;
+    const { userId, role, email, token } = req.body;
 
     const user = await User.findById(userId);
     if (!user) {
