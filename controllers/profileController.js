@@ -109,7 +109,7 @@ const checkAllInfo = async (req, res) => {
     if (!user) {
         res.status(400).json({error: "User not found"});
     }
-    if (!user.nickname || !user.age || !user.gender || !user.bio || user.image === "0") {
+    else if (!user.nickname || !user.age || !user.gender || !user.bio || user.image === "0") {
         res.status(400).json({error: "User profile info is missing"});
     }
     else {
