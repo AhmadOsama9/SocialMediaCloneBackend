@@ -136,15 +136,16 @@ const google = async (req, res) => {
 
     
     const exist = await User.findOne({ email });
-
-    const match = await bcrypt.compare("`-_GOACCOGUNTLE_?", exist.password);
-    if(exist && match) {
-        googleLogin(email, res);
-    } 
-    if (exist && !match) {
-        const error = "Your email is already registered but not as a google account";
-        const redirectURL = `http://localhost:5173/signupcallback?error=${error}`;
-        res.redirect(redirectURL);
+    if (exist) {
+        const match = await bcrypt.compare("`-_GOACCOGUNTLE_?", exist.password);
+        if(exist && match) {
+            googleLogin(email, res);
+        } 
+        if (exist && !match) {
+            const error = "Your email is already registered but not as a google account";
+            const redirectURL = `http://localhost:5173/signupcallback?error=${error}`;
+            res.redirect(redirectURL);
+        }
     }
     if (!exist) {
         googleSignup(email, res);
