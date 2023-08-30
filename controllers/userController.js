@@ -94,7 +94,7 @@ const googleSignup = async (email, res) => {
 
             const userProfile = await Profile.create({
                 user: user._id,
-                bio: "",
+                image: "0",
             });
             if (!userProfile) {
                 throw Error("Failed to create a profile");

@@ -102,6 +102,21 @@ const getNickname = async (req, res) => {
     }
 }
 
+const checkAllInfo = async (req, res) => {
+    const { userId } = req.query;
+
+    const user = await Profile.findOne(user: userId);
+    if (!user) {
+        res.status(400).json({error: "User not found"});
+    }
+    if (!user.nickname || !user.age || !user.gender || !user.bio || user.image === "0") {
+        res.status(400).json({error: "User profile info is missing"});
+    }
+    else {
+        res.status(200).json({message: "User profile info is filled"});
+    }
+}
+
 module.exports = {
     updateNickname, 
     updateAge,
@@ -111,4 +126,5 @@ module.exports = {
     getProfileInfo,
     searchByNickname,
     getNickname,
+    checkAllInfo,
 }

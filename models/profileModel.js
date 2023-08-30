@@ -141,13 +141,5 @@ profileSchema.statics.getNickname = async function (userId) {
   return userProfile.nickname;
 }
 
-profileSchema.statics.checkAllInfo = async (userId) {
-  const userProfile = await this.findONe({ user: userId});
-  if (!userPRofile) {
-    throw Error("User not found");
-  }
-  
-  
-}
 
 module.exports = mongoose.model("Profiles", profileSchema);
