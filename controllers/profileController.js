@@ -50,7 +50,7 @@ const updateImage = async (req, res) => {
   
     try {
       await Profile.updateImage(userId, image);
-      res.status(200).json({ message: "The image has been updated Successfully" });
+      res.status(200).json({ image });
     } catch (error) {
       res.status(400).json({ error: error.message });
     }
