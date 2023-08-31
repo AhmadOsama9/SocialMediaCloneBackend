@@ -105,7 +105,7 @@ profileSchema.statics.updateBio = async function (userId, bio) {
   
 };
 
-profileSchema.statics.updateAvatar = async function (userId, iconNumber) {
+profileSchema.statics.updateImage = async function (userId, iconNumber) {
   
     const profile = await this.findOne({ user: userId });
 
