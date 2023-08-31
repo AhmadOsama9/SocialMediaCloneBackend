@@ -112,7 +112,9 @@ profileSchema.statics.updateImage = async function (userId, iconNumber) {
     if (!profile) {
       throw Error("Profile not found");
     }
-
+    if (!iconNumber) {
+      throe Error("The avatar number has not been sent");
+    }
     profile.image = iconNumber;
 
     const updatedProfile = await profile.save();
