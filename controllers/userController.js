@@ -178,7 +178,13 @@ const checkUserInfo = async (req, res) => {
     if (!user) {
         res.status(400).json({error: "User not found"});
     }
-    else if (user.email !== email || user.role !== role || user.jwt !== token) {
+    else if (user.email !== email) {
+        res.status(400).json({error: "Invalid User Info"});
+    }
+    else if (user.role !== role) {
+        res.status(400).json({error: "Invalid User Info"});
+    }
+    else if (user.jwt !== token) {
         res.status(400).json({error: "Invalid User Info"});
     }
     else {
