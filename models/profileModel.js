@@ -113,7 +113,7 @@ profileSchema.statics.updateImage = async function (userId, iconNumber) {
       throw Error("Profile not found");
     }
     if (!iconNumber) {
-      throe Error("The avatar number has not been sent");
+      throw Error("The avatar number has not been sent");
     }
     profile.image = iconNumber;
 
