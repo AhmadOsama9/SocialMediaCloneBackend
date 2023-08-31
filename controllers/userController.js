@@ -179,13 +179,13 @@ const checkUserInfo = async (req, res) => {
         res.status(400).json({error: "User not found"});
     }
     else if (user.email !== email) {
-        res.status(400).json({error: "Invalid User Info"});
+        res.status(400).json({error: "Invalid User email"});
     }
     else if (user.role !== role) {
-        res.status(400).json({error: "Invalid User Info"});
+        res.status(400).json({error: "Invalid User role"});
     }
     else if (user.jwt !== token) {
-        res.status(400).json({error: "Invalid User Info"});
+        res.status(400).json({error: "Invalid User token"});
     }
     else {
         res.status(200).json({message: "Valid User Info"});
