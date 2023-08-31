@@ -45,11 +45,11 @@ const updateBio = async (req, res) => {
     }
 }
 
-const updateAvatar = async (req, res) => {
+const updateImage = async (req, res) => {
     const { userId, avatar } = req.body;
   
     try {
-      await Profile.updateAvatar(userId, avatar);
+      await Profile.updateImage(userId, avatar);
       res.status(200).json({ message: "Image updated successfully" });
     } catch (error) {
       res.status(400).json({ error: error.message });
