@@ -105,9 +105,9 @@ profileSchema.statics.updateBio = async function (userId, bio) {
   
 };
 
-profileSchema.statics.updateImage = async function (userId, iconNumber) {
+profileSchema.statics.updateAvatar = async function (userId, iconNumber) {
   
-    const profile = await this.findOne({ user: new mongoose.Types.ObjectId(userId)  });
+    const profile = await this.findOne({ user: userId });
 
     if (!profile) {
       throw Error("Profile not found");
