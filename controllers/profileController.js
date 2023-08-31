@@ -46,7 +46,7 @@ const updateBio = async (req, res) => {
 }
 
 const updateImage = async (req, res) => {
-    const { userId, avatar } = req.body;
+    const { userId, image } = req.body;
   
     try {
       await Profile.updateImage(userId, avatar);
