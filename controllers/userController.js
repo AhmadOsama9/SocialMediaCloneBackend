@@ -179,8 +179,6 @@ const checkUserInfo = async (req, res) => {
         res.status(400).json({error: "User not found"});
     }
     else if (user.email !== email) {
-        console.log("user email is: ", user.email);
-        console.log("sent email is: ", email);
         res.status(400).json({error: "Invalid User email"});
     }
     else if (user.role !== role) {
