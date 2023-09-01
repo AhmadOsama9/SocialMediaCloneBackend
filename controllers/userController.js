@@ -57,9 +57,13 @@ const signupUser = async (req, res) => {
     try {
         const user = await User.signup(email, password, role);
 
-        const profile = await Profile.create({
+        const userCount = await User.countDocuments();
+        const userNickname = "user" + userCount;
+
+        const userProfile = await Profile.create({
             user: user._id,
             image: "0",
+            nickname: userCount,
         });
         if (!profile) {
             throw Error("Failed to create a profile");
@@ -92,9 +96,13 @@ const googleSignup = async (email, res) => {
 
             const user = await User.googleSignup(email, "user");
 
+            const userCount = await User.countDocuments();
+            const userNickname = "user" + userCount;
+
             const userProfile = await Profile.create({
                 user: user._id,
                 image: "0",
+                nickname: userCount,
             });
             if (!userProfile) {
                 throw Error("Failed to create a profile");

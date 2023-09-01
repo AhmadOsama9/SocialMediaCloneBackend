@@ -9,7 +9,6 @@ const {
   getProfileInfo,
   searchByNickname,
   getNickname,
-  checkAllInfo,
 } = require("../controllers/profileController");
 
 router.post("/updateprofile/nickname", updateNickname);
@@ -30,6 +29,5 @@ router.get("/getprofilebynickname", searchByNickname);
 
 router.get("/getnickname", getNickname);
 
-router.get("/checkallinfo", checkAllInfo);
 
 module.exports = router;
