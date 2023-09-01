@@ -36,6 +36,12 @@ pageSchema.statics.createPage = async function (name, description, userId) {
         throw Error("User Activity not found");
     }
 
+    const existingPageWithSameName = await this.findOne({ name });
+
+    if (existingPageWithSameName) {
+        throw Error("Page name is already in use");
+    }
+
     const newPage = await this.create({
         name, 
         description,

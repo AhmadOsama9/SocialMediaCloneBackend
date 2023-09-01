@@ -30,6 +30,12 @@ profileSchema.statics.updateNickname = async function (userId, nickname) {
       throw Error("Profile not found");
     }
 
+    const existingProfileWithNickname = await this.findOne({ nickname });
+
+    if (existingProfileWithNickname && existingProfileWithNickname.user.toString() !== userId) {
+      throw Error("Nickname is already in use");
+    }
+
     profile.nickname = nickname;
     
     const updatedProfile = await profile.save();

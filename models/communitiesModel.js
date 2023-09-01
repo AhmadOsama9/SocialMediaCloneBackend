@@ -38,6 +38,12 @@ communitySchema.statics.createCommunity = async function (name, description, use
     if (!userActivity) {
         throw Error("User Activity not found");
     }
+
+    const existingCommunityWithSameName = await this.findOne({ name });
+
+    if (existingCommunityWithSameName) {
+        throw Error("Community name is already in use");
+    }
     
     const newCommunity = await this.create({
         name,
