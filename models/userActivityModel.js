@@ -367,6 +367,16 @@ userActivitySchema.statics.getSharedPosts = async function(userId) {
     }
     return results;
 }
+
+userActivitySchema.statics.getFeedPosts = async function (userId) {
+    const Post = require("./postModel");
+
+    const userActivity = await this.findOne({ user: userId});
+    if (!userActivity) {
+        throw Error("User activity not found");
+    }
+    
+}
   
 
 module.exports = mongoose.model("usersactivities", userActivitySchema);
