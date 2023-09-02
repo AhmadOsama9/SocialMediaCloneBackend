@@ -368,15 +368,57 @@ userActivitySchema.statics.getSharedPosts = async function(userId) {
     return results;
 }
 
-userActivitySchema.statics.getFeedPosts = async function (userId) {
-    const Post = require("./postModel");
-
-    const userActivity = await this.findOne({ user: userId});
-    if (!userActivity) {
-        throw Error("User activity not found");
+const getFeedPosts = async (userId, page) => {
+    const pageSize = 5;
+    try {
+      // 1. Get User's Newest Posts
+      const userPosts = await Post.find({ owner: userId })
+        .sort({ createdAt: -1 })
+        .limit(pageSize)
+        .skip(page * pageSize);
+  
+      // 2. Get User's Friends' Posts
+      const userActivity = await UserActivity.findOne({ user: userId });
+      const friendIds = userActivity.friends.map((friend) => friend.userId);
+      const friendPosts = await Post.find({ owner: { $in: friendIds } })
+        .sort({ createdAt: -1 })
+        .limit(pageSize)
+        .skip(page * pageSize);
+  
+      // 3. Get User's Joined Communities' Posts
+      const joinedCommunityIds = userActivity.joinedCommunities;
+      const communityPosts = await Post.find({ community: { $in: joinedCommunityIds } })
+        .sort({ createdAt: -1 })
+        .limit(pageSize)
+        .skip(page * pageSize);
+  
+      // 4. Combine and Sort Posts
+      let feedPosts = [...userPosts, ...friendPosts, ...communityPosts];
+      feedPosts.sort((a, b) => b.createdAt - a.createdAt);
+  
+      // 5. Check if feedPosts array has fewer than pageSize items
+      const remainingPosts = pageSize - feedPosts.length;
+  
+      if (remainingPosts > 0) {
+        // 6. Fetch additional posts from other users to fill remaining slots
+        const additionalPosts = await Post.find({
+          owner: { $ne: userId }, // Exclude the user's own posts
+        })
+          .sort({ createdAt: -1 })
+          .limit(remainingPosts);
+  
+        feedPosts = [...feedPosts, ...additionalPosts];
+      }
+  
+      // 7. Sort all posts again in case additional posts were added
+      feedPosts.sort((a, b) => b.createdAt - a.createdAt);
+  
+      return feedPosts;
+    } catch (error) {
+      throw Error("Error fetching feed posts");
     }
-    
-}
+  };
+  
   
 
 module.exports = mongoose.model("usersactivities", userActivitySchema);

@@ -12,6 +12,7 @@ const {
     declineFriendRequest,
     cancelRequest,
     getReceivedRequests,
+    getFeedPosts,
 } = require("../controllers/userActivityController");
 
 const router = express.Router();
@@ -38,6 +39,8 @@ router.get("/getallfriends", getAllFriends);
 router.get("/getjoinedCommunities", getJoinedCommunities);
 
 router.get("/getrelation", getFriendRelationshipStatus);
+
+router.get("/getfeedposts", getFeedPosts);
 
 
 module.exports = router;
