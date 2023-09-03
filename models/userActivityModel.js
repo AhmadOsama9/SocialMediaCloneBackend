@@ -368,7 +368,7 @@ userActivitySchema.statics.getSharedPosts = async function(userId) {
     return results;
 }
 
-const getFeedPosts = async (userId, page) => {
+userActivitySchema.statics.getFeedPosts = async (userId, page) => {
     const pageSize = 5;
     try {
       // 1. Get User's Newest Posts
