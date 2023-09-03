@@ -367,6 +367,7 @@ userActivitySchema.statics.getSharedPosts = async function(userId) {
     }
     return results;
 }
+
 userActivitySchema.statics.getFeedPosts = async function (userId, page) {
     const Post = require("./postModel");
   
@@ -386,7 +387,8 @@ userActivitySchema.statics.getFeedPosts = async function (userId, page) {
     const userPosts = await Post.find({ owner: userId })
       .sort({ createdAt: -1 })
       .skip(skip)
-      .limit(pageSize);
+      .limit(pageSize)
+      .select('nickname header content postId');
 
     const userPosts2 = await Post.find({ owner: userId});  
     console.log("the user posts is: ", userPosts);
@@ -397,15 +399,17 @@ userActivitySchema.statics.getFeedPosts = async function (userId, page) {
     const friendPosts = await Post.find({ owner: { $in: friendIds } })
       .sort({ createdAt: -1 })
       .skip(skip)
-      .limit(pageSize);
+      .limit(pageSize)
+      .select('nickname header content postId');
   
     // 3. Get User's Joined Communities' Posts
     const joinedCommunityIds = userActivity.joinedCommunities;
     const communityPosts = await Post.find({ community: { $in: joinedCommunityIds } })
       .sort({ createdAt: -1 })
       .skip(skip)
-      .limit(pageSize);
-  
+      .limit(pageSize)
+      .select('nickname header content postId');
+
     // Combine all posts without excluding the user's own posts
     let feedPosts = [...userPosts, ...friendPosts, ...communityPosts];
   
@@ -422,7 +426,8 @@ userActivitySchema.statics.getFeedPosts = async function (userId, page) {
       })
         .sort({ createdAt: -1 })
         .skip(skip)
-        .limit(remainingPosts);
+        .limit(remainingPosts)
+        .select('nickname header content postId');
   
       feedPosts = [...feedPosts, ...additionalPosts];
     }
