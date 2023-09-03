@@ -370,17 +370,24 @@ userActivitySchema.statics.getSharedPosts = async function(userId) {
 
 userActivitySchema.statics.getFeedPosts = async (userId, page) => {
     const Post = require("./postModel");
-    
+
+    if (!userId || !page) {
+        throw Error("Invalid info");
+    }
+
     const pageSize = 5;
-    try {
       // 1. Get User's Newest Posts
       const userPosts = await Post.find({ owner: userId })
         .sort({ createdAt: -1 })
         .limit(pageSize)
         .skip(page * pageSize);
+        
   
       // 2. Get User's Friends' Posts
       const userActivity = await this.findOne({ user: userId });
+      if (!userActivity) {
+        throw Error("User Activity not found");
+      }
       const friendIds = userActivity.friends.map((friend) => friend.userId);
       const friendPosts = await Post.find({ owner: { $in: friendIds } })
         .sort({ createdAt: -1 })
@@ -416,9 +423,6 @@ userActivitySchema.statics.getFeedPosts = async (userId, page) => {
       feedPosts.sort((a, b) => b.createdAt - a.createdAt);
   
       return feedPosts;
-    } catch (error) {
-      throw Error("Error fetching feed posts");
-    }
   };
   
   
