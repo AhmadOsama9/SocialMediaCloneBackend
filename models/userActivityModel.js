@@ -388,7 +388,13 @@ userActivitySchema.statics.getFeedPosts = async function (userId, page) {
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(pageSize)
-      .select('nickname header content postId');
+      .select({
+        nickname: 1,
+        header: 1,
+        content: 1,
+        _id: 0, // Exclude the default _id field
+        postId: '$_id', // Rename _id to postId
+       });
 
     const userPosts2 = await Post.find({ owner: userId});  
     console.log("the user posts is: ", userPosts);
@@ -400,7 +406,13 @@ userActivitySchema.statics.getFeedPosts = async function (userId, page) {
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(pageSize)
-      .select('nickname header content postId');
+      .select({
+        nickname: 1,
+        header: 1,
+        content: 1,
+        _id: 0, // Exclude the default _id field
+        postId: '$_id', // Rename _id to postId
+       });
   
     // 3. Get User's Joined Communities' Posts
     const joinedCommunityIds = userActivity.joinedCommunities;
@@ -408,7 +420,13 @@ userActivitySchema.statics.getFeedPosts = async function (userId, page) {
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(pageSize)
-      .select('nickname header content postId');
+      .select({
+        nickname: 1,
+        header: 1,
+        content: 1,
+        _id: 0, // Exclude the default _id field
+        postId: '$_id', // Rename _id to postId
+       });
 
     // Combine all posts without excluding the user's own posts
     let feedPosts = [...userPosts, ...friendPosts, ...communityPosts];
@@ -427,7 +445,13 @@ userActivitySchema.statics.getFeedPosts = async function (userId, page) {
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(remainingPosts)
-        .select('nickname header content postId');
+        .select({
+        nickname: 1,
+        header: 1,
+        content: 1,
+        _id: 0, // Exclude the default _id field
+        postId: '$_id', // Rename _id to postId
+       });
   
       feedPosts = [...feedPosts, ...additionalPosts];
     }
