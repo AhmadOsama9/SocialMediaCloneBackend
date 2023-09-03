@@ -378,7 +378,7 @@ userActivitySchema.statics.getFeedPosts = async (userId, page) => {
         .skip(page * pageSize);
   
       // 2. Get User's Friends' Posts
-      const userActivity = await UserActivity.findOne({ user: userId });
+      const userActivity = await this.findOne({ user: userId });
       const friendIds = userActivity.friends.map((friend) => friend.userId);
       const friendPosts = await Post.find({ owner: { $in: friendIds } })
         .sort({ createdAt: -1 })
