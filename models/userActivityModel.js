@@ -368,7 +368,7 @@ userActivitySchema.statics.getSharedPosts = async function(userId) {
     return results;
 }
 
-userActivitySchema.statics.getFeedPosts = async (userId, page) => {
+userActivitySchema.statics.getFeedPosts = async function(userId, page) {
     const Post = require("./postModel");
 
     if (!userId || !page) {
@@ -386,7 +386,7 @@ userActivitySchema.statics.getFeedPosts = async (userId, page) => {
       // 2. Get User's Friends' Posts
       const userActivity = await this.findOne({ user: userId});
       if (!userActivity) {
-          throw Error("User activity not found");
+        throw Error("User activity not found");
       }
       const friendIds = userActivity.friends.map((friend) => friend.userId);
       const friendPosts = await Post.find({ owner: { $in: friendIds } })
