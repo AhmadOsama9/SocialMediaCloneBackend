@@ -125,7 +125,7 @@ const getFeedPosts = async (req, res) => {
     const { userId, page } = req.query;
 
     try {
-        const Posts = await UsersActivity.getFeedPosts(userId, page);
+        const posts = await UsersActivity.getFeedPosts(userId, page);
         res.status(200).json(posts);
     } catch (error) {
         res.status(400).json({error: error.message});
