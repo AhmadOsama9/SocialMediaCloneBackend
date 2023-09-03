@@ -388,7 +388,9 @@ userActivitySchema.statics.getFeedPosts = async function (userId, page) {
       .skip(skip)
       .limit(pageSize);
 
+    const userPosts2 = await Post.find({ owner: userId});  
     console.log("the user posts is: ", userPosts);
+    console.log("The userPosts2 is: ", userPosts2);
   
     // 2. Get User's Friends' Posts
     const friendIds = userActivity.friends.map((friend) => friend.userId);
