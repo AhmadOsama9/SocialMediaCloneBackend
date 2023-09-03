@@ -367,63 +367,70 @@ userActivitySchema.statics.getSharedPosts = async function(userId) {
     }
     return results;
 }
-
-userActivitySchema.statics.getFeedPosts = async function(userId, page) {
+userActivitySchema.statics.getFeedPosts = async function (userId, page) {
     const Post = require("./postModel");
-
-    if (!userId || !page) {
-        throw Error("Invalid info");
+  
+    if (!userId || page < 0) {
+      throw Error("Invalid info");
+    }
+  
+    const userActivity = await this.findOne({ user: userId });
+    if (!userActivity) {
+      throw Error("User activity not found");
     }
 
     const pageSize = 5;
-      // 1. Get User's Newest Posts
-      const userPosts = await Post.find({ owner: userId })
+    const skip = page * pageSize;
+  
+    // 1. Get User's Newest Posts
+    const userPosts = await Post.find({ owner: userId })
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(pageSize);
+
+    console.log("the user posts is: ", userPosts);
+  
+    // 2. Get User's Friends' Posts
+    const friendIds = userActivity.friends.map((friend) => friend.userId);
+    const friendPosts = await Post.find({ owner: { $in: friendIds } })
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(pageSize);
+  
+    // 3. Get User's Joined Communities' Posts
+    const joinedCommunityIds = userActivity.joinedCommunities;
+    const communityPosts = await Post.find({ community: { $in: joinedCommunityIds } })
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(pageSize);
+  
+    // Combine all posts without excluding the user's own posts
+    let feedPosts = [...userPosts, ...friendPosts, ...communityPosts];
+  
+    // 4. Sort all posts by createdAt
+    feedPosts.sort((a, b) => b.createdAt - a.createdAt);
+  
+    // 5. Check if feedPosts array has fewer than pageSize items
+    const remainingPosts = pageSize - feedPosts.length;
+  
+    if (remainingPosts > 0) {
+      // 6. Fetch additional posts from other users to fill remaining slots
+      const additionalPosts = await Post.find({
+        owner: { $ne: userId }, // Exclude the user's own posts
+      })
         .sort({ createdAt: -1 })
-        .limit(pageSize)
-        .skip(page * pageSize);
-        
+        .skip(skip)
+        .limit(remainingPosts);
   
-      // 2. Get User's Friends' Posts
-      const userActivity = await this.findOne({ user: userId});
-      if (!userActivity) {
-        throw Error("User activity not found");
-      }
-      const friendIds = userActivity.friends.map((friend) => friend.userId);
-      const friendPosts = await Post.find({ owner: { $in: friendIds } })
-        .sort({ createdAt: -1 })
-        .limit(pageSize)
-        .skip(page * pageSize);
+      feedPosts = [...feedPosts, ...additionalPosts];
+    }
   
-      // 3. Get User's Joined Communities' Posts
-      const joinedCommunityIds = userActivity.joinedCommunities;
-      const communityPosts = await Post.find({ community: { $in: joinedCommunityIds } })
-        .sort({ createdAt: -1 })
-        .limit(pageSize)
-        .skip(page * pageSize);
+    // 7. Sort all posts again in case additional posts were added
+    feedPosts.sort((a, b) => b.createdAt - a.createdAt);
   
-      // 4. Combine and Sort Posts
-      let feedPosts = [...userPosts, ...friendPosts, ...communityPosts];
-      feedPosts.sort((a, b) => b.createdAt - a.createdAt);
-  
-      // 5. Check if feedPosts array has fewer than pageSize items
-      const remainingPosts = pageSize - feedPosts.length;
-  
-      if (remainingPosts > 0) {
-        // 6. Fetch additional posts from other users to fill remaining slots
-        const additionalPosts = await Post.find({
-          owner: { $ne: userId }, // Exclude the user's own posts
-        })
-          .sort({ createdAt: -1 })
-          .limit(remainingPosts);
-  
-        feedPosts = [...feedPosts, ...additionalPosts];
-      }
-  
-      // 7. Sort all posts again in case additional posts were added
-      feedPosts.sort((a, b) => b.createdAt - a.createdAt);
-  
-      return feedPosts;
+    return feedPosts;
   };
+  
   
   
 
