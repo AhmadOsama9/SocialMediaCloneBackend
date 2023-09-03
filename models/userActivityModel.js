@@ -384,9 +384,9 @@ userActivitySchema.statics.getFeedPosts = async (userId, page) => {
         
   
       // 2. Get User's Friends' Posts
-      const userActivity = await this.findOne({ user: userId });
+      const userActivity = await this.findOne({ user: userId});
       if (!userActivity) {
-        throw Error("User Activity not found");
+          throw Error("User activity not found");
       }
       const friendIds = userActivity.friends.map((friend) => friend.userId);
       const friendPosts = await Post.find({ owner: { $in: friendIds } })
