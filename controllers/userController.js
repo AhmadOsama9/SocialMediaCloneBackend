@@ -200,10 +200,22 @@ const checkUserInfo = async (req, res) => {
     }
 }
 
+const forgotPassword = async (req, res) => {
+    const { email } = req.body;
+
+    try {
+        await User.forgotPassword(email);
+        res.status(200).json({message: "The otp has been sent, NOTE::It'll expire in 5 minutes"});
+    } catch (error) {
+        res.status(400).json({error: error.message});
+    }
+}
+
 module.exports = {
     signupUser,
     loginUser,
     google,
     checkUserInfo,
     checkToken,
+    forgotPassword,
 };

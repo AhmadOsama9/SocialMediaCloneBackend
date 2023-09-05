@@ -7,6 +7,7 @@ const {
     google,
     checkUserInfo,
     checkToken,
+    forgotPassword,
 } = require("../controllers/userController");
 
 const router = express.Router();
@@ -26,6 +27,8 @@ router.get(
     passport.authenticate("google", { failureRedirect: "http://localhost:5173/" }),
     google
 );
+
+router.post("/forgotpassword", forgotPassword);
 
 
 

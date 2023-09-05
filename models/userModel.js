@@ -99,5 +99,54 @@ userSchema.statics.login = async function(email, password) {
 
 }
 
+userSchema.statics.forgotPassword = async function (email) {
+    if (!email) {
+        throw Error("The email has not been sent");
+    }
+    const user = await this.findOne({ email });
+    if (!user) {
+        throw Error("Incorrect Email");
+    }
+    const match = await bcrypt.compare("`-_GOACCOGUNTLE_?", user.password);
+    if (match) {
+        throw Error("This email has been registered as google email, It can't be recovered using OTP");
+    }
+
+    const randomstring = require('randomstring')
+    const otp = randomstring.generate({
+        length: 6,
+        charset: 'numeric',
+    });
+    const otpExpiry = new Date();
+    otpExpiry.setMinutes(otpExpiry.getMinutes() + 5);
+    
+    user.passwordResetOTP = otp;
+    user.otpExpiry = otpExpiry;
+
+    const savedUser = await user.save();
+    if (!savedUser) {
+        throw Error("Valid to save the udpated User");
+    }
+
+    const nodemailer = require('nodemailer');
+
+    // Create a transporter object using your email service (e.g., Gmail)
+    const transporter = nodemailer.createTransport({
+    service: 'Gmail',
+    auth: {
+        user: 'mailotp153@gmail.com',
+        pass: process.env.EMAIL_PASSWORD,
+    },
+    });
+    const mailOptions = {
+        from: 'mailotp153@gmail.com',
+        to: email,
+        subject: 'Password Reset OTP',
+        text: `Your OTP for password reset is: ${otp}`,
+    };
+      
+    await transporter.sendMail(mailOptions);
+}
+
 
 module.exports = mongoose.model('Users', userSchema);
