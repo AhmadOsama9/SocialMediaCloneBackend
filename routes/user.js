@@ -8,6 +8,7 @@ const {
     checkUserInfo,
     checkToken,
     forgotPassword,
+    validateOTP,
 } = require("../controllers/userController");
 
 const router = express.Router();
@@ -29,6 +30,8 @@ router.get(
 );
 
 router.post("/forgotpassword", forgotPassword);
+
+router.post("/validateotp", validateOTP);
 
 
 

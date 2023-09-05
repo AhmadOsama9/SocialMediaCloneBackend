@@ -148,5 +148,38 @@ userSchema.statics.forgotPassword = async function (email) {
     await transporter.sendMail(mailOptions);
 }
 
+userSchema.statics.validateOTP = async function (email, otp) {
+    if (!email || !otp) {
+        throw Error("Missing Info");
+    }
+    const user = await this.findOne({ email });
+    if (!user) {
+        throw Error("Incorrect Email");
+    }
+
+    if (user.passwordResetOTP !== otp) {
+        throw Error("Invalid OTP");
+    }
+
+    const currentTimestamp = new Date();
+    if (currentTimestamp > user.otpExpiry) {
+        throw Error("OTP has expired");
+    }
+
+    const newPassword = generateNewPassword();
+    user.password = newPassword;
+
+    user.passwordResetOTP = undefined;
+    user.otpExpiry = undefined;
+
+    const savedUser = await user.save();
+    if (!savedUser) {
+        throw Error("Failed to save the updated user");
+    }
+
+    return newPassword;
+}
+
+
 
 module.exports = mongoose.model('Users', userSchema);

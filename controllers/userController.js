@@ -211,6 +211,17 @@ const forgotPassword = async (req, res) => {
     }
 }
 
+const validateOTP = async (req, res) => {
+    const {email, otp} = req.body;
+
+    try {
+        const password = await User.validateOTP(email, otp);
+        res.status(200).json({password});
+    } catch (error) {
+        res.status(400).json({error: error.message});
+    }
+}
+
 module.exports = {
     signupUser,
     loginUser,
@@ -218,4 +229,5 @@ module.exports = {
     checkUserInfo,
     checkToken,
     forgotPassword,
+    validateOTP,
 };
