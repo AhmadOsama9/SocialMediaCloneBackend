@@ -299,6 +299,27 @@ userActivitySchema.statics.getUserCommunities = async function (userId) {
     return results;
 }
 
+userActivitySchema.statics.getUserPages = async function (userId) {
+    const Page = require("./pageModel");
+
+    const userActivity = await this.findOne({ user: userId});
+    if (!userActivity) {
+        throw Error("User Activity not found");
+    }
+
+    const results = [];
+    const createdPages = userActivity.createdPages;
+    for (const pageId of createdPages) {
+        const page = await Page.findById(pageId);
+        if (!page) {
+            throw Error("Cannot find a page with that Id");
+        }
+        results.push({ id: page._id, name: page.name, description: page.description});
+    }
+
+    return results;
+}
+
 
 userActivitySchema.statics.getFriendRelationshipStatus = async function (userId, otherUserId) {
     const userActivity = await this.findOne({ user: userId });
