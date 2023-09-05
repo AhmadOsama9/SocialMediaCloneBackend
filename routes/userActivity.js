@@ -9,6 +9,7 @@ const {
     getAllFriends,
     getJoinedCommunities,
     getUserCommunities,
+    getUserPages,
     getFriendRelationshipStatus,
     declineFriendRequest,
     cancelRequest,
@@ -40,6 +41,8 @@ router.get("/getallfriends", getAllFriends);
 router.get("/getjoinedCommunities", getJoinedCommunities);
 
 router.get("/getusercommunities", getUserCommunities);
+
+router.get("/getuserpages", getUserPages);
 
 router.get("/getrelation", getFriendRelationshipStatus);
 
