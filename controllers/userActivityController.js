@@ -88,6 +88,17 @@ const getUserCommunities = async (req, res) => {
     }
 }
 
+const getUserPages = async (req, res) => {
+    const { userId } = req.query;
+
+    try {
+        const userPages = await UsersActivity.getUserPages(userId);
+        res.status(200).json(userPages);
+    } catch (error) {
+        res.status(400).json({error: error.message});
+    }
+}
+
 const getFriendRelationshipStatus = async (req, res) => {
     const { userId, otherUserId } = req.query;
 
@@ -154,6 +165,7 @@ module.exports = {
     getAllFriends,
     getJoinedCommunities,
     getUserCommunities,
+    getUserPages,
     getFriendRelationshipStatus,
     declineFriendRequest,
     cancelRequest,
