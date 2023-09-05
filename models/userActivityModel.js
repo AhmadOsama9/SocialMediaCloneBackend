@@ -260,8 +260,6 @@ userActivitySchema.statics.getJoinedCommunities = async function (userId) {
         throw Error("user activity not found");
     }
 
-    console.log("Joined Communities Array:", userActivity.joinedCommunities);
-
     const results = [];
 
     const joinedCommunities = userActivity.joinedCommunities;
@@ -272,6 +270,30 @@ userActivitySchema.statics.getJoinedCommunities = async function (userId) {
         }
 
         results.push({ id: community._id, name: community.name, description: community.description });
+    }
+
+    return results;
+}
+userActivitySchema.statics.getUserCommunities = async function (userId) {
+    const Community = require("./communitiesModel");
+
+    const userActivity = await this.findOne({ user: userId});
+    if (!userActivity) {
+        throw Error("user activity not found");
+    }
+
+    const results = [];
+
+    const joinedCommunities = userActivity.joinedCommunities;
+    for (const communityId of joinedCommunities) {
+        const community = await Community.findById(communityId);
+        if (!community) {
+            throw Error("Cannot find a community with that Id");
+        }
+
+        if (community.admins.includes(userId)) {
+            results.push({ id: community._id, name: community.name, description: community.description });
+        }
     }
 
     return results;
