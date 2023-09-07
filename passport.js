@@ -46,7 +46,7 @@ passport.use(
                 res.redirect(redirectURL);
             }
             else {
-                return done(null, { accessToken, profile });
+                return done(null, accessToken, profile);
             }
         }
     )
