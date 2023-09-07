@@ -10,7 +10,7 @@ passport.deserializeUser(function(user, done) {
         done(null, user);
 });
 
-async function verifyGoogleToken(accessToken, done) {
+async function verifyGoogleToken(accessToken) {
     try {
       // Make an HTTP GET request to Google's tokeninfo endpoint
       const response = await axios.get(`https://oauth2.googleapis.com/tokeninfo?access_token=${accessToken}`);
@@ -39,10 +39,11 @@ passport.use(
             scope: ["email"], // Only request email access
         },
         async function (request, accessToken, refreshToken, profile, done) {
-            const tokenValid = await verifyGoogleToken(accessToken, done);
+            const tokenValid = await verifyGoogleToken(accessToken);
             if (!tokenValid) {
                 console.error("Invalid access token");
-                return done(new Error("Invalid access token"), null);
+                const redirectURL = `http://localhost:5173/signupcallback?error=${"Invalid google Token"}`;
+                res.redirect(redirectURL);
             }
             else {
                 return done(null, { accessToken, profile });
