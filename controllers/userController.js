@@ -134,6 +134,13 @@ const googleSignup = async (email, res) => {
 }
 
 const google = async (req, res) => {
+    const tokenValid = verifyGoogleToken(req.accessToken);
+    if (!tokenValid) {
+        console.error("Invalid access token");
+        return done(new Error("Invalid access token"), null);
+    }
+
+
     if (!req.user || !req.user.emails || !req.user.emails[0].value) {
         console.error('Missing or invalid user data');
         res.status(400).json({ error: 'Missing or invalid user data' });
@@ -217,6 +224,32 @@ const validateOTP = async (req, res) => {
     try {
         const password = await User.validateOTP(email, otp);
         res.status(200).json({password});
+    } catch (error) {
+        res.status(400).json({error: error.message});
+    }
+}
+
+const checkPassword = async (req, res) => {
+    const { userId, password} = req.body;
+
+    try {
+        const user = User.findById(userId);
+        if (!user) {
+            throw Error("No user with that id");
+        }
+
+        const match = await bcrypt.compare("`-_GOACCOGUNTLE_?", user.password);
+        if (match) {
+            throw Error("You cann't change the password of an email registered with google");
+        }
+
+        if (user.password === password) {
+            res.status(200).json({message: "valid password"});
+        }
+        else {
+            throw Error("Invalid Password");
+        }
+
     } catch (error) {
         res.status(400).json({error: error.message});
     }

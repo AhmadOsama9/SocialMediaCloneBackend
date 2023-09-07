@@ -19,7 +19,13 @@ passport.use(
             scope: ["email"], // Only request email access
         },
         async function (request, accessToken, refreshToken, profile, done) {
-            return done(null, profile);
+            const tokenValid = verifyGoogleToken(accessToken);
+            if (!tokenValid) {
+                console.error("Invalid access token");
+                return done(new Error("Invalid access token"), null);
+            }
+
+            return done(null, accessToken, profile);
         }
     )
 );

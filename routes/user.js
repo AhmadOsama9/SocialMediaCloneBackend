@@ -23,6 +23,7 @@ router.get(
     "/auth/google",
     passport.authenticate("google", { scope: ["email"] })
 );
+
 router.get(
     "/auth/google/callback",
     passport.authenticate("google", { failureRedirect: "http://localhost:5173/" }),
