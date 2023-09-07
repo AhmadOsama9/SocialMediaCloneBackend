@@ -154,7 +154,7 @@ async function verifyGoogleToken(accessToken) {
 }
 
 const google = async (req, res) => {
-    const tokenValid = verifyGoogleToken(req.accessToken);
+    const tokenValid = await verifyGoogleToken(req.accessToken);
     if (!tokenValid) {
         console.error("Invalid access token");
         return done(new Error("Invalid access token"), null);
