@@ -136,6 +136,7 @@ const googleSignup = async (email, res) => {
 
 async function verifyGoogleToken(accessToken) {
     try {
+        console.log("The accessToken is: ", accessToken);
       // Make an HTTP GET request to Google's tokeninfo endpoint
       const response = await axios.get(`https://oauth2.googleapis.com/tokeninfo?access_token=${accessToken}`);
       // Check if the response contains the required fields
