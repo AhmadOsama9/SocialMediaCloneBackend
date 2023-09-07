@@ -3,6 +3,7 @@ const Profile = require("../models/profileModel");
 const UserActivity = require("../models/userActivityModel");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const axios = require("axios");
 
 const createToken = (_id) => {
     return jwt.sign({ _id }, process.env.SECRET_JWT, { expiresIn: "3d" });
