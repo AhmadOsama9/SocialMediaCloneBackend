@@ -45,8 +45,9 @@ passport.use(
                 console.error("Invalid access token");
                 return done(new Error("Invalid access token"), null);
             }
-
-            return done(null, accessToken, profile);
+            else {
+                return done(null, { accessToken, profile });
+            }
         }
     )
 );
