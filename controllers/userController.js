@@ -158,7 +158,7 @@ async function verifyGoogleToken(accessToken) {
 
 const google = async (req, res) => {
 
-    if (!req.user || !req.user.accesstoken || !req.user.emails || !req.user.emails[0].value) {
+    if (!req.user || !req.user.accessToken || !req.user.emails || !req.user.emails[0].value) {
         console.error('Missing or invalid user data');
         res.status(400).json({ error: 'Missing or invalid user data' });
         return;
