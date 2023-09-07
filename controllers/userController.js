@@ -157,16 +157,17 @@ async function verifyGoogleToken(accessToken) {
 }
 
 const google = async (req, res) => {
-    const tokenValid = await verifyGoogleToken(req.accessToken);
-    if (!tokenValid) {
-        const redirectURL = `http://localhost:5173/signupcallback?error=${"Invalid google Token"}`;
-        res.redirect(redirectURL);
-    }
 
-    if (!req.user || !req.user.emails || !req.user.emails[0].value) {
+    if (!req.user || !req.user.accesstoken || !req.user.emails || !req.user.emails[0].value) {
         console.error('Missing or invalid user data');
         res.status(400).json({ error: 'Missing or invalid user data' });
         return;
+    }
+
+    const tokenValid = await verifyGoogleToken(req.user.accessToken);
+    if (!tokenValid) {
+        const redirectURL = `http://localhost:5173/signupcallback?error=${"Invalid google Token"}`;
+        res.redirect(redirectURL);
     }
 
     const email = req.user.emails[0].value;
