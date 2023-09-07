@@ -1,6 +1,6 @@
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const passport = require("passport");
-const axios = require("axios");
+const axios = require('axios');
 
 passport.serializeUser(function(user, done) {
     done(null, user);
@@ -10,11 +10,10 @@ passport.deserializeUser(function(user, done) {
         done(null, user);
 });
 
-async function verifyGoogleToken(accessToken) {
+async function verifyGoogleToken(accessToken, done) {
     try {
       // Make an HTTP GET request to Google's tokeninfo endpoint
       const response = await axios.get(`https://oauth2.googleapis.com/tokeninfo?access_token=${accessToken}`);
-        console.log("The response.data.aud is: ", response.data.aud);
       // Check if the response contains the required fields
       if (response.data.aud && response.data.aud === process.env.CLIENT_ID) {
         // The token is valid and intended for your application
@@ -40,7 +39,7 @@ passport.use(
             scope: ["email"], // Only request email access
         },
         async function (request, accessToken, refreshToken, profile, done) {
-            const tokenValid = await verifyGoogleToken(accessToken);
+            const tokenValid = await verifyGoogleToken(accessToken, done);
             if (!tokenValid) {
                 console.error("Invalid access token");
                 return done(new Error("Invalid access token"), null);
