@@ -133,13 +133,32 @@ const googleSignup = async (email, res) => {
     }
 }
 
+async function verifyGoogleToken(accessToken) {
+    try {
+      // Make an HTTP GET request to Google's tokeninfo endpoint
+      const response = await axios.get(`https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=${accessToken}`);
+  
+      // Check if the response contains the required fields
+      if (response.data.aud && response.data.aud === process.env.CLIENT_ID) {
+        // The token is valid and intended for your application
+        return true;
+      } else {
+        // The token is not valid for your application
+        return false;
+      }
+    } catch (error) {
+      // An error occurred while verifying the token
+      console.error('Error verifying Google token:', error);
+      return false;
+    }
+}
+
 const google = async (req, res) => {
     const tokenValid = verifyGoogleToken(req.accessToken);
     if (!tokenValid) {
         console.error("Invalid access token");
         return done(new Error("Invalid access token"), null);
     }
-
 
     if (!req.user || !req.user.emails || !req.user.emails[0].value) {
         console.error('Missing or invalid user data');

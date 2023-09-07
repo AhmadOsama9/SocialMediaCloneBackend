@@ -9,6 +9,26 @@ passport.deserializeUser(function(user, done) {
         done(null, user);
 });
 
+async function verifyGoogleToken(accessToken) {
+    try {
+      // Make an HTTP GET request to Google's tokeninfo endpoint
+      const response = await axios.get(`https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=${accessToken}`);
+  
+      // Check if the response contains the required fields
+      if (response.data.aud && response.data.aud === process.env.CLIENT_ID) {
+        // The token is valid and intended for your application
+        return true;
+      } else {
+        // The token is not valid for your application
+        return false;
+      }
+    } catch (error) {
+      // An error occurred while verifying the token
+      console.error('Error verifying Google token:', error);
+      return false;
+    }
+}
+
 passport.use(
     new GoogleStrategy(
         {
