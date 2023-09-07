@@ -155,8 +155,8 @@ async function verifyGoogleToken(accessToken) {
 const google = async (req, res) => {
     const tokenValid = await verifyGoogleToken(req.accessToken);
     if (!tokenValid) {
-        console.error("Invalid access token");
-        return done(new Error("Invalid access token"), null);
+        const redirectURL = `http://localhost:5173/signupcallback?error=${"Invalid google Token"}`;
+        res.redirect(redirectURL);
     }
 
     if (!req.user || !req.user.emails || !req.user.emails[0].value) {
