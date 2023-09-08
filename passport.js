@@ -19,8 +19,7 @@ passport.use(
             scope: ["email"], // Only request email access
         },
         async function (request, accessToken, refreshToken, profile, done) {
-            const user = { accessToken, profile };
-            return done(null, user);
+            return done(null, accessToken, profile);
         }
     )
 );
