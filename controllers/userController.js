@@ -267,7 +267,7 @@ const checkPassword = async (req, res) => {
     const { userId, password} = req.body;
 
     try {
-        const user = User.findById(userId);
+        const user = await User.findById(userId);
         if (!user) {
             throw Error("No user with that id");
         }
@@ -293,7 +293,7 @@ const updatePassword = async (req, res) => {
     const { userId, newPassword } = req.body;
 
     try {
-        const user = User.findById(userId);
+        const user = await User.findById(userId);
         if (!user) {
             throw Error("No user with that id");
         }
@@ -303,7 +303,7 @@ const updatePassword = async (req, res) => {
         if (!updatedUser) {
             throw Error("Failed to save the updated user");
         } 
-        
+
     } catch (error) {
         res.status(400).json({error: error.message});
     }
