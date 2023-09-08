@@ -32,6 +32,8 @@ userSchema.statics.signup = async function(email, password, role) {
         throw Error("All Fields Must Be Filled");
     }
 
+    email = email.toLowerCase();
+
     if(!validator.isEmail(email)) {
         throw Error("Email is not valid");
     }

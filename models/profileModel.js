@@ -30,6 +30,12 @@ profileSchema.statics.updateNickname = async function (userId, nickname) {
       throw Error("Profile not found");
     }
 
+    const adminRegex = /admin/i;
+
+    if (adminRegex.test(nickname)) {
+      throw Error("Nickname cannot contain 'admin' or its variations");
+    }
+
     const existingProfileWithNickname = await this.findOne({ nickname });
 
     if (existingProfileWithNickname && existingProfileWithNickname.user.toString() !== userId) {
