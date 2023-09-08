@@ -10,6 +10,7 @@ const {
     forgotPassword,
     validateOTP,
     checkPassword,
+    updatePassword,
 } = require("../controllers/userController");
 
 const router = express.Router();
@@ -21,6 +22,7 @@ router.get("/checktoken", checkToken);
 router.post("/checkuserinfo", checkUserInfo);
 
 router.post("/checkpassword", checkPassword);
+router.post("/updatepassword", updatePassword);
 
 router.get(
     "/auth/google",

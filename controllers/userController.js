@@ -289,6 +289,26 @@ const checkPassword = async (req, res) => {
     }
 }
 
+const updatePassword = async (req, res) => {
+    const { userId, newPassword } = req.body;
+
+    try {
+        const user = User.findById(userId);
+        if (!user) {
+            throw Error("No user with that id");
+        }
+
+        user.password = newPassword;
+        const updatedUser = user.save();
+        if (!updatedUser) {
+            throw Error("Failed to save the updated user");
+        } 
+        
+    } catch (error) {
+        res.status(400).json({error: error.message});
+    }
+}
+
 module.exports = {
     signupUser,
     loginUser,
@@ -297,5 +317,6 @@ module.exports = {
     checkToken,
     forgotPassword,
     validateOTP,
-    checkPassword
+    checkPassword,
+    updatePassword,
 };
