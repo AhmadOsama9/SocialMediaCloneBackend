@@ -181,7 +181,7 @@ const google = async (req, res) => {
         res.redirect(redirectURL);
     }
 
-    const email = req.user.emails[0].value;
+    const email = req.user.profile.emails[0].value;
 
     
     const exist = await User.findOne({ email });
