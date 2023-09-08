@@ -66,7 +66,7 @@ const signupUser = async (req, res) => {
             image: "0",
             nickname: userNickname,
         });
-        if (!profile) {
+        if (!userProfile) {
             throw Error("Failed to create a profile");
         }
 
