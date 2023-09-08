@@ -276,8 +276,9 @@ const checkPassword = async (req, res) => {
         if (match) {
             throw Error("You cann't change the password of an email registered with google");
         }
-
-        if (user.password === password) {
+        
+        const match2 = await bcrypt.compare(password, user.password);
+        if (match2) {
             res.status(200).json({message: "valid password"});
         }
         else {
