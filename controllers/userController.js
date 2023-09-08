@@ -158,14 +158,16 @@ async function verifyGoogleToken(accessToken) {
 
 const google = async (req, res) => {
 
-    if (!req.user || !req.user.accessToken || !req.user.emails || !req.user.emails[0].value) {
+    if (!req.user || !req.user.accessToken || !req.user.profile.emails || !req.user.profile.emails[0].value) {
         if (!req.user)
             console.log("the req.user is missing");
-        else if(!req.user.emails)
+        else if(!req.user.profile) 
+            console.log("The req.user.profile is missing");
+        else if(!req.user.profile.emails)
             console.log("The req.user.emails is missing");
-        else if(!req.user.emails[0].value)
+        else if(!req.user.profile.emails[0].value)
             console.log("The req.user.emails[0].value is missing");
-        else if (!!req.user.accessToken)
+        else if (!req.user.accessToken)
             console.log("the req.user.accessToken is missing");
         
         const redirectURL = `http://localhost:5173/signupcallback?error=${"Missing Google Info"}`;
