@@ -299,6 +299,11 @@ const updatePassword = async (req, res) => {
             throw Error("No user with that id");
         }
 
+        const match = await bcrypt.compare(newPassword, user.password);
+        if (match) {
+            res.status(400).json({message: "It's the same Password"});
+        }
+
         user.password = newPassword;
         const updatedUser = user.save();
         if (!updatedUser) {
