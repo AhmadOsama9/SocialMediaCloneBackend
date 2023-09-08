@@ -297,4 +297,5 @@ module.exports = {
     checkToken,
     forgotPassword,
     validateOTP,
+    checkPassword
 };

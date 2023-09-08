@@ -9,6 +9,7 @@ const {
     checkToken,
     forgotPassword,
     validateOTP,
+    checkPassword,
 } = require("../controllers/userController");
 
 const router = express.Router();
@@ -18,6 +19,8 @@ router.post("/signup", signupUser);
 
 router.get("/checktoken", checkToken);
 router.post("/checkuserinfo", checkUserInfo);
+
+router.post("/checkpassword", checkPassword);
 
 router.get(
     "/auth/google",
