@@ -4,6 +4,7 @@ const UserActivity = require("../models/userActivityModel");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const axios = require("axios");
+const validator = require("validator");
 
 const createToken = (_id) => {
     return jwt.sign({ _id }, process.env.SECRET_JWT, { expiresIn: "3d" });
@@ -302,6 +303,10 @@ const updatePassword = async (req, res) => {
         const match = await bcrypt.compare(newPassword, user.password);
         if (match) {
             res.status(400).json({message: "It's the same Password"});
+        }
+
+        if(!validator.isStrongPassword(newPassword)) {
+            throw Error("Password is not Strong enough");
         }
 
         user.password = newPassword;
