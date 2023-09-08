@@ -140,7 +140,7 @@ async function verifyGoogleToken(accessToken) {
       // Make an HTTP GET request to Google's tokeninfo endpoint
       const response = await axios.get(`https://oauth2.googleapis.com/tokeninfo?access_token=${accessToken}`);
       // Check if the response contains the required fields
-      console.log("The response.data.aud is: ", req.data.aud);
+      console.log("The response.data.aud is: ", response.data.aud);
       console.log("The Client Id is: ", process.env.CLIENT_ID);
       if (response.data.aud && response.data.aud === process.env.CLIENT_ID) {
         // The token is valid and intended for your application
