@@ -161,6 +161,8 @@ const google = async (req, res) => {
     if (!req.user || !req.user.accessToken || !req.user.emails || !req.user.emails[0].value) {
         if (!req.user)
             console.log("the req.user is missing");
+        else if(!req.user.emails)
+            console.log("The req.user.emails is missing");
         else if (!!req.user.accessToken)
             console.log("the req.user.accessToken is missing");
         
