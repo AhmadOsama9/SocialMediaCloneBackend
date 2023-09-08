@@ -159,6 +159,11 @@ async function verifyGoogleToken(accessToken) {
 const google = async (req, res) => {
 
     if (!req.user || !req.user.accessToken || !req.user.emails || !req.user.emails[0].value) {
+        if (!req.user)
+            console.log("the req.user is missing");
+        else if (!!req.user.accessToken)
+            console.log("the req.user.accessToken is missing");
+        
         const redirectURL = `http://localhost:5173/signupcallback?error=${"Missing Google Info"}`;
         res.redirect(redirectURL);
         return;
