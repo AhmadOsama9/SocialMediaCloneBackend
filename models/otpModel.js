@@ -28,7 +28,7 @@ otpSchema.statics.createAndSendOTP = async function (email) {
     const existingOTP = await this.findOne({ email, otpExpiry: { $gt: new Date() } });
 
     if (existingOTP) {
-        throw Error("An active OTP already exists for this email. Please check your email or wait for it to expire.");
+        return;
     }
 
     const randomstring = require('randomstring')
