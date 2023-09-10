@@ -81,7 +81,7 @@ userSchema.statics.googleSignup = async function(email, role) {
 
 
 
-userSchema.statics.login = async function(email, password) {
+userSchema.statics.login = async function (email, password) {
     if(!email || !password) {
         throw Error("All Fields Must Be Filed");
     }
@@ -124,13 +124,19 @@ userSchema.statics.forgotPassword = async function (email) {
     otpExpiry.setMinutes(otpExpiry.getMinutes() + 5);
     
     user.passwordResetOTP = otp;
-    user.otpExpiry = otpExpiry;
-
     const savedUser = await user.save();
     if (!savedUser) {
         throw Error("Valid to save the udpated User");
     }
 
+    user.otpExpiry = otpExpiry;
+    const savedUser = await user.save();
+    if (!savedUser) {
+        throw Error("Valid to save the udpated User");
+    }
+
+
+    
     const nodemailer = require('nodemailer');
 
     const transporter = nodemailer.createTransport({
