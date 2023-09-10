@@ -63,9 +63,10 @@ userSchema.statics.googleSignup = async function(email, role) {
         throw Error("The email is missing");
     }
 
-    if(!validator.isEmail(email)) {
-        throw Error("Email is not valid");
-    }    
+    const gmailRegex = "/^[a-zA-Z0-9._%+-]+@gmail\.com$/";
+    if (!gmailRegex.test(email)) {
+        throw Error("Email is not valid, only google account are valid");
+    }  
 
     const exist = await this.findOne({ email });
 

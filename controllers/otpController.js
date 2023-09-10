@@ -25,5 +25,5 @@ const validateOTP = async (req, res) => {
 
 module.exports = {
     createAndSendOTP,
-
+    validateOTP,
 }

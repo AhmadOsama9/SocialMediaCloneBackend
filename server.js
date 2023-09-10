@@ -13,6 +13,7 @@ const communityRoutes = require("./routes/community");
 const chatRoutes = require("./routes/chat");
 const userActivityRoutes = require("./routes/userActivity");
 const pageRoutes = require("./routes/page");
+const otpRoutes = require("./routes/otp");
 
 const app = express();
 
@@ -41,6 +42,7 @@ app.use("/api/community/", communityRoutes);
 app.use("/api/chat/", chatRoutes);
 app.use("/api/user/", userActivityRoutes);
 app.use("/api/page/", pageRoutes);
+app.use("/api/otp/", otpRoutes);
 
 mongoose.connect(process.env.MONGO_URL).then(
     () => {

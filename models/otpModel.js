@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const validator = require("validator");
 
 const Schema = mongoose.Schema;
 
@@ -19,8 +18,9 @@ otpSchema.statics.createAndSendOTP = async function (email) {
     if (!email) {
         throw Error("The email has not been sent");
     }
-    if (!validator.isEmail(email)) {
-        throw Error("Email is not valid");
+    const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+    if (!gmailRegex.test(email)) {
+        throw Error("Email is not valid, only google account are valid");
     }
 
     const randomstring = require('randomstring')
@@ -35,7 +35,7 @@ otpSchema.statics.createAndSendOTP = async function (email) {
     if (!createdOTP) {
         throw Error("Failed to create the otp");
     }
-    
+
     const nodemailer = require('nodemailer');
 
     const transporter = nodemailer.createTransport({
