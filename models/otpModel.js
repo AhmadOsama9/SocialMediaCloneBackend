@@ -39,10 +39,22 @@ otpSchema.statics.createAndSendOTP = async function (email) {
     const otpExpiry = new Date();
     otpExpiry.setMinutes(otpExpiry.getMinutes() + 5);
     
-    const createdOTP = await this.create({email, otp, otpExpiry});
-    if (!createdOTP) {
-        throw Error("Failed to create the otp");
+    const existingOTP2 = await this.findOne({email});
+    if (!existingOTP2) {
+        const createdOTP = await this.create({email, otp, otpExpiry});
+        if (!createdOTP) {
+            throw Error("Failed to create the otp");
+        }
+    } else {
+        existingOTP2.otp = otp;
+        existingOTP2.otpExpiry = otpExpiry;
+        
+        const updatedExistingOTP = existingOTP2.save();
+        if (!updatedExistingOTP) {
+            throw Error("Failed to save the updated OTP");
+        }
     }
+    
 
     const nodemailer = require('nodemailer');
 
