@@ -24,7 +24,7 @@ const userSchema = new Schema({
     jwt: {
         type: String,
         default: "Not Created Yet",
-    }
+    },
     passwordResetOTP: String,
     otpExpiry: Date,
 })
