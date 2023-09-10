@@ -56,8 +56,8 @@ otpSchema.statics.createAndSendOTP = async function (email) {
     const mailOptions = {
         from: 'mailotp153@gmail.com',
         to: email,
-        subject: 'Password Reset OTP',
-        text: `Your OTP for password reset is: ${otp}`,
+        subject: 'verification OTP',
+        text: `Your OTP for verification is: ${otp}`,
     };
       
     const sendMail = await transporter.sendMail(mailOptions);
@@ -85,7 +85,7 @@ otpSchema.statics.validateOTP = async function (email, otp) {
         throw Error("Invalid OTP");
     }
     const currentTimestamp = new Date();
-    if (currentTimestamp > user.otpExpiry) {
+    if (currentTimestamp > emailOTP.otpExpiry) {
         throw Error("OTP has expired");
     }
 }

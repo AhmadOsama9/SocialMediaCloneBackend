@@ -18,7 +18,7 @@ const validateOTP = async (req, res) => {
         await OTP.validateOTP(email, otp);
         res.status(200).json({message: "The otp is valid"});
     } catch (error) {
-        res.status(200).json({error: error.message});
+        res.status(400).json({error: error.message});
     }
 }
 
