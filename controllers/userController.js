@@ -308,8 +308,10 @@ const updatePassword = async (req, res) => {
         if(!validator.isStrongPassword(newPassword)) {
             throw Error("Password is not Strong enough");
         }
+        const salt = await bcrypt.genSalt(10);
+        const hash = await bcrypt.hash(newPassword, salt);
 
-        user.password = newPassword;
+        user.password = hash;
         const updatedUser = user.save();
         if (!updatedUser) {
             throw Error("Failed to save the updated user");
