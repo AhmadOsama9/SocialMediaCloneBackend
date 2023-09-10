@@ -130,8 +130,8 @@ userSchema.statics.forgotPassword = async function (email) {
     }
 
     user.otpExpiry = otpExpiry;
-    const savedUser = await user.save();
-    if (!savedUser) {
+    const savedUser2 = await user.save();
+    if (!savedUser2) {
         throw Error("Valid to save the udpated User");
     }
 
