@@ -317,7 +317,7 @@ const updatePassword = async (req, res) => {
             throw Error("Failed to save the updated user");
         } 
 
-        res.status(200).json({message: "THe password has been updated"});
+        res.status(200).json({message: "The password has been updated"});
 
     } catch (error) {
         res.status(400).json({error: error.message});
