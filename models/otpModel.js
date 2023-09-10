@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const User = require("./userModel");
 
 const Schema = mongoose.Schema;
 
@@ -23,6 +24,11 @@ otpSchema.statics.createAndSendOTP = async function (email) {
     const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
     if (!gmailRegex.test(email)) {
         throw Error("Email is not valid, only google account are valid");
+    }
+    
+    const user = await User.findOne({email});
+    if (user) {
+        throw Error("That email is already registered");
     }
 
     const existingOTP = await this.findOne({ email, otpExpiry: { $gt: new Date() } });
@@ -55,7 +61,6 @@ otpSchema.statics.createAndSendOTP = async function (email) {
         }
     }
     
-
     const nodemailer = require('nodemailer');
 
     const transporter = nodemailer.createTransport({
