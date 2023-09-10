@@ -133,7 +133,6 @@ userSchema.statics.forgotPassword = async function (email) {
 
     const nodemailer = require('nodemailer');
 
-    // Create a transporter object using your email service (e.g., Gmail)
     const transporter = nodemailer.createTransport({
     service: 'Gmail',
     auth: {
@@ -161,6 +160,8 @@ userSchema.statics.validateOTP = async function (email, otp) {
     }
 
     if (user.passwordResetOTP !== otp) {
+        console.log("The sended otp is: ", otp);
+        console.log("The user otp is: ", user.passwordResetOTP);
         throw Error("Invalid OTP");
     }
 
