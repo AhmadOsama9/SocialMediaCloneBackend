@@ -11,16 +11,24 @@ const otpSchema = new Schema({
     otp: {
         type: String,
     },
-    otpExpiry: Data,
+    otpExpiry: Date,
 })
 
 otpSchema.statics.createAndSendOTP = async function (email) {
     if (!email) {
         throw Error("The email has not been sent");
     }
+
+    email = email.toLowerCase();
     const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
     if (!gmailRegex.test(email)) {
         throw Error("Email is not valid, only google account are valid");
+    }
+
+    const existingOTP = await this.findOne({ email, otpExpiry: { $gt: new Date() } });
+
+    if (existingOTP) {
+        throw Error("An active OTP already exists for this email. Please check your email or wait for it to expire.");
     }
 
     const randomstring = require('randomstring')
@@ -63,8 +71,10 @@ otpSchema.statics.validateOTP = async function (email, otp) {
     if (!email) {
         throw Error("The email has not been sent");
     }
-    if (!validator.isEmail(email)) {
-        throw Error("Email is not valid");
+    email = email.toLowerCase();
+    const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+    if (!gmailRegex.test(email)) {
+        throw Error("Email is not valid, only google account are valid");
     }
     
     const emailOTP = await this.findOne({email});
