@@ -93,10 +93,12 @@ otpSchema.statics.validateOTP = async function (email, otp) {
     if (!emailOTP) {
         throw Error("There's no otp for that email");
     }
+
     if (emailOTP.otp !== otp) {
-        throw Error("Invalid OTP");
         console.log('the userOTP', emailOTP.otp);
         console.log("The sent otp", otp);
+        throw Error("Invalid OTP");
+        
     }
     const currentTimestamp = new Date();
     if (currentTimestamp > emailOTP.otpExpiry) {
