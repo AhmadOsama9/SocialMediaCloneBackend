@@ -147,7 +147,10 @@ userSchema.statics.forgotPassword = async function (email) {
         text: `Your OTP for password reset is: ${otp}`,
     };
       
-    await transporter.sendMail(mailOptions);
+    const sendMail = await transporter.sendMail(mailOptions);
+    if (!sendMail) {
+        throw Error("Failed due to the sendMail function");
+    }
 }
 
 userSchema.statics.validateOTP = async function (email, otp) {
