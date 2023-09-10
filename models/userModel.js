@@ -25,6 +25,8 @@ const userSchema = new Schema({
         type: String,
         default: "Not Created Yet",
     }
+    passwordResetOTP: String,
+    otpExpiry: Date,
 })
 
 userSchema.statics.signup = async function(email, password, role) {
@@ -124,19 +126,13 @@ userSchema.statics.forgotPassword = async function (email) {
     otpExpiry.setMinutes(otpExpiry.getMinutes() + 5);
     
     user.passwordResetOTP = otp;
+    user.otpExpiry = otpExpiry;
+
     const savedUser = await user.save();
     if (!savedUser) {
         throw Error("Valid to save the udpated User");
     }
 
-    user.otpExpiry = otpExpiry;
-    const savedUser2 = await user.save();
-    if (!savedUser2) {
-        throw Error("Valid to save the udpated User");
-    }
-
-
-    
     const nodemailer = require('nodemailer');
 
     const transporter = nodemailer.createTransport({
