@@ -9,3 +9,5 @@ const {
 router.post("/sendotp", createAndSendOTP);
 
 router.post("/validateotp", validateOTP);
+
+module.exports = router;
