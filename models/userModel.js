@@ -194,7 +194,7 @@ userSchema.statics.validateOTP = async function (email, otp) {
         throw Error("Failed to save the updated user");
     }
 
-    return strongPassword;
+    return strongPassword ;
 }
 
 
