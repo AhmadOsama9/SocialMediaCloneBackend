@@ -14,8 +14,8 @@ const loginUser = async (req, res) => {
     const { email, password } = req.body;
 
     try {
-        email = email.toLowerCase();
-        const user = await User.login(email, password);
+        userEmail = email.toLowerCase();
+        const user = await User.login(userEmail, password);
 
         const token = createToken(user._id);
         user.jwt = token;
@@ -24,7 +24,7 @@ const loginUser = async (req, res) => {
             throw Error("Failed to save the user");
         }
 
-        res.status(200).json({ email, token, role: user.role, userId: user._id });
+        res.status(200).json({ email: userEmail, token, role: user.role, userId: user._id });
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
