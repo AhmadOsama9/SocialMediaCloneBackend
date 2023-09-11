@@ -175,8 +175,16 @@ userSchema.statics.validateOTP = async function (email, otp) {
         throw Error("OTP has expired");
     }
 
-    const newPassword = generateNewPassword();
-    user.password = newPassword;
+    const strongPassword = randomstring.generate({
+        length: 12, 
+        charset: 'alphanumeric',
+        capitalization: 'mixed',
+    });
+
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(strongPassword, salt);
+ 
+    user.password = hash;
 
     user.passwordResetOTP = undefined;
     user.otpExpiry = undefined;
