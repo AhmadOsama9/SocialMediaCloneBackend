@@ -143,7 +143,7 @@ userSchema.statics.forgotPassword = async function (email) {
     },
     });
     const mailOptions = {
-        from: 'mailotp153@gmail.com',
+        from: 'SocialMediaClone',
         to: email,
         subject: 'Password Reset OTP',
         text: `Your OTP for password reset is: ${otp}`,
@@ -194,7 +194,7 @@ userSchema.statics.validateOTP = async function (email, otp) {
         throw Error("Failed to save the updated user");
     }
 
-    return strongPassword ;
+    return strongPassword;
 }
 
 

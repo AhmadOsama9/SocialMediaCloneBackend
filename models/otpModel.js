@@ -71,7 +71,7 @@ otpSchema.statics.createAndSendOTP = async function (email) {
     },
     });
     const mailOptions = {
-        from: 'mailotp153@gmail.com',
+        from: 'SocialMediaClone',
         to: email,
         subject: 'verification OTP',
         text: `Your OTP for verification is: ${otp}`,
