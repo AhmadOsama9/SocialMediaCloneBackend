@@ -174,7 +174,7 @@ userSchema.statics.validateOTP = async function (email, otp) {
     if (currentTimestamp > user.otpExpiry) {
         throw Error("OTP has expired");
     }
-
+    const randomstring = require('randomstring')
     const strongPassword = randomstring.generate({
         length: 12, 
         charset: 'alphanumeric',
