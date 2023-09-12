@@ -46,10 +46,10 @@ const googleLogin = async (email, res) => {
             throw Error("Failed to save the user");
         }
 
-        const redirectURL = `http://localhost:5173/logincallback?email=${email}&token=${token}&role=${"user"}&userId=${user._id}`;
+        const redirectURL = `https://socialmediaclone-s3lg.onrender.com/logincallback?email=${email}&token=${token}&role=${"user"}&userId=${user._id}`;
         res.redirect(redirectURL);
     } catch (error) {
-        const redirectURL = `http://localhost:5173/logincallback?error=${error}`;
+        const redirectURL = `https://socialmediaclone-s3lg.onrender.com/logincallback?error=${error}`;
         res.redirect(redirectURL);
     }
 };
@@ -125,13 +125,13 @@ const googleSignup = async (email, res) => {
                 throw Error("Failed to save the user");
             }
 
-            const redirectURL = `http://localhost:5173/signupcallback?email=${email}&token=${token}&role=${"user"}&userId=${user._id}`;
+            const redirectURL = `https://socialmediaclone-s3lg.onrender.com/signupcallback?email=${email}&token=${token}&role=${"user"}&userId=${user._id}`;
             res.redirect(redirectURL);
         }
 
         await handleAsyncOperations();
     } catch (error) {
-        const redirectURL = `http://localhost:5173/signupcallback?error=${error}`;
+        const redirectURL = `https://socialmediaclone-s3lg.onrender.com/signupcallback?error=${error}`;
         res.redirect(redirectURL);
     }
 }
@@ -172,14 +172,14 @@ const google = async (req, res) => {
         else if (!req.user.accessToken)
             console.log("the req.user.accessToken is missing");
         
-        const redirectURL = `http://localhost:5173/signupcallback?error=${"Missing Google Info"}`;
+        const redirectURL = `https://socialmediaclone-s3lg.onrender.com/signupcallback?error=${"Missing Google Info"}`;
         res.redirect(redirectURL);
         return;
     }
 
     const tokenValid = await verifyGoogleToken(req.user.accessToken);
     if (!tokenValid) {
-        const redirectURL = `http://localhost:5173/signupcallback?error=${"Invalid google Token"}`;
+        const redirectURL = `https://socialmediaclone-s3lg.onrender.com/signupcallback?error=${"Invalid google Token"}`;
         res.redirect(redirectURL);
     }
 
@@ -194,7 +194,7 @@ const google = async (req, res) => {
         } 
         if (exist && !match) {
             const error = "Your email is already registered but not as a google account";
-            const redirectURL = `http://localhost:5173/signupcallback?error=${error}`;
+            const redirectURL = `https://socialmediaclone-s3lg.onrender.com/signupcallback?error=${error}`;
             res.redirect(redirectURL);
         }
     }
