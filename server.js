@@ -48,6 +48,13 @@ app.use("/api/user/", userActivityRoutes);
 app.use("/api/page/", pageRoutes);
 app.use("/api/otp/", otpRoutes);
 
+
+// Redirect all unknown routes to the home page
+app.all('*', (req, res) => {
+    res.redirect("https://socialmediaclone-s3lg.onrender.com");
+});
+  
+
 mongoose.connect(process.env.MONGO_URL).then(
     () => {
         console.log("Connected to the database");
