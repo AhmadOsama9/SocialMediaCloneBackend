@@ -49,6 +49,15 @@ profileSchema.statics.updateNickname = async function (userId, nickname) {
       throw Error("Failed to svae the udpated profile")
     }
 
+    const Post = require("./postModel");
+
+    try {
+      await Post.updateMany({ owner: userId }, { nickname: nickname });
+    } catch (err) {
+      throw Error("Failed to update posts with the new nickname");
+    }
+
+
     return profile;
   
 };
