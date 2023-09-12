@@ -1,6 +1,4 @@
 const mongoose = require("mongoose");
-const Reactions = require("./reactionModel");
-const Comments = require("./commentModel");
 
 const Schema = mongoose.Schema;
 
