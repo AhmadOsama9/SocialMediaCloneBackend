@@ -31,7 +31,7 @@ router.get(
 
 router.get(
     "/auth/google/callback",
-    passport.authenticate("google", { failureRedirect: "http://localhost:5173/" }),
+    passport.authenticate("google", { failureRedirect: "https://socialmediaclone-s3lg.onrender.com/" }),
     google
 );
 
