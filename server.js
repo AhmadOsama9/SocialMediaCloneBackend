@@ -17,13 +17,14 @@ const otpRoutes = require("./routes/otp");
 
 const app = express();
 
+app.use(express.json());
+
 app.use(cors({
     origin: [
       "https://socialmediaclone-s3lg.onrender.com",
       "http://localhost:5173",
     ],
-  }));
-app.use(express.json());
+}));
 
 app.use(cookieSession({
     name: 'google-auth-session',
