@@ -6,6 +6,7 @@ const postSchema = new Schema({
   nickname: {
     type: String, 
     required: true,
+    lowercase: true,
   },
   header: {
     type: String, 

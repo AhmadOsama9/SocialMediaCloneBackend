@@ -12,6 +12,7 @@ const profileSchema = new Schema({
     type: String,
     unique: true,
     sparse: true,
+    lowercase: true,
   },
   age: Number,
   gender: {

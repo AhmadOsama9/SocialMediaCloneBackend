@@ -2,9 +2,10 @@ const Community = require("../models/communitiesModel")
 
 const createCommunity = async (req, res) => {
     const {name, description, userId} = req.body;
+    const lowercaseName = name.toLowerCase();
 
     try {
-        const community = await Community.createCommunity(name, description, userId);
+        const community = await Community.createCommunity(lowercaseName, description, userId);
         res.status(200).json({message: "The community has been created Sucessfully"});
 
     } catch (error) {
@@ -70,9 +71,10 @@ const makeMemberAdmin = async (req, res) => {
 
 const searchCommunityByName = async (req, res) => {
     const { name } = req.query;
+    const lowercaseName = name.toLowerCase();
 
     try {
-        const community = await Community.searchCommunityByName(name);
+        const community = await Community.searchCommunityByName(lowercaseName);
         res.status(200).json(community);
     } catch (error) {
         res.status(400).json({error: error.message});
