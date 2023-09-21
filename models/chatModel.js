@@ -75,7 +75,7 @@ chatSchema.statics.sendMessageByChatId = async function (chatId, userId, content
 
     chat.messages.push({
         sender: userId,
-        content: content,
+        content: content
     });
 
     const updatedChat = chat.save();
