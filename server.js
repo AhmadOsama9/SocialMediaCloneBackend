@@ -19,6 +19,7 @@ const otpRoutes = require("./routes/otp");
 
 const app = express();
 const server = http.createServer(app);
+const io = require("socket.io")(server);
 
 app.use(express.json());
 
@@ -57,28 +58,22 @@ app.all('*', (req, res) => {
     res.redirect("https://socialmediaclone-s3lg.onrender.com");
 });
 
-const io = new Server (server, {
-  cors: {
-    origin: "http://localhost:5173", // Adjust the origin as needed
-    methods: ["GET", "POST"],
-  },
-});
 
-module.exports = io;
+mongoose
+  .connect(process.env.MONGO_URL)
+  .then(() => {
+      console.log("Connected to the database");
 
+      server.listen(5000, () => {
+        console.log("The websocket server is running on port 5000");
+      })
 
-mongoose.connect(process.env.MONGO_URL).then(
-    () => {
-        console.log("Connected to the database");
-
-        server.listen(5000, () => {
-          console.log("The websocket server is running on port 5000");
-        })
-
-        app.listen(4000, () => {
-            console.log("Server is Listening to port 4000");
-        })
+      app.listen(4000, () => {
+          console.log("Server is Listening to port 4000");
+      })
     }
 ).catch((err) => {
     console.error(err);
 });
+
+module.exports = io;
