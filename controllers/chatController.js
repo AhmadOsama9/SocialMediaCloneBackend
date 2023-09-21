@@ -1,4 +1,31 @@
 const Chat = require("../models/chatModel");
+const io = require("../server");
+
+// Replace the RESTful controllers with WebSocket event handlers
+const CHAT_MESSAGE_EVENT = "chat-message";
+
+io.on("connection", (socket) => {
+  // Event listener for chat messages
+  socket.on(CHAT_MESSAGE_EVENT, async (data) => {
+    const { userId, otherUserId, content } = data;
+
+    try {
+      // Implement your logic for sending chat messages here
+      // You can use your existing Chat model methods
+      await Chat.sendMessage(userId, otherUserId, content);
+
+      // Optionally, send an acknowledgment or confirmation to the sender
+      socket.emit("message-sent-acknowledgment", { message: "Message sent successfully" });
+
+      // Broadcast the message to other connected clients
+      socket.broadcast.emit(CHAT_MESSAGE_EVENT, data);
+    } catch (error) {
+      console.error("Failed to send message:", error);
+      // Handle errors and potentially send an error response to the sender
+      socket.emit("message-send-failure", { error: error.message });
+    }
+  });
+});
 
 
 const sendMessage = async (req, res) => {
