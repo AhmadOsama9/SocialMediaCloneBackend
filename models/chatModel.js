@@ -99,8 +99,13 @@ chatSchema.statics.getChatMessages = async function (userId, otherUserId) {
         }
     }
     chat.messages.sort((a, b) => a.timestamp - b.timestamp);
+    
+    let chatId;
 
-    return { messages: chat.messages, chatId: newChat._id};
+    if (chat) chatId = chat._id;
+    else chatId = newChat._id;
+
+    return { messages: chat.messages, chatId};
 }
 
 chatSchema.statics.getChatMessagesByChatId = async function (chatId) {
