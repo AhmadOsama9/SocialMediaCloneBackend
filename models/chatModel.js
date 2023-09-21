@@ -97,11 +97,10 @@ chatSchema.statics.getChatMessages = async function (userId, otherUserId) {
         if (!newChat) {
             throw Error("Failed to create a chat");
         }
-        return chat._id;
     }
     chat.messages.sort((a, b) => a.timestamp - b.timestamp);
 
-    return { messages: chat.messages, chatId: chat._id};
+    return { messages: chat.messages, chatId: newChat._id};
 }
 
 chatSchema.statics.getChatMessagesByChatId = async function (chatId) {
