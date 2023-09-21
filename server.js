@@ -53,11 +53,6 @@ app.use("/api/user/", userActivityRoutes);
 app.use("/api/page/", pageRoutes);
 app.use("/api/otp/", otpRoutes);
 
-// Redirect all unknown routes to the home page
-app.all('*', (req, res) => {
-    res.redirect("https://socialmediaclone-s3lg.onrender.com");
-});
-
 const io = new Server(server, {
   cors: {
     origin: ["http://localhost:5173", "https://socialmediaclone-s3lg.onrender.com"],
