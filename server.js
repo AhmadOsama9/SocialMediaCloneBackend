@@ -64,7 +64,7 @@ const io = new Server (server, {
   },
 });
 
-module.exports = {io};
+module.exports = io;
 
 
 mongoose.connect(process.env.MONGO_URL).then(
