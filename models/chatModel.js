@@ -97,6 +97,10 @@ chatSchema.statics.getChatMessages = async function (userId, otherUserId) {
         if (!newChat) {
             throw Error("Failed to create a chat");
         }
+        const updatedChat = newChat.save();
+        if (!updatedChat) {
+            throw Error("Failed to save the updated Chat");
+        }
     }
     chat.messages.sort((a, b) => a.timestamp - b.timestamp);
     
