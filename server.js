@@ -19,7 +19,6 @@ const otpRoutes = require("./routes/otp");
 
 const app = express();
 const server = http.createServer(app);
-const io = require("socket.io")(server);
 
 app.use(express.json());
 
@@ -58,6 +57,12 @@ app.all('*', (req, res) => {
     res.redirect("https://socialmediaclone-s3lg.onrender.com");
 });
 
+const io = new Server (server, {
+  cors: {
+    origin: "http://localhost:5173", 
+    methods: ["GET", "POST"],
+  },
+});
 
 mongoose
   .connect(process.env.MONGO_URL)
