@@ -58,9 +58,9 @@ app.all('*', (req, res) => {
     res.redirect("https://socialmediaclone-s3lg.onrender.com");
 });
 
-const io = new Server (server, {
+const io = new Server(server, {
   cors: {
-    origin: "http://localhost:5173", "https://socialmediaclone-s3lg.onrender.com", 
+    origin: ["http://localhost:5173", "https://socialmediaclone-s3lg.onrender.com"],
     methods: ["GET", "POST"],
   },
 });
