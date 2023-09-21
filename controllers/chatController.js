@@ -52,8 +52,8 @@ const getChatMessages = async (req, res) => {
     const { userId, otherUserId } = req.body;
 
     try {
-        const messages = await Chat.getChatMessages(userId, otherUserId);
-        res.status(200).json(messages);
+        const result = await Chat.getChatMessages(userId, otherUserId);
+        res.status(200).json({messages: result.messages, chatId: result.chatId});
     } catch(error) {
         res.status(400).json({error: error.message});
     }

@@ -89,14 +89,19 @@ chatSchema.statics.getChatMessages = async function (userId, otherUserId) {
     const chat = await this.findOne({
         participants: {$all: [userId, otherUserId] },
     });
-    
     if (!chat) {
-        throw Error("Chat not found");
+        const newChat = await this.create({
+            participants: [userId, otherUserId],
+        });
+        
+        if (!newChat) {
+            throw Error("Failed to create a chat");
+        }
+        return chat._id;
     }
-
     chat.messages.sort((a, b) => a.timestamp - b.timestamp);
 
-    return chat.messages;
+    return { messages: chat.messages, chatId: chat._id};
 }
 
 chatSchema.statics.getChatMessagesByChatId = async function (chatId) {
