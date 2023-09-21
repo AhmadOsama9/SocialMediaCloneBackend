@@ -100,10 +100,6 @@ mongoose
   .then(() => {
       console.log("Connected to the database");
 
-      server.listen(5000, () => {
-        console.log("The websocket server is running on port 5000");
-      })
-
       app.listen(4000, () => {
           console.log("Server is Listening to port 4000");
       })
@@ -111,4 +107,8 @@ mongoose
 ).catch((err) => {
     console.error(err);
 });
+
+server.listen(5000, () => {
+  console.log("The websocket server is running on port 5000");
+})
 
