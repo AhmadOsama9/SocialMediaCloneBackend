@@ -75,6 +75,11 @@ io.on("connection", (socket) => {
     console.log(`User ${socket.id} joined chat room: ${chatId}`);
   });
 
+  socket.on("leave-chat", (chatId) => {
+    socket.leave(chatId);
+    console.log(`User ${socket.id} left chat room: ${chatId}`)
+  })
+
   // Event listener for chat messages
   socket.on("chat-message", async (data) => {
     const { chatId, message, userId } = data;
