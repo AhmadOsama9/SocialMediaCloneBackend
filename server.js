@@ -81,4 +81,4 @@ mongoose
     console.error(err);
 });
 
-module.exports = io;
+module.exports = {io};
