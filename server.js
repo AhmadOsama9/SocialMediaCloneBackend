@@ -7,6 +7,7 @@ const passport = require("passport");
 const cookieSession = require("cookie-session");
 const http = require("http");
 const Server = require("socket.io").Server;
+const Chat = require("./models/chatModel");
 
 const userRoutes = require("./routes/user");
 const profileRoutes = require("./routes/profile");
@@ -64,6 +65,31 @@ const io = new Server (server, {
   },
 });
 
+
+io.on("connection", (socket) => {
+  console.log(`User connected via WebSocket: ${socket.id}`);
+
+  // Event listener for joining a chat room
+  socket.on("join-chat", (chatId) => {
+    socket.join(chatId);
+    console.log(`User ${socket.id} joined chat room: ${chatId}`);
+  });
+
+  // Event listener for chat messages
+  socket.on("chat-message", async (data) => {
+    const { chatId, message, userId } = data;
+    await Chat.sendMessageByChatId(chatId, userId, content);
+
+    // Broadcast the message to the chat room
+    socket.to(chatId).emit("chat-message", message);
+  });
+
+  socket.on("disconnect", () => {
+    console.log(`User disconnected: ${socket.id}`);
+  });
+});
+
+
 mongoose
   .connect(process.env.MONGO_URL)
   .then(() => {
@@ -81,4 +107,3 @@ mongoose
     console.error(err);
 });
 
-module.exports = {io};
