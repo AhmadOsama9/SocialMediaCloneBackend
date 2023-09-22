@@ -78,7 +78,7 @@ io.on("connection", (socket) => {
   // Event listener for chat messages
   socket.on("chat-message", async (data) => {
     const { chatId, message, userId } = data;
-    await Chat.sendMessageByChatId(chatId, userId, content);
+    await Chat.sendMessageByChatId(chatId, userId, message);
 
     // Broadcast the message to the chat room
     socket.to(chatId).emit("chat-message", message);
