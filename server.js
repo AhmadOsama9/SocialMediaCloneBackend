@@ -53,12 +53,7 @@ app.use("/api/user/", userActivityRoutes);
 app.use("/api/page/", pageRoutes);
 app.use("/api/otp/", otpRoutes);
 
-const io = new Server(server, {
-  cors: {
-    origin: ["http://localhost:5173", "https://socialmediaclone-s3lg.onrender.com"],
-    methods: ["GET", "POST"],
-  },
-});
+const io = new Server(server, {});
 
 
 io.on("connection", (socket) => {
