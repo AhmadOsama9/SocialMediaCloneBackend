@@ -94,10 +94,6 @@ mongoose
   .connect(process.env.MONGO_URL)
   .then(() => {
       console.log("Connected to the database");
-
-      app.listen(4000, () => {
-          console.log("Server is Listening to port 4000");
-      })
     }
 ).catch((err) => {
     console.error(err);
