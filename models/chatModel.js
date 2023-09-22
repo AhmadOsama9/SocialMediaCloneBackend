@@ -134,7 +134,7 @@ chatSchema.statics.getChats = async function (userId) {
 
     for (const chat of chats) {
         const otherParticipantId = chat.participants.find(
-            (participant) => participant !== userId
+            (participant) => participant.toString() !== userId
         );
         console.log("the chat participate is: ", chat.participants);
         console.log("The userId: ", userId);
