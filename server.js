@@ -103,7 +103,7 @@ mongoose
     console.error(err);
 });
 
-server.listen(5001, () => {
-  console.log("The websocket server is running on port 5001");
+server.listen(5000, () => {
+  console.log("The websocket server is running on port 5000");
 })
 
