@@ -136,9 +136,6 @@ chatSchema.statics.getChats = async function (userId) {
         const otherParticipantId = chat.participants.find(
             (participant) => participant.toString() !== userId
         );
-        console.log("the chat participate is: ", chat.participants);
-        console.log("The userId: ", userId);
-        console.log("the otheruserId is: ", otherParticipantId);
 
         const otherUserProfile = await Profile.findOne({ user: otherParticipantId });
         if (!otherUserProfile) {
