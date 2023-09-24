@@ -83,6 +83,7 @@ io.on("connection", (socket) => {
 
     // Broadcast the message to the chat room
     socket.to(chatId).emit("chat-message", message);
+    console.log("The socket.to is being called");
   });
 
   socket.on("disconnect", () => {
