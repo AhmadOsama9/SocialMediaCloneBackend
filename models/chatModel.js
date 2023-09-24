@@ -66,24 +66,27 @@ chatSchema.statics.sendMessage = async function (senderId, receiverId, content) 
     }
     
 }
-
 chatSchema.statics.sendMessageByChatId = async function (chatId, userId, content) {
     const chat = await this.findById(chatId);
     if (!chat) {
-        throw Error("Cannot find the chat");
+        throw Error("Chat not found");
     }
 
-    chat.messages.push({
+    const newMessage = {
         sender: userId,
         content: content
-    });
+    };
 
-    const updatedChat = chat.save();
+    chat.messages.push(newMessage);
+
+    const updatedChat = await chat.save();
     if (!updatedChat) {
         throw Error("Failed to save the updated chat");
     }
-    return chat;
+
+    return newMessage;
 }
+
 
 chatSchema.statics.getChatMessages = async function (userId, otherUserId) {
     const chat = await this.findOne({

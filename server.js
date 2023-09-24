@@ -79,12 +79,17 @@ io.on("connection", (socket) => {
   socket.on("chat-message", async (data) => {
     console.log("It call the chat-message, data is: ", data);
     const { chatId, message, userId } = data;
-    await Chat.sendMessageByChatId(chatId, userId, message);
 
-    // Broadcast the message to the chat room
-    socket.to(chatId).emit("chat-message", message);
-    console.log("The socket.to is being called");
-  });
+    try {
+        const newMessage = await Chat.sendMessageByChatId(chatId, userId, message);
+
+        // Broadcast the new message to the chat room
+        socket.to(chatId).emit("chat-message", newMessage);
+        console.log("The socket.to is being called");
+    } catch (error) {
+        console.error("Error sending chat message:", error);
+    }
+});
 
   socket.on("disconnect", () => {
     console.log(`User disconnected: ${socket.id}`);
