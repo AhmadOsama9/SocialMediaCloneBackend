@@ -497,7 +497,7 @@ userActivitySchema.statics.getFeedPosts = async function (userId, page) {
           postId: post._id,
           createdAt: format(post.createdAt, "yyyy-MM-dd HH:mm:ss"), // Format the date
           avatar: profile ? profile.image : null, // Include the image/avatar or null if not found
-          communityNickname: community ? community.name : null,
+          communityName: community ? community.name : null,
         };
       }));
     
