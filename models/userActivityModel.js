@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { format } = require("date-fns");
 
 const Schema = mongoose.Schema;
 
@@ -348,159 +349,155 @@ userActivitySchema.statics.getFriendRelationshipStatus = async function (userId,
 };
 
 userActivitySchema.statics.getCreatedPosts = async function (userId) {
-    const Post = require("./postModel");
+  const Post = require("./postModel");
+  const Profile = require("./profileModel");
 
-    const userActivity = await this.findOne({ user: userId });
-    if (!userActivity) {
-        throw Error("User activity not found");
+  const userActivity = await this.findOne({ user: userId });
+  if (!userActivity) {
+    throw Error("User activity not found");
+  }
+
+  const userPosts = userActivity.userPosts;
+  const results = [];
+
+  for (const userPost of userPosts) {
+    const post = await Post.findById(userPost);
+    if (!post) {
+      throw Error("Can not find the post");
     }
 
-    const userPosts = userActivity.userPosts;
-    const results = [];
+    // Format the createdAt field
+    const formattedCreatedAt = format(post.createdAt, "yyyy-MM-dd HH:mm:ss");
 
-    for (const userPost of userPosts) {
-        const post = await Post.findById(userPost);
-        if (!post) {
-            throw Error("Can not find the post");
-        }
+    // Fetch the user's avatar (image) from the profile
+    const profile = await Profile.findOne({ nickname: post.nickname });
 
-        const nickname = post.nickname;
-        const header = post.header;
-        const content = post.content;
+    results.push({
+      nickname: post.nickname,
+      header: post.header,
+      content: post.content,
+      postId: post._id,
+      createdAt: formattedCreatedAt, // Include the formatted createdAt
+      avatar: profile ? profile.image : null, // Include the image/avatar or null if not found
+    });
+  }
 
-        results.push({
-            nickname: nickname,
-            header: header,
-            content: content,
-            postId: post._id,
-        });
-    }
-
-    return results;
+  return results;
 };
 
 
 userActivitySchema.statics.getSharedPosts = async function(userId) {
-    const Post = require("./postModel");
+  const Post = require("./postModel");
+  const Profile = require("./profileModel");
 
-    const userActivity = await this.findOne({ user: userId});
-    if (!userActivity) {
-        throw Error("User activity not found");
+  const userActivity = await this.findOne({ user: userId });
+  if (!userActivity) {
+    throw Error("User activity not found");
+  }
+
+  const userPosts = userActivity.sharedPosts;
+  const results = [];
+
+  for (const sharedPost of userPosts) {
+    const post = await Post.findById(sharedPost);
+    if (!post) {
+      throw Error("Shared post not found");
     }
 
-    const userPosts = userActivity.sharedPosts;
-    const results = [];
+    // Format the createdAt field
+    const formattedCreatedAt = format(post.createdAt, "yyyy-MM-dd HH:mm:ss");
 
-    for (const sharedPost of userPosts) {
-        const post = await Post.findById(sharedPost);
-        if (!post) {
-            throw Error("Shared post not found");
-        }
+    // Fetch the user's avatar (image) from the profile
+    const profile = await Profile.findOne({ nickname: post.nickname });
 
-        const nickname = post.nickname;
-        const header = post.header;
-        const content = post.content;
+    results.push({
+      nickname: post.nickname,
+      header: post.header,
+      content: post.content,
+      postId: post._id,
+      createdAt: formattedCreatedAt, // Include the formatted createdAt
+      avatar: profile ? profile.image : null, // Include the image/avatar or null if not found
+    });
+  }
 
-        results.push({
-            nickname: nickname, 
-            header: header,
-            content: content,
-            postId: post._id,
-        });
-    }
-    return results;
-}
+  return results;
+};
 
 userActivitySchema.statics.getFeedPosts = async function (userId, page) {
     const Post = require("./postModel");
-  
+    const Profile = require("./profileModel");
+
     if (!userId || page < 0) {
-      throw Error("Invalid info");
-    }
-  
-    const userActivity = await this.findOne({ user: userId });
-    if (!userActivity) {
-      throw Error("User activity not found");
-    }
-
-    const pageSize = 5;
-    const skip = page * pageSize;
-  
-    // 1. Get User's Newest Posts
-    const userPosts = await Post.find({ owner: userId })
-      .sort({ createdAt: -1 })
-      .skip(skip)
-      .limit(pageSize)
-      .select({
-        nickname: 1,
-        header: 1,
-        content: 1,
-        _id: 0, // Exclude the default _id field
-        postId: '$_id', // Rename _id to postId
-       });
-
-    const userPosts2 = await Post.find({ owner: userId});  
-  
-    // 2. Get User's Friends' Posts
-    const friendIds = userActivity.friends.map((friend) => friend.userId);
-    const friendPosts = await Post.find({ owner: { $in: friendIds } })
-      .sort({ createdAt: -1 })
-      .skip(skip)
-      .limit(pageSize)
-      .select({
-        nickname: 1,
-        header: 1,
-        content: 1,
-        _id: 0, // Exclude the default _id field
-        postId: '$_id', // Rename _id to postId
-       });
-  
-    // 3. Get User's Joined Communities' Posts
-    const joinedCommunityIds = userActivity.joinedCommunities;
-    const communityPosts = await Post.find({ community: { $in: joinedCommunityIds } })
-      .sort({ createdAt: -1 })
-      .skip(skip)
-      .limit(pageSize)
-      .select({
-        nickname: 1,
-        header: 1,
-        content: 1,
-        _id: 0, // Exclude the default _id field
-        postId: '$_id', // Rename _id to postId
-       });
-
-    // Combine all posts without excluding the user's own posts
-    let feedPosts = [...userPosts, ...friendPosts, ...communityPosts];
-  
-    // 4. Sort all posts by createdAt
-    feedPosts.sort((a, b) => b.createdAt - a.createdAt);
-  
-    // 5. Check if feedPosts array has fewer than pageSize items
-    const remainingPosts = pageSize - feedPosts.length;
-  
-    if (remainingPosts > 0) {
-      // 6. Fetch additional posts from other users to fill remaining slots
-      const additionalPosts = await Post.find({
-        owner: { $ne: userId }, // Exclude the user's own posts
-      })
+        throw Error("Invalid info");
+      }
+    
+      const userActivity = await this.findOne({ user: userId });
+      if (!userActivity) {
+        throw Error("User activity not found");
+      }
+    
+      const pageSize = 5;
+      const skip = page * pageSize;
+    
+      // 1. Get User's Newest Posts
+      const userPosts = await Post.find({ owner: userId })
         .sort({ createdAt: -1 })
         .skip(skip)
-        .limit(remainingPosts)
-        .select({
-        nickname: 1,
-        header: 1,
-        content: 1,
-        _id: 0, // Exclude the default _id field
-        postId: '$_id', // Rename _id to postId
-       });
-  
-      feedPosts = [...feedPosts, ...additionalPosts];
-    }
-  
-    // 7. Sort all posts again in case additional posts were added
-    feedPosts.sort((a, b) => b.createdAt - a.createdAt);
-  
-    return feedPosts;
+        .limit(pageSize);
+    
+      // 2. Get User's Friends' Posts
+      const friendIds = userActivity.friends.map((friend) => friend.userId);
+      const friendPosts = await Post.find({ owner: { $in: friendIds } })
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(pageSize);
+    
+      // 3. Get User's Joined Communities' Posts
+      const joinedCommunityIds = userActivity.joinedCommunities;
+      const communityPosts = await Post.find({ community: { $in: joinedCommunityIds } })
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(pageSize);
+    
+      // Combine all posts without excluding the user's own posts
+      let feedPosts = [...userPosts, ...friendPosts, ...communityPosts];
+    
+      // 4. Sort all posts by createdAt
+      feedPosts.sort((a, b) => b.createdAt - a.createdAt);
+    
+      // 5. Check if feedPosts array has fewer than pageSize items
+      const remainingPosts = pageSize - feedPosts.length;
+    
+      if (remainingPosts > 0) {
+        // 6. Fetch additional posts from other users to fill remaining slots
+        const additionalPosts = await Post.find({
+          owner: { $ne: userId }, // Exclude the user's own posts
+        })
+          .sort({ createdAt: -1 })
+          .skip(skip)
+          .limit(remainingPosts);
+    
+        feedPosts = [...feedPosts, ...additionalPosts];
+      }
+    
+      // 7. Sort all posts again in case additional posts were added
+      feedPosts.sort((a, b) => b.createdAt - a.createdAt);
+    
+      // 8. Format createdAt for each post and fetch the image/avatar
+      const formattedFeedPosts = await Promise.all(feedPosts.map(async (post) => {
+        const profile = await Profile.findOne({ nickname: post.nickname });
+    
+        return {
+          nickname: post.nickname,
+          header: post.header,
+          content: post.content,
+          postId: post._id,
+          createdAt: format(post.createdAt, "yyyy-MM-dd HH:mm:ss"), // Format the date
+          avatar: profile ? profile.image : null, // Include the image/avatar or null if not found
+        };
+      }));
+    
+      return formattedFeedPosts;
   };
   
   
