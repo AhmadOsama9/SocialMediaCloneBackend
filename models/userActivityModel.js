@@ -275,6 +275,7 @@ userActivitySchema.statics.getJoinedCommunities = async function (userId) {
 
     return results;
 }
+
 userActivitySchema.statics.getUserCommunities = async function (userId) {
     const Community = require("./communitiesModel");
 
