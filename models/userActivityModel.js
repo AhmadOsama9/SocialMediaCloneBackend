@@ -426,6 +426,7 @@ userActivitySchema.statics.getSharedPosts = async function(userId) {
 userActivitySchema.statics.getFeedPosts = async function (userId, page) {
     const Post = require("./postModel");
     const Profile = require("./profileModel");
+    const Community = require("./communitiesModel");
 
     if (!userId || page < 0) {
         throw Error("Invalid info");
@@ -486,6 +487,8 @@ userActivitySchema.statics.getFeedPosts = async function (userId, page) {
       // 8. Format createdAt for each post and fetch the image/avatar
       const formattedFeedPosts = await Promise.all(feedPosts.map(async (post) => {
         const profile = await Profile.findOne({ nickname: post.nickname });
+        const community = await Community.findById(post.community);
+
     
         return {
           nickname: post.nickname,
@@ -494,6 +497,7 @@ userActivitySchema.statics.getFeedPosts = async function (userId, page) {
           postId: post._id,
           createdAt: format(post.createdAt, "yyyy-MM-dd HH:mm:ss"), // Format the date
           avatar: profile ? profile.image : null, // Include the image/avatar or null if not found
+          communityNickname: community ? community.name : null,
         };
       }));
     
