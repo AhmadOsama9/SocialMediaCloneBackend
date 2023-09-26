@@ -63,6 +63,8 @@ communitySchema.statics.createCommunity = async function (name, description, use
     if (!updatedUserActivity) {
         throw Error("Failed to save the updated user activity");
     }
+    
+    return newCommunity;
 };
 
 communitySchema.statics.addToRequests = async function (userId, communityId) {
