@@ -89,7 +89,15 @@ io.on("connection", (socket) => {
     } catch (error) {
         console.error("Error sending chat message:", error);
     }
-});
+  });
+
+  socket.on("typing", (chatId) => {
+    socket.to(chatId).emit("typing");
+  })
+
+  socket.on("stop typing", (chatId) => {
+    socket.to(chatId).emit("stop typing");
+  })
 
   socket.on("disconnect", () => {
     console.log(`User disconnected: ${socket.id}`);
