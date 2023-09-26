@@ -91,11 +91,13 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("typing", (chatId, userId) => {
+  socket.on("typing", (data) => {
+    const { chatId, userId } = data; 
     socket.to(chatId).emit("typing", userId);
   })
 
-  socket.on("stop typing", (chatId, userId) => {
+  socket.on("stop typing", (data) => {
+    const {chatId, userId } = data;
     socket.to(chatId).emit("stop typing", userId);
   })
 
