@@ -92,10 +92,12 @@ io.on("connection", (socket) => {
   });
 
   socket.on("typing", (chatId) => {
+    console.log("a user is typing");
     socket.to(chatId).emit("typing");
   })
 
   socket.on("stop typing", (chatId) => {
+    console.log("a user stopped typing")
     socket.to(chatId).emit("stop typing");
   })
 
