@@ -58,6 +58,8 @@ pageSchema.statics.createPage = async function (name, description, userId) {
         throw Error("Failed to save the updated user activity");
     }
 
+    return newPage;
+
 }
 
 pageSchema.statics.deletePage = async function (name) {

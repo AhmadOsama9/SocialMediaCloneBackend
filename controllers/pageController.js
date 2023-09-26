@@ -5,8 +5,8 @@ const createPage = async (req, res) => {
     const lowercaseName = name.toLowerCase();
 
     try {
-        await Pages.createPage(lowercaseName, description, userId);
-        res.status(200).json({message: "The Page has been created"});
+        const page = await Pages.createPage(lowercaseName, description, userId);
+        res.status(200).json(page);
     } catch (error) {
         res.status(400).json({error: error.message});
     }
