@@ -91,14 +91,12 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("typing", (chatId) => {
-    console.log("a user is typing");
-    socket.to(chatId).emit("typing");
+  socket.on("typing", (chatId, userId) => {
+    socket.to(chatId).emit("typing", userId);
   })
 
-  socket.on("stop typing", (chatId) => {
-    console.log("a user stopped typing")
-    socket.to(chatId).emit("stop typing");
+  socket.on("stop typing", (chatId, userId) => {
+    socket.to(chatId).emit("stop typing", userId);
   })
 
   socket.on("disconnect", () => {
