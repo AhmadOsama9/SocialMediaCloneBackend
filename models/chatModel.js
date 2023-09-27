@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { format } = require("date-fns")
 
 const Schema = mongoose.Schema;
 
@@ -112,7 +113,13 @@ chatSchema.statics.getChatMessages = async function (userId, otherUserId) {
     if (chat) chatId = chat._id;
     else chatId = newChat._id;
 
-    return { messages: chat.messages, chatId};
+    // Format timestamps in messages
+    const formattedMessages = chat.messages.map((message) => ({
+        ...message,
+        createdAt: format(new Date(message.timestamp), "yyyy-MM-dd HH:mm:ss"),
+    }));
+
+    return { messages: formattedMessages, chatId };
 }
 
 chatSchema.statics.getChatMessagesByChatId = async function (chatId) {
@@ -123,7 +130,12 @@ chatSchema.statics.getChatMessagesByChatId = async function (chatId) {
     
     chat.messages.sort((a, b) => a.timestamp - b.timestamp);
 
-    return chat.messages;
+    const formattedMessages = chat.messages.map((message) => ({
+        ...message,
+        createdAt: format(new Date(message.timestamp), "yyyy-MM-dd HH:mm:ss"),
+    }));
+
+    return formattedMessages;
 }
 
 chatSchema.statics.getChats = async function (userId) {
