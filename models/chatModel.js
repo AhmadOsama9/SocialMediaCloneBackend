@@ -67,6 +67,7 @@ chatSchema.statics.sendMessage = async function (senderId, receiverId, content) 
     }
     
 }
+
 chatSchema.statics.sendMessageByChatId = async function (chatId, userId, content) {
     const chat = await this.findById(chatId);
     if (!chat) {
@@ -88,16 +89,15 @@ chatSchema.statics.sendMessageByChatId = async function (chatId, userId, content
     return newMessage;
 }
 
-
 chatSchema.statics.getChatMessages = async function (userId, otherUserId) {
     const chat = await this.findOne({
-        participants: {$all: [userId, otherUserId] },
+        participants: { $all: [userId, otherUserId] },
     });
     if (!chat) {
         const newChat = await this.create({
             participants: [userId, otherUserId],
         });
-        
+
         if (!newChat) {
             throw Error("Failed to create a chat");
         }
@@ -107,7 +107,7 @@ chatSchema.statics.getChatMessages = async function (userId, otherUserId) {
         }
     }
     chat.messages.sort((a, b) => a.timestamp - b.timestamp);
-    
+
     let chatId;
 
     if (chat) chatId = chat._id;
@@ -115,12 +115,13 @@ chatSchema.statics.getChatMessages = async function (userId, otherUserId) {
 
     // Format timestamps in messages
     const formattedMessages = chat.messages.map((message) => ({
-        ...message,
+        ...message.toObject(), // Convert to plain JavaScript object
         createdAt: format(new Date(message.timestamp), "yyyy-MM-dd HH:mm:ss"),
     }));
 
     return { messages: formattedMessages, chatId };
 }
+
 
 chatSchema.statics.getChatMessagesByChatId = async function (chatId) {
     const chat = await this.findById(chatId);
@@ -130,8 +131,16 @@ chatSchema.statics.getChatMessagesByChatId = async function (chatId) {
     
     chat.messages.sort((a, b) => a.timestamp - b.timestamp);
 
-    return chat.messages;
+    const formattedMessages = await Promise.all(
+        chat.messages.map(async (message) => ({
+            ...message.toObject(), // Convert to plain JavaScript object
+            createdAt: format(new Date(message.timestamp), "yyyy-MM-dd HH:mm:ss"),
+        }))
+    );
+
+    return formattedMessages;
 }
+
 
 chatSchema.statics.getChats = async function (userId) {
     const Profile = require("./profileModel");
