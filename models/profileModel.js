@@ -37,6 +37,10 @@ profileSchema.statics.updateNickname = async function (userId, nickname) {
       throw Error("Nickname cannot contain 'admin' or its variations");
     }
 
+    if (/\s/.test(nickname)) {
+      throw Error("Nickname cannot contain spaces");
+    }
+
     const existingProfileWithNickname = await this.findOne({ nickname });
 
     if (existingProfileWithNickname && existingProfileWithNickname.user.toString() !== userId) {
