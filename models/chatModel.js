@@ -130,12 +130,7 @@ chatSchema.statics.getChatMessagesByChatId = async function (chatId) {
     
     chat.messages.sort((a, b) => a.timestamp - b.timestamp);
 
-    const formattedMessages = chat.messages.map((message) => ({
-        ...message,
-        createdAt: format(new Date(message.timestamp), "yyyy-MM-dd HH:mm:ss"),
-    }));
-
-    return formattedMessages;
+    return chat.messages;
 }
 
 chatSchema.statics.getChats = async function (userId) {
