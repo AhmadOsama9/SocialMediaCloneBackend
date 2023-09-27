@@ -373,13 +373,20 @@ userActivitySchema.statics.getCreatedPosts = async function (userId) {
     // Fetch the user's avatar (image) from the profile
     const profile = await Profile.findOne({ nickname: post.nickname });
 
+    const reactions = await Post.getPostReactions(post._id);
+    const comments = await Post.getPostComments(post._id);
+    const shares = await Post.getPostShares(post._id);
+
     results.push({
       nickname: post.nickname,
       header: post.header,
       content: post.content,
       postId: post._id,
-      createdAt: formattedCreatedAt, // Include the formatted createdAt
-      avatar: profile ? profile.image : null, // Include the image/avatar or null if not found
+      createdAt: formattedCreatedAt,
+      avatar: profile ? profile.image : null, 
+      reactions,
+      comments,
+      shares,
     });
   }
 
@@ -411,13 +418,20 @@ userActivitySchema.statics.getSharedPosts = async function(userId) {
     // Fetch the user's avatar (image) from the profile
     const profile = await Profile.findOne({ nickname: post.nickname });
 
+    const reactions = await Post.getPostReactions(post._id);
+    const comments = await Post.getPostComments(post._id);
+    const shares = await Post.getPostShares(post._id);
+
     results.push({
       nickname: post.nickname,
       header: post.header,
       content: post.content,
       postId: post._id,
-      createdAt: formattedCreatedAt, // Include the formatted createdAt
-      avatar: profile ? profile.image : null, // Include the image/avatar or null if not found
+      createdAt: formattedCreatedAt,
+      avatar: profile ? profile.image : null,
+      reactions,
+      comments,
+      shares,
     });
   }
 
@@ -483,13 +497,16 @@ userActivitySchema.statics.getFeedPosts = async function (userId, page) {
       }
     
       // 7. Sort all posts again in case additional posts were added
-      feedPosts.sort((a, b) => b.createdAt - a.createdAt);
+      feedPosts.sort((a, b) => a.createdAt - b.createdAt);
     
       // 8. Format createdAt for each post and fetch the image/avatar
       const formattedFeedPosts = await Promise.all(feedPosts.map(async (post) => {
         const profile = await Profile.findOne({ nickname: post.nickname });
         const community = await Community.findById(post.community);
 
+        const reactions = await Post.getPostReactions(post._id);
+        const comments = await Post.getPostComments(post._id);
+        const shares = await Post.getPostShares(post._id);
     
         return {
           nickname: post.nickname,
@@ -499,6 +516,9 @@ userActivitySchema.statics.getFeedPosts = async function (userId, page) {
           createdAt: format(post.createdAt, "yyyy-MM-dd HH:mm:ss"), // Format the date
           avatar: profile ? profile.image : null, // Include the image/avatar or null if not found
           communityName: community ? community.name : null,
+          reactions,
+          comments,
+          shares,
         };
       }));
     
