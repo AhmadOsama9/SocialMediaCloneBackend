@@ -366,16 +366,24 @@ communitySchema.statics.getCreatedPosts = async function (communityId) {
         if (!post) {
             throw Error("Can not find the post");
         }
+        
 
         const nickname = post.nickname;
         const header = post.header;
         const content = post.content;
+
+        const reactions = await Post.getPostReactions(post._id);
+        const comments = await Post.getPostComments(post._id);
+        const shares = await Post.getPostShares(post._id);
 
         results.push({
             nickname: nickname,
             header: header,
             content: content,
             postId: post._id,
+            reactions,
+            comments,
+            shares,
         });
     }
 

@@ -112,11 +112,18 @@ pageSchema.statics.getCreatedPosts = async function (name) {
             throw Error("Cannot find the post");
         }
 
+        const reactions = await Post.getPostReactions(post._id);
+        const comments = await Post.getPostComments(post._id);
+        const shares = await Post.getPostShares(post._id);
+
         results.push({
             nickname: post.nickname,
             header: post.header,
             content: post.content,
             postId: post._id,
+            reactions,
+            comments,
+            shares,
         });
     }
 
