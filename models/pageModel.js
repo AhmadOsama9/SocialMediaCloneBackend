@@ -97,6 +97,8 @@ pageSchema.statics.deletePage = async function (name) {
 
 pageSchema.statics.getCreatedPosts = async function (name) {
     const Post = require("./postModel");
+    const Profile = require("./profileModel");
+    const { format } = require("date-fns");
     
     const page = await this.findOne({name});
     if (!page) {
@@ -112,6 +114,8 @@ pageSchema.statics.getCreatedPosts = async function (name) {
             throw Error("Cannot find the post");
         }
 
+        const profile = await Profile.findOne({nickname: post.nickname});
+
         const reactions = await Post.getPostReactions(post._id);
         const comments = await Post.getPostComments(post._id);
         const shares = await Post.getPostShares(post._id);
@@ -121,6 +125,8 @@ pageSchema.statics.getCreatedPosts = async function (name) {
             header: post.header,
             content: post.content,
             postId: post._id,
+            createdAt: format(post.createdAt, "yyyy-MM-dd HH:mm:ss"),
+            avatar: profile ? profile.image : null,
             reactions,
             comments,
             shares,

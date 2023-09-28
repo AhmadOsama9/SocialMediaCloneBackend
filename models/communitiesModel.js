@@ -353,6 +353,8 @@ communitySchema.statics.leaveCommunity = async function (userId, communityId) {
 
 communitySchema.statics.getCreatedPosts = async function (communityId) {
     const Post = require("./postModel");
+    const Profile = require("./profileModel");
+    const { format } = require("date-fns");
 
     const community = await this.findById(communityId);
     if (!community) {
@@ -367,6 +369,7 @@ communitySchema.statics.getCreatedPosts = async function (communityId) {
             throw Error("Can not find the post");
         }
         
+        const profile = await Profile.findOne({nickname: post.nickname});
 
         const nickname = post.nickname;
         const header = post.header;
@@ -381,6 +384,8 @@ communitySchema.statics.getCreatedPosts = async function (communityId) {
             header: header,
             content: content,
             postId: post._id,
+            createdAt: format(post.createdAt, "yyyy-MM-dd HH:mm:ss"),
+            avatar: profile ? profile.image :null,
             reactions,
             comments,
             shares,
