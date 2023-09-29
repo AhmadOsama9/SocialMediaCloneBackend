@@ -93,6 +93,7 @@ chatSchema.statics.getChatMessages = async function (userId, otherUserId) {
     const chat = await this.findOne({
         participants: { $all: [userId, otherUserId] },
     });
+
     if (!chat) {
         const newChat = await this.create({
             participants: [userId, otherUserId],
@@ -105,13 +106,12 @@ chatSchema.statics.getChatMessages = async function (userId, otherUserId) {
         if (!updatedChat) {
             throw Error("Failed to save the updated Chat");
         }
+        const chatId = newChat._id;
+        return { messages: [], chatId};
     }
     chat.messages.sort((a, b) => a.timestamp - b.timestamp);
 
-    let chatId;
-
-    if (chat) chatId = chat._id;
-    else chatId = newChat._id;
+    const chatId = chat._id;
 
     // Format timestamps in messages
     const formattedMessages = chat.messages.map((message) => ({
