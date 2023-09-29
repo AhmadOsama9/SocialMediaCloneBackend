@@ -497,7 +497,7 @@ userActivitySchema.statics.getFeedPosts = async function (userId, page) {
       }
     
       // 7. Sort all posts again in case additional posts were added
-      feedPosts.sort((a, b) => a.createdAt - b.createdAt);
+      feedPosts.sort((a, b) => b.createdAt - a.createdAt);
     
       // 8. Format createdAt for each post and fetch the image/avatar
       const formattedFeedPosts = await Promise.all(feedPosts.map(async (post) => {
