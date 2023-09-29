@@ -88,39 +88,46 @@ chatSchema.statics.sendMessageByChatId = async function (chatId, userId, content
 
     return newMessage;
 }
-
 chatSchema.statics.getChatMessages = async function (userId, otherUserId) {
     const chat = await this.findOne({
-        participants: { $all: [userId, otherUserId] },
+      participants: { $all: [userId, otherUserId] },
     });
-
+  
     if (!chat) {
-        const newChat = await this.create({
-            participants: [userId, otherUserId],
-        });
-
-        if (!newChat) {
-            throw Error("Failed to create a chat");
-        }
-        const updatedChat = newChat.save();
-        if (!updatedChat) {
-            throw Error("Failed to save the updated Chat");
-        }
-        const chatId = newChat._id;
-        return { messages: [], chatId};
+      // Create a new chat if it doesn't exist
+      const newChat = await this.create({
+        participants: [userId, otherUserId],
+      });
+  
+      if (!newChat) {
+        throw Error("Failed to create a chat");
+      }
+  
+      // Save the new chat
+      const updatedChat = await newChat.save();
+  
+      if (!updatedChat) {
+        throw Error("Failed to save the updated Chat");
+      }
+  
+      // Set 'chatId' and return an empty 'messages' array
+      const chatId = newChat._id;
+      return { messages: [], chatId };
     }
+  
     chat.messages.sort((a, b) => a.timestamp - b.timestamp);
-
+  
     const chatId = chat._id;
-
+  
     // Format timestamps in messages
     const formattedMessages = chat.messages.map((message) => ({
-        ...message.toObject(), // Convert to plain JavaScript object
-        createdAt: format(new Date(message.timestamp), "yyyy-MM-dd HH:mm:ss"),
+      ...message.toObject(), // Convert to plain JavaScript object
+      createdAt: format(new Date(message.timestamp), "yyyy-MM-dd HH:mm:ss"),
     }));
-
+  
     return { messages: formattedMessages, chatId };
-}
+  };
+  
 
 
 chatSchema.statics.getChatMessagesByChatId = async function (chatId) {
