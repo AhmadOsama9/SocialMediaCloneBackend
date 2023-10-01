@@ -176,7 +176,7 @@ userActivitySchema.statics.removeFriend = async function (userId, friendId) {
     }
     
     const friendIndex = userActivity.friends.findIndex((friend) => friend.userId.equals(friendId));
-    if (friendIndex) {
+    if (friendIndex === -1) {
         throw Error("That user is not in your friend list");
     }
 
