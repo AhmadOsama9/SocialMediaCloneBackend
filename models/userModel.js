@@ -81,7 +81,13 @@ userSchema.statics.googleSignup = async function(email, role) {
     return user;
 }
 
-
+function decryptPassword(encryptedPassword) {
+    const decipher = crypto.createDecipher('aes-256-cbc', env.process.ENCRYPTION_KEY);
+    let decryptedPassword = decipher.update(encryptedPassword, 'hex', 'utf8');
+    decryptedPassword += decipher.final('utf8');
+    return decryptedPassword;
+  }
+  
 
 userSchema.statics.login = async function (email, password) {
     if(!email || !password) {
@@ -94,7 +100,9 @@ userSchema.statics.login = async function (email, password) {
         throw Error("Incorrect Email");
     }
 
-    const match = await bcrypt.compare(password, user.password);
+    const plainPassword = decryptPassword(password);
+
+    const match = await bcrypt.compare(plainPassword, user.password);
 
     if(!match) {
         throw Error("Incorrect Password");
