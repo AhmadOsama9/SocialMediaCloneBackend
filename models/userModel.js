@@ -93,7 +93,7 @@ userSchema.statics.login = async function (email, password) {
     if(!user) {
         throw Error("Incorrect Email");
     }
-    const bytes = CryptoJS.AES.decrypt(encryptedPassword, process.env.ENCRYPTION_KEY);
+    const bytes = CryptoJS.AES.decrypt(password, process.env.ENCRYPTION_KEY);
     const decryptedPassword = bytes.toString(CryptoJS.enc.Utf8);
 
     const match = await bcrypt.compare(decryptedPassword, user.password);
