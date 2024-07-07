@@ -1,5 +1,8 @@
 require("dotenv").config();
 
+const swaggerJsdoc = require("swagger-jsdoc");
+const swaggerUi = require("swagger-ui-express");
+
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -20,6 +23,22 @@ const otpRoutes = require("./routes/otp");
 
 const app = express();
 const server = http.createServer(app);
+
+const swaggerOptions = {
+  swaggerDefinition: {
+      openapi: "3.0.0",
+      info: {
+          title: "sociaMediaCloneBackendDocumentation",
+          version: "1.0.0",
+          description: "Documentation for your APIs",
+      },
+  },
+  apis: ["./routes/*.js"], // Path to the API routes
+};
+
+const swaggerSpec = swaggerJsdoc(swaggerOptions);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 
 app.use(express.json());
 
