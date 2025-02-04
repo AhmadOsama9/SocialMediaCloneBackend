@@ -41,7 +41,6 @@ const swaggerOptions = {
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-
 app.use(express.json());
 
 app.use(cors({
@@ -55,7 +54,7 @@ app.use(cookieSession({
     name: 'google-auth-session',
     keys: ['key1', 'key2']
 }))
-  
+
 
 app.use(passport.initialize());
 app.use(passport.session());
